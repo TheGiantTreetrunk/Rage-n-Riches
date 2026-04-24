@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <title>Rage 'n' Riches</title>
+        <meta charset="UTF-8">
+        <meta name="MobileOptimized" content="480"/>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <meta name="keywords" content="Adventure">
+        <meta name="description" content="A Game">
+        <meta name="author" content="Austin Elke">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="HandheldFriendly" content="true"/>
+
+        <link href='game_style.css?=v3.4' rel='stylesheet'>
+        <script defer type="text/javascript" src="game_data.js?=v3.4"></script>
+
+
+    </head>
+    <body onload="Start()">
+    
+    <div id="splash">
+        <h1 id="game_menu_title">Rage 'n' Riches</h1>
+        <div id="center_stuff">
+            <div id="tap_to_play">
+                <button id="tap_to_play_button" onclick="hud(0)">Tap to Play</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu" style="display: none;">
+        <h1 style="text-align: center">Class Select</h1> 
+        <h3 id="name_of_class" style="text-align: center">class name</h3>
+        <p id="class_description" style="text-align: center">'class description'</p>
+        <p id="class_icon" class="icns" style="text-align: center">@</p>
+        <p id="class_stats" style="text-align: center">1,0,0,1</p>
+        
+        <table style="margin: auto; text-align: center;">
+            <tr>
+                <td><button data-class-num="1" class="class_select"><a class="icns red">@</a></button></td>
+                <td><button data-class-num="2" class="class_select"><a class="icns blue">@</a></button></td>
+                <td><button data-class-num="3" class="class_select"><a class="icns brown">@</a></button></td>
+            </tr>
+            <tr>
+                <td><button data-class-num="4" class="class_select"><a class="icns green">@</a></button></td>
+                <td><button data-class-num="5" class="class_select"><a class="icns yellow">@</a></button></td>
+                <td><button data-class-num="6" class="class_select"><a class="icns purple">@</a></button></td>
+            </tr>
+            <tr>
+                <td><button data-class-num="7" class="class_select"><a class="icns cyan">@</a></button></td>
+                <td><button data-class-num="8" class="class_select"><a class="icns magenta">@</a></button></td>
+            </tr>
+        </table>
+
+        <br>
+        <div style="text-align: center">
+            <button class="play_bttn" onclick="hud(11)">Play!</button>
+        </div>
+    </div>
+
+    <div id="door" style="display: none; text-align: center;">
+        <h1>Next Room</h1>
+        <p id="door_text">A heavy oak door stands before you.</p>
+        <button class="play_bttn" onclick="Door_Action('knock')">KNOCK POLITELY</button>
+        <button class="play_bttn" onclick="Door_Action('kick')">KICK IT DOWN</button>
+        <p>Rooms Cleared: <span id="rooms_count">0</span></p>
+    </div>
+
+    <div id="battle" style="display: none;">
+        <h2 style="text-align: center;">BATTLE</h2>
+        <table style="width: 100%; table-layout: fixed; text-align: center;">
+            <tr>
+                <td id="player_status" style="font-size: 10px; color: gray;">FOCUSED</td>
+                <td id="enemy_status" style="font-size: 10px; color: gray;">NORMAL</td>
+            </tr>
+            <tr>
+                <td id="player_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">@</td>
+                <td id="enemy_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">&</td>
+            </tr>
+            <tr>
+                <td><span class="red icns">~</span> <a id="player_battle_health">20</a></td>
+                <td><span class="red icns">~</span> <a id="enemy_battle_health">10</a></td>
+            </tr>
+            <tr>
+                <td><span class="blue icns">%</span> <a id="player_battle_armor">10</a></td>
+                <td><span class="blue icns">%</span> <a id="enemy_battle_armor">10</a></td>
+            </tr>
+        </table>
+
+        <div style="height: 50px; text-align: center; margin-top: 5px; padding: 0 10px;">
+            <h4 id="encounter_battle_test" style="font-size: 12px; color: white;"></h4>
+        </div>
+
+        <div class="combat_book">
+            <table style="width: 100%; table-layout: fixed; border-spacing: 0;">
+                <tr>
+                    <td><button class="tablinks active" onclick="openPage(event, 'Page_Strike')">[ ATK ]</button></td>
+                    <td><button class="tablinks" onclick="openPage(event, 'Page_Tactics')">[ TAC ]</button></td>
+                    <td><button class="tablinks" onclick="openPage(event, 'Page_Rest')">[ RST ]</button></td>
+                </tr>
+            </table>
+
+            <div id="Page_Strike" class="tabcontent" style="display: block;">
+                <button class="book_action" onclick="Battle_System(2)">SWORD STRIKE</button>
+                <button class="book_action" onclick="Battle_System(15)">PIMP SLAP</button>
+            </div>
+
+            <div id="Page_Tactics" class="tabcontent" style="display: none;">
+                <button id="repair_btn" class="book_action" onclick="Battle_System(16)">REPAIR (3G)</button>
+                <button id="bribe_btn" class="book_action" onclick="Battle_System(13)">BRIBE (5G)</button>
+                <button class="book_action" onclick="Battle_System(11)">ANALYZE</button>
+            </div>
+
+            <div id="Page_Rest" class="tabcontent" style="display: none;">
+                <button class="book_action" onclick="Battle_System(5)">HEAL (1x FOOD)</button>
+                <button class="book_action" onclick="Battle_System(12)">BREATHE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const classButtons = document.querySelectorAll('.class_select');
+            classButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const classNum = button.dataset.classNum;
+                    if (classNum) {
+                        if (typeof class_selection === 'function') {
+                            class_selection(parseInt(classNum, 10), button);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

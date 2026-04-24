@@ -1,0 +1,827 @@
+/* Add this to the TOP of your CSS to fix all sizing issues */
+* {
+    box-sizing: border-box;
+}
+
+/* Add styles here */
+:root {
+    --shadow-color: #000000;
+    --card-color: #2f3031;
+    --match-color: #707070;
+    --mismatch-color: #000000;
+    --ra-pixel-color: #222222; /* Dark Gray Transition Blocks */
+    --ra-bg-color: #000000;    /* Deep Black */
+    --ra-text-primary: #ffffff; /* Stark White */
+    --ra-text-secondary: #888888; /* Dim Gray */
+    --bg-color: #121212;
+    --border-color: #ffffff;
+    --highlight: #ff00ff; /* Neon Pink */
+    --accent: #00ffff;    /* Neon Cyan */
+    --text-color: #ffffff;
+}
+
+@font-face {
+    font-family: 'Game_Icns'; /* Choose a name for your font */
+    font-weight: normal;
+    src: url('test.ttf?v=5.00') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'main'; /* Choose a name for your font */
+    font-weight: normal;
+    src: url(font.otf);
+    font-style: normal;
+}
+
+body {
+    color: #ffffff;
+    background-color: #000000;
+	font-family: 'main';
+}
+
+
+img {
+	image-rendering: pixelated;
+}
+
+hr {
+	border: 2px solid white;
+}
+
+div {
+	image-rendering: pixelated;
+}
+
+
+.icns{
+    font-family: 'Game_Icns';
+}
+
+button {
+	background-color: #000000;
+	color: #ffffff;
+	border: 2px solid #ffffff;
+
+  font-family: 'main';
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+  
+button:hover {
+	background-color: #ffffff;
+	color: #555555;
+  	border: 2px solid #555555;
+}
+
+button:disabled {
+	pointer-events: none;
+	background-color: #555555;
+	color: white;
+
+}
+
+/*TERMINAL COLORS!!!!!!*/
+
+.black {
+	color: #000000;
+}
+
+.white {
+	color: #ffffff;
+}
+
+.red {
+	color: #883232;
+}
+
+.cyan {
+	color: #67b6bd;
+}
+
+.magenta {
+	color: #8b3f96;
+}
+
+.green {
+	color: #55a049;
+}
+
+.blue {
+	color: #40318d;
+}
+
+.yellow {
+	color: #bfce72;
+}
+
+.brown {
+	color: #8b5429;
+}
+
+.dark_brown {
+	color: #574200;
+}
+
+.pink {
+	color: #b86962;
+}
+
+.dark_gray {
+	color: #505050;
+}
+
+.gray {
+	color: #787878;
+}
+
+.lime {
+	color: #94e089;
+}
+
+.purple {
+	color: #7869c4;
+}
+
+.light_gray {
+	color: #9f9f9f;
+}
+
+.back_black {
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.back_white {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.back_red {
+	background-color: #883232;
+	color: #ffffff;
+}
+
+.back_cyan {
+	background-color: #67b6bd;
+	color: #000000;
+}
+
+.back_magenta {
+	background-color: #8b3f96;
+	color: #ffffff;
+}
+
+.back_green {
+	background-color: #55a049;
+	color: #000000;
+}
+
+.back_blue {
+	background-color: #40318d;
+	color: #ffffff;
+}
+
+.back_yellow {
+	background-color: #bfce72;
+	color: #000000;
+}
+
+.back_brown {
+	background-color: #8b5429;
+	color: #000000;
+}
+
+.back_dark_brown {
+	background-color: #574200;
+	color: #ffffff;
+}
+
+.back_pink {
+	background-color: #b86962;
+	color: #ffffff;
+}
+
+.back_dark_gray {
+	background-color: #505050;
+	color: #ffffff;
+}
+
+.back_gray {
+	background-color: #787878;
+	color: #ffffff;
+}
+
+.back_lime {
+	background-color: #94e089;
+	color: #000000;
+}
+
+.back_purple {
+	background-color: #7869c4;
+	color: #ffffff;
+}
+
+.back_light_gray {
+	background-color: #9f9f9f;
+	color: #ffffff;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	box-shadow: none; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #c3c3c3; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #212626; 
+}
+
+progress[value] {
+	--color: #000; /* the progress color */
+	--background: lightgrey; /* the background color */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;
+	width: 200px;
+	margin: 5px 5px;
+	background: var(--background);
+}
+
+progress[value]::-webkit-progress-bar {
+	background: var(--background);
+}
+
+progress[value]::-webkit-progress-value {
+	background: var(--color);
+}
+
+progress[value]::-moz-progress-bar {
+	background: var(--color);
+}
+
+.topnav_top {
+  border: 3px solid white;
+  overflow: hidden;
+  background-color: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.topnav_top a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 7px 8px;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.topnav_top a:hover {
+  background-color: #000;
+  color: white;
+}
+
+.topnav_top a.active {
+  background-color: #000;
+  color: white;
+}
+
+.topnav_btm {
+  border: 3px solid white;
+  overflow: hidden;
+  background-color: #000000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.topnav_btm a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 7px 8px;
+  text-decoration: none;
+  font-size: 10px;
+}
+
+.topnav_btm a:hover {
+  background-color: #000;
+  color: white;
+}
+
+.topnav_btm a.active {
+  background-color: #000;
+  color: white;
+}
+
+.topnav_mnu {
+  overflow: hidden;
+}
+
+.topnav_mnu a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 10px 24px;
+  /*border-radius: 30px 30px 0px 0px;*/
+  margin-right: 2px;
+  margin-left: 2px;
+  
+  border: 3px solid white;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.topnav_mnu a:hover {
+  background-color: #808080;
+  color: white;
+}
+
+.topnav_mnu a.active {
+  background-color: #000;
+  color: white;
+}
+
+
+#rosebud_engine {
+	width: 320px;
+	height: 320px;
+	border: 1px solid white;
+	
+    margin-left: auto;
+    margin-right: auto;
+	border: 2px solid white;
+}
+
+.rosebud_content {
+	position: relative;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	margin-left: 5px;
+	border: 1px solid white;
+}
+
+/*Media full sized desktop*/
+#home {
+	margin-top: 72px;
+	padding: 20px;
+	border: 2px solid white;
+	border-radius: 25px;
+	width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+#account_id {
+	float: right;
+	font-size: 11px;
+	text-decoration: underline;
+}
+
+.logo {
+	width: 16px;
+	height: 16px;
+}
+
+
+.tooltip {
+	position: relative;
+  }
+  
+  .tooltip .tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 9;
+	top: 100%;
+	left: 50%;
+	margin-left: -60px;
+  }
+  
+  .tooltip .tooltiptext1 {
+	visibility: hidden;
+	width: 240px;
+	height: 60px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1000;
+	top: 100%;
+	right: 0;
+  }
+  
+  .tooltip:hover .tooltiptext {
+	visibility: visible;
+  }
+
+
+/*SPLASH STUFF*/
+
+#game_menu_title {
+    position: fixed;
+    top: 64px;
+    text-align: center;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+}
+
+#splash {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#center_stuff {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 10%;
+    text-align: center;
+}
+
+/*MENU STUFF*/
+
+#menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 75%;
+}
+
+#class_icon {
+    font-size: 24px;
+}
+
+.class_select {
+    width: 48px;
+    height: 48px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    font-family: 'Game_Icns';
+    transition: background-color 0.4s;
+}
+
+.play_bttn {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    padding: 14px 64px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.class_select:has(a.red):hover,
+.class_select:has(a.red).selected {
+    background-color: #ff6666;
+}
+
+.class_select:has(a.blue):hover,
+.class_select:has(a.blue).selected {
+    background-color: #6666ff;
+}
+
+.class_select:has(a.brown):hover,
+.class_select:has(a.brown).selected {
+    background-color: #574200;
+}
+
+.class_select:has(a.green):hover,
+.class_select:has(a.green).selected {
+    background-color: #66ff66;
+}
+
+.class_select:has(a.yellow):hover,
+.class_select:has(a.yellow).selected {
+    background-color: #ffff66;
+}
+
+.class_select:has(a.purple):hover,
+.class_select:has(a.purple).selected {
+    background-color: #ff66ff;
+}
+
+.class_select:has(a.lime):hover,
+.class_select:has(a.lime).selected {
+    background-color: #ccff66;
+}
+
+.class_select:has(a.cyan):hover,
+.class_select:has(a.cyan).selected {
+    background-color: #66ffff;
+}
+
+.class_select:has(a.magenta):hover,
+.class_select:has(a.magenta).selected {
+    background-color: #ff66ff;
+}
+
+
+/*LOADING SCREEN STUFF*/
+
+#loading_scene {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:root {
+    /* Define your project colors as CSS variables for easy management */
+    --color-1: #883232;
+    --color-2: #40318d;
+    --color-3: #ffffff;
+    --color-4: #55a049;
+    --color-5: #bfce72;
+    --color-6: #7869c4;
+    --color-7: #94e089;
+    --color-8: #67b6bd;
+    --color-9: #8b3f96;
+    
+    /* Variables for segment size and gap */
+    --color-segment-width: 15px;
+    --gap-width: 2px;
+    --total-segment-width: 17px;
+    --total-colored-blocks: 8;
+    
+    /* Variables for vertical spacing */
+    --bar-inner-height: 15px;
+    --vertical-padding: 4px;
+}
+
+/* --- Container and Text Styles --- */
+
+.loading-container {
+    width: 100%;
+    text-align: center;
+}
+
+.loading-text {
+    color: var(--color-3);
+    font-size: 2em;
+    margin-bottom: 10px;
+    image-rendering: pixelated;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* --- Loading Bar Border (The outer white box) --- */
+
+.loading-bar-border {
+    border: 3px solid var(--color-3);
+    padding: var(--vertical-padding) 0px;
+    height: var(--bar-inner-height);
+    box-sizing: content-box;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    overflow: hidden;
+}
+
+/* --- The Actual Loading Bar (Default State) --- */
+
+.loading-bar {
+    width: 0%;
+    /* Stays at 0% until the .is-loading class is applied */
+    height: 100%;
+    background-color: transparent;
+    
+    /* 1. Define the Multi-Color Gradient with Black Gaps */
+    background-image: repeating-linear-gradient( to right, var(--color-1), var(--color-1) var(--color-segment-width), #000 var(--color-segment-width), #000 var(--total-segment-width), var(--color-2) var(--total-segment-width), var(--color-2) calc(var(--total-segment-width) * 2 - var(--gap-width)), #000 calc(var(--total-segment-width) * 2 - var(--gap-width)), #000 calc(var(--total-segment-width) * 2), var(--color-4) calc(var(--total-segment-width) * 2), var(--color-4) calc(var(--total-segment-width) * 3 - var(--gap-width)), #000 calc(var(--total-segment-width) * 3 - var(--gap-width)), #000 calc(var(--total-segment-width) * 3), var(--color-5) calc(var(--total-segment-width) * 3), var(--color-5) calc(var(--total-segment-width) * 4 - var(--gap-width)), #000 calc(var(--total-segment-width) * 4 - var(--gap-width)), #000 calc(var(--total-segment-width) * 4), var(--color-6) calc(var(--total-segment-width) * 4), var(--color-6) calc(var(--total-segment-width) * 5 - var(--gap-width)), #000 calc(var(--total-segment-width) * 5 - var(--gap-width)), #000 calc(var(--total-segment-width) * 5), var(--color-7) calc(var(--total-segment-width) * 5), var(--color-7) calc(var(--total-segment-width) * 6 - var(--gap-width)), #000 calc(var(--total-segment-width) * 6 - var(--gap-width)), #000 calc(var(--total-segment-width) * 6), var(--color-8) calc(var(--total-segment-width) * 6), var(--color-8) calc(var(--total-segment-width) * 7 - var(--gap-width)), #000 calc(var(--total-segment-width) * 7 - var(--gap-width)), #000 calc(var(--total-segment-width) * 7), var(--color-9) calc(var(--total-segment-width) * 7), var(--color-9) calc(var(--total-segment-width) * 8 - var(--gap-width)), #000 calc(var(--total-segment-width) * 8 - var(--gap-width)), #000 calc(var(--total-segment-width) * 8));
+}
+
+/* --- NEW: Trigger Class for Animation --- */
+
+.loading-bar.is-loading {
+    /* This class contains the animation property */
+    animation: load-progress 4s steps(var(--total-colored-blocks), end) forwards;
+}
+
+@keyframes load-progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* --- Example Button Styling --- */
+
+.start-button {
+    padding: 10px 20px;
+    background-color: var(--color-4);
+    color: #000;
+    border: 3px solid var(--color-3);
+    cursor: pointer;
+}
+
+.start-button:hover {
+    background-color: var(--color-7);
+}
+
+.start-button:disabled {
+    background-color: #666;
+    cursor: default;
+}
+
+#attention_class_select {
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 50%;
+	height: 50%;
+	border: 3px solid #ffffff;
+	background-color: #000;
+	overflow-y: scroll;
+    box-shadow: 10px 10px var(--shadow-color, #ffffff);
+    color:#fff;
+    padding: 10px;
+}
+
+#attention_class_select button {
+    padding: 14px 48px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#attention_early_development {
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%;
+	height: 80%;
+	border: 3px solid #ffffff;
+	background-color: #000;
+	overflow-y: scroll;
+    box-shadow: 10px 10px var(--shadow-color, #ffffff);
+    color:#fff;
+    padding: 10px;
+}
+
+#tap_to_play_button {
+    padding: 14px 0px;
+	width: 100%;
+    border: none;
+}
+
+/* Ensure Battle buttons match Class Select style */
+.battle_combat_button_actions {
+    width: 100%;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 10px 0;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.battle_combat_button_actions:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+#door {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 75%;
+}
+
+/* Vertical positioning for the Battle screen to match Menu */
+#battle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 75%;
+}
+
+
+/* Matching your Menu/Class Select vibe */
+.combat_book {
+    border: 2px solid #ffffff; /* Matches play_bttn */
+    background: #000;
+    margin-top: 5px;
+    overflow: hidden; /* Stops mobile scrolling */
+}
+
+/* Update your existing .tablinks block */
+.tablinks {
+    width: 100%;
+    background: #000 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-bottom: 2px solid #ffffff !important;
+    padding: 10px 0 !important;
+    font-size: 14px;
+    cursor: pointer;
+    /* KILL THE TWITCH */
+    transition: none !important;
+    margin: 0 !important; 
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+.tablinks:hover {
+    background-color: #333 !important; /* Slight hint of interaction */
+}
+
+.tablinks.active {
+    background: #ffffff !important;
+    color: #000 !important;
+}
+
+.tabcontent {
+    display: none;
+    padding: 10px;
+    height: 110px; 
+    overflow-y: auto; /* Adds a scrollbar INSIDE if you add too many buttons, instead of growing the box */
+    overflow-x: hidden;
+}
+
+.book_action {
+    display: block;
+    width: 100% !important; /* Force full width */
+    height: 35px;           /* Lock the height of every button */
+    background: #000 !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important; 
+    
+    /* THE FIXES */
+    margin: 0 0 5px 0 !important; /* Forces 0 margin on top/sides, only 5px on bottom */
+    padding: 0 !important;        /* Padding often causes text-shift twitching */
+    line-height: 35px;            /* Centers text vertically without padding */
+    font-size: 12px !important;
+    
+    transition: none !important;  /* No 0.4s delay */
+    box-sizing: border-box !important;
+    vertical-align: top !important;
+}
+
+.book_action:active {
+    background: #ffffff;
+    color: #000;
+}
+
+.book_action:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important; /* Keep border white so it doesn't shift */
+}
