@@ -59,13 +59,69 @@
     <div id="door" style="display: none; text-align: center;">
         <h1>Next Room</h1>
         <p id="door_text">A heavy oak door stands before you.</p>
+        <hr>
+
+        <table class="radar-table">
+            <tr>
+                <td id="floor_10">Lvl. 10</td>
+                <td id="floor_10_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_10_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_9">Lvl. 9</td>
+                <td id="floor_9_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_9_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_8">Lvl. 8</td>
+                <td id="floor_8_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_8_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_7">Lvl. 7</td>
+                <td id="floor_7_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_7_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_6">Lvl. 6</td>
+                <td id="floor_6_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_6_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_5">Lvl. 5</td>
+                <td id="floor_5_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_5_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_4">Lvl. 4</td>
+                <td id="floor_4_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_4_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_3">Lvl. 3</td>
+                <td id="floor_3_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_3_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_2">Lvl. 2</td>
+                <td id="floor_2_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_2_check">0</td>
+            </tr>
+            <tr>
+                <td id="floor_1">Lvl. 1</td>
+                <td id="floor_1_id"><a id='door1' class='door brown'>:</a></td>
+                <td id="floor_1_check">0</td>
+            </tr>
+        </table>
+        <hr>
         <button class="play_bttn" onclick="Door_Action('knock')">KNOCK POLITELY</button>
         <button class="play_bttn" onclick="Door_Action('kick')">KICK IT DOWN</button>
-        <p>Rooms Cleared: <span id="rooms_count">0</span></p>
     </div>
 
     <div id="battle" style="display: none;">
         <h2 style="text-align: center;">BATTLE</h2>
+        <hr>
+        <br>
         <table style="width: 100%; table-layout: fixed; text-align: center;">
             <tr>
                 <td id="player_status" style="font-size: 10px; color: gray;">FOCUSED</td>
@@ -89,30 +145,16 @@
             <h4 id="encounter_battle_test" style="font-size: 12px; color: white;"></h4>
         </div>
 
-        <div class="combat_book">
-            <table style="width: 100%; table-layout: fixed; border-spacing: 0;">
-                <tr>
-                    <td><button class="tablinks active" onclick="openPage(event, 'Page_Strike')">[ ATK ]</button></td>
-                    <td><button class="tablinks" onclick="openPage(event, 'Page_Tactics')">[ TAC ]</button></td>
-                    <td><button class="tablinks" onclick="openPage(event, 'Page_Rest')">[ RST ]</button></td>
-                </tr>
-            </table>
+        <hr>
 
-            <div id="Page_Strike" class="tabcontent" style="display: block;">
+        <div class="combat_book">
                 <button class="book_action" onclick="Battle_System(2)">SWORD STRIKE</button>
                 <button class="book_action" onclick="Battle_System(15)">PIMP SLAP</button>
-            </div>
-
-            <div id="Page_Tactics" class="tabcontent" style="display: none;">
                 <button id="repair_btn" class="book_action" onclick="Battle_System(16)">REPAIR (3G)</button>
                 <button id="bribe_btn" class="book_action" onclick="Battle_System(13)">BRIBE (5G)</button>
                 <button class="book_action" onclick="Battle_System(11)">ANALYZE</button>
-            </div>
-
-            <div id="Page_Rest" class="tabcontent" style="display: none;">
                 <button class="book_action" onclick="Battle_System(5)">HEAL (1x FOOD)</button>
                 <button class="book_action" onclick="Battle_System(12)">BREATHE</button>
-            </div>
         </div>
     </div>
 

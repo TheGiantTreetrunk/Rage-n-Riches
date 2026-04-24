@@ -37,17 +37,6 @@ var rooms_cleared = 0;
 
 //rooms and items
 var itm_nm = ["Gold","Food","Water","Potion","Armor","Weapon","Scrolls"];
-/*
-// logic for what each item "Upgrades" or "Restores"
-var itm_effects = {
-    "Food":    { stat: "hp",       value: 5,  type: "restore" },
-    "Water":   { stat: "stv",      value: -3, type: "restore" }, // Lowers stress!
-    "Armor":   { stat: "thp",      value: 5,  type: "restore" }, // Repairs armor
-    "Potion":  { stat: "mobility", value: 1,  type: "upgrade" },
-    "Weapon":  { stat: "strength", value: 1,  type: "upgrade" },
-    "Scrolls": { stat: "academic", value: 1,  type: "upgrade" }
-};
-*/
 var room = 0;
 var score = 0;
 var gold = 0;
@@ -65,9 +54,6 @@ var player = {
     stv: 0,
 	status: "Normal"
 };
-
-// Buffed Class Health Array (Matching the new baseline)
-var player_class_health = [0, 60, 35, 50, 45, 40, 70, 45, 35];
 
 // --- INVENTORY (Mapped to your itm_nm array) ---
 // [Gold, Food, Water, Potion, Armor, Weapon, Scrolls]
@@ -148,7 +134,6 @@ function hud(callout) {
             break;
         case 10: // SHOW BATTLE
             document.getElementById("battle").style.display = "block";
-            initBattleTabs(); 
             break;
         case 11: // SHOW DOOR
             document.getElementById("door").style.display = "block";
@@ -382,43 +367,4 @@ function enemy_turn() {
         log.innerHTML = "You died. The Narrator is laughing at your corpse.";
         setTimeout(() => { location.reload(); }, 3000);
     }
-}
-
-function openPage(evt, pageName) {
-    let i, tabcontent, tablinks;
-    
-    // Hide all pages
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-
-    // Deactivate all tab buttons
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the specific page and highlight the tab
-    document.getElementById(pageName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-// Call this function whenever you trigger a battle
-function initBattleTabs() {
-    // Hide all tab content except the first one
-    let tabcontent = document.getElementsByClassName("tabcontent");
-    for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    
-    // Show the Strike page by default
-    document.getElementById("Page_Strike").style.display = "block";
-    
-    // Make sure the first tab button is marked as active
-    let tablinks = document.getElementsByClassName("tablinks");
-    for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-    }
-    tablinks[0].classList.add("active");
 }
