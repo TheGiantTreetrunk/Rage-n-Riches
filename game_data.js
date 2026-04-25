@@ -26,13 +26,6 @@ function getRoast(category, enemyName = "", cost = "") {
     return roast.replace("{name}", enemyName).replace("{cost}", cost);
 }
 
-
-var difficulty = 0;
-var section = 0;
-var enemies_defeated = 0;
-var items_opened = 0;
-var items_smashed = 0;
-var gold_earned = 0;
 var rooms_cleared = 0;
 
 //rooms and items
@@ -46,11 +39,8 @@ var player = {
     nme: "Adventurer",
     class: "None",
     hp: 40,      // Baseline increased from 20
-    mhp: 40,     // Max HP baseline
     thp: 20,     // Starting Armor baseline
     str: 10,     // Baseline Damage
-    mob: 10,     // Baseline Dodge
-    aca: 10,     // Baseline Logic
     stv: 0,
 	status: "Normal"
 };
@@ -58,31 +48,18 @@ var player = {
 // --- INVENTORY (Mapped to your itm_nm array) ---
 // [Gold, Food, Water, Potion, Armor, Weapon, Scrolls]
 var inv = [10, 2, 2, 1, 0, 0, 0]; 
-
-// --- SCALING & PROGRESSION TRACKERS ---
-var bribes_given = 0;    // Increases BRIBE cost
-var repairs_made = 0;    // Increases REPAIR cost
-var rooms_cleared = 0;   // Your score / progress
+var rooms_cleared = 0;
 
 
 var player_class = ["Hooman","Fighter","Alchemist","Theologian","Ranger","Monk","Knight","Troubadour","Artillerist"];
-var player_cls_val = [];
 var player_colors = ["white","red","blue","brown","green","yellow","purple","cyan","magenta"];
-var player_class_health =   [0, 12,  6, 12, 10,  8, 14, 10,  8];
-var player_class_academic = [0,  6, 14, 12,  8, 10,  6, 12, 14];
-var player_class_mobility = [0,  8, 10,  6, 12, 14,  6, 10,  8];
-var player_class_strength = [0, 14,  6, 10, 10,  8, 14,  8, 10];
-var player_class_health_value =   [0, 5, 0, 2, 1, 1, 3, 1, 0];
-var player_class_academic_value = [0, 0, 3, 2, 0, 0,-1, 1, 3];
-var player_class_mobility_value = [0, 0, 0, 0, 1, 3,-1, 1,-1];
-var player_class_strength_value = [0, 1,-1, 0, 1, 0, 1, 0, 0];
+var player_class_health = [0,12,6,12,10,8,14,10,8];
+var player_class_damage = [0,4,5,2,3,2,3,2,5];
+var player_class_stv = [0,10,1,6,4,2,12,6,4];
+var player_class_thp = [0,10,0,6,4,2,15,6,4];
 var player_class_unique_weapon = ["Zweihandler","Musket","Mace","Long Bow","Quarterstaff","Long Sword","Rapier","Rifle"];
 var player_class_unique_armor = ["Field Plate","Simple Clothes","Brigandine","Leather Coat","Padded Gambeson","Gothic Plate","Mail Hauberk","Leather Coat"];
 var player_class_unique_shield = ["None","None","Heater","None","None","Kite","Buckler","None"];
-var player_class_unique_damage = [4,5,2,3,2,3,2,5];
-var player_class_unique_stv = [10,1,6,4,2,12,6,4];
-var player_class_unique_thp = [10,0,6,4,2,15,6,4];
-var player_class_unique_ss = [0,0,1,0,0,2,1,0];
 
 var class_data = {
     1: { name: "Fighter", description: "High Health/Strength (Tank)" },
@@ -96,16 +73,13 @@ var class_data = {
 };
 
 var enemy_nme = ["Ghost","Glarb","Serpant","Golem","Skeleton","Toad","Blob","Ember","Goblin"];
+var enemy_hth = [3,4,3,8,4,2,2,2,4];
 var enemy_dmg = [3,4,4,6,3,2,4,4,3];
 var enemy_arm = [1,2,2,3,1,1,2,1,2];
 var enemy_icn = ["&","?","!",".",",","+",";","=","\x5C"];
 var enemy_clr = ["white","green","lime","gray","white","olive","purple","orange","green"];
 
-var enemy_hth = [25, 35, 45, 80, 30, 20, 40, 35, 35];
-
-// --- ENEMY DATABASE ---
-var enemy_type = 0; // The current index being fought
-// The "Active" enemy stats for the current fight
+var enemy_type = 0;
 var enemy = {
     name: "",
     health: 0,
@@ -118,7 +92,7 @@ function Start() {
     document.getElementById("menu").style.display = "none";
 	document.getElementById("battle").style.display = "none";
 	document.getElementById("door").style.display = "none";
-
+    rooms_cleared = 0;
 }
 
 function hud(callout) {
@@ -139,8 +113,16 @@ function hud(callout) {
             document.getElementById("door").style.display = "block";
             // Ensure the roast text is reset for the new room
             document.getElementById("door_text").innerHTML = "A new door. What's the plan, Chief?";
+            for (var i = 0; i < 10; i++) {
+               document.getElementById(`floor_${i}_id`).innerHTML = "<a class='door white'>_</a><a class='door brown'>:</a>"; 
+            }
+            document.getElementById(`floor_${rooms_cleared}_id`).innerHTML = "<a id='hero' class='icns'>@</a><a id='door1' class='door brown'>:</a>";
             break;
     }
+}
+
+function Radar(rooms_cleared) {
+    document.getElementById(`floor_ ${rooms_cleared} _id`).innerHTML = "<a id='hero' class='icns'>@</a><a id='door1' class='door brown'>:</a>";
 }
 
 function class_selection(class_num, button_element) {
@@ -153,11 +135,10 @@ function class_selection(class_num, button_element) {
 
     // 2. Set the Technical Stats in the Player Object
     player.class = class_num;
-    player.hp = player_class_health[class_num] || 20;
-    player.mhp = player.hp;
-    player.str = player_class_strength[class_num] || 5;
-    player.aca = player_class_academic[class_num] || 5;
-    player.mob = player_class_mobility[class_num] || 5;
+    player.hp = player_class_health[class_num];
+    player.str = player_class_damage[class_num];
+    player.thp = player_class_thp[class_num];
+    player.stv = player_class_stv[class_num];
 
     // 3. Handle the CSS Color and Icon Logic
     if (class_data[class_num]) {
@@ -176,10 +157,9 @@ function class_selection(class_num, button_element) {
         
         // Display stats in the menu
         document.getElementById("class_stats").innerHTML = `
-            <a class='red icns'>~</a> ${player_class_health_value[class_num]} 
-            <a class='white icns'> }</a> ${player_class_academic_value[class_num]} 
-            <a class='yellow icns'>|</a> ${player_class_mobility_value[class_num]} 
-            <a class='purple icns'>{</a> ${player_class_strength_value[class_num]}`;
+            <a class='red icns'>~</a> ${player_class_health[class_num]}
+            <a class='yellow icns'>|</a> ${player_class_damage[class_num]} 
+            <a class='purple icns'>{</a> ${player_class_thp[class_num]}`;
     }
 }
 
@@ -334,7 +314,12 @@ function Battle_System(callout) {
             inv[0] += loot;
             
             setTimeout(() => { 
-                hud(11); // Switch back to Door Scene
+                if(rooms_cleared <= 9) {
+                    hud(11); // Switch back to Door Scene
+                } else {
+                    alert("You Won!");
+                    Start();
+                }
             }, 2000);
             break;
     }
