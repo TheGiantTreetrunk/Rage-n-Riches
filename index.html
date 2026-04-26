@@ -114,8 +114,20 @@
             </tr>
         </table>
         <hr>
-        <button class="play_bttn" onclick="Door_Action('knock')">KNOCK POLITELY</button>
-        <button class="play_bttn" onclick="Door_Action('kick')">KICK IT DOWN</button>
+        <button class="play_bttn" onclick="Door_Action('knock')">Enter Room</button>
+        <br>
+        <button class="play_bttn" onclick="Stats()">Player Stats</button>
+    </div>
+
+    <div id="stats">
+        <h1>Stats</h1>
+        <h3 id="name_of_class1" style="text-align: center">class name</h3>
+        <p id="class_description1" style="text-align: center">'class description'</p>
+        <p id="class_icon1" class="icns" style="text-align: center">@</p>
+        <p id="class_stats1" style="text-align: center">1,0,0,1</p>
+        <p id="bag-status"></p>
+        <p id="inventory-list"></p>
+        <button onclick="hud(13)">Back</button>
     </div>
 
     <div id="battle" style="display: none;">
@@ -156,6 +168,16 @@
                 <button class="book_action" onclick="Battle_System(5)">HEAL (1x FOOD)</button>
                 <button class="book_action" onclick="Battle_System(12)">BREATHE</button>
         </div>
+    </div>
+
+    <div id="loot" style="display: none; text-align: center;">
+        <h1>Loot Found!</h1>
+        <hr>
+        <div id="loot_display" style="margin: 20px 0;">
+            <p id="loot_text" style="font-size: 18px; color: yellow;"></p>
+        </div>
+        <hr>
+        <button class="play_bttn" onclick="closeLootUI()">OK!</button>
     </div>
 
     <script>

@@ -27,12 +27,10 @@ function getRoast(category, enemyName = "", cost = "") {
 }
 
 var rooms_cleared = 0;
-
-//rooms and items
-var itm_nm = ["Gold","Food","Water","Potion","Armor","Weapon","Scrolls"];
-var room = 0;
+var itm_nm = ["Gold", "Dmg Potion", "Str Potion", "Health Pot", "Scrolls"];
+var inv = [10, 0, 0, 1, 0]; 
+var bag_limit = 10;
 var score = 0;
-var gold = 0;
 
 // --- PLAYER BASELINE ATTRIBUTES ---
 var player = {
@@ -44,11 +42,6 @@ var player = {
     stv: 0,
 	status: "Normal"
 };
-
-// --- INVENTORY (Mapped to your itm_nm array) ---
-// [Gold, Food, Water, Potion, Armor, Weapon, Scrolls]
-var inv = [10, 2, 2, 1, 0, 0, 0]; 
-var rooms_cleared = 0;
 
 
 var player_class = ["Hooman","Fighter","Alchemist","Theologian","Ranger","Monk","Knight","Troubadour","Artillerist"];
@@ -92,6 +85,7 @@ function Start() {
     document.getElementById("menu").style.display = "none";
 	document.getElementById("battle").style.display = "none";
 	document.getElementById("door").style.display = "none";
+    document.getElementById("stats").style.display = "none";
     rooms_cleared = 0;
 }
 
@@ -101,6 +95,7 @@ function hud(callout) {
     document.getElementById("menu").style.display = "none";
     document.getElementById("door").style.display = "none";
     document.getElementById("battle").style.display = "none";
+    document.getElementById("stats").style.display = "none";
 
     switch(callout) {
         case 0: // Splash -> Class Select
@@ -118,6 +113,11 @@ function hud(callout) {
             }
             document.getElementById(`floor_${rooms_cleared}_id`).innerHTML = "<a id='hero' class='icns'>@</a><a id='door1' class='door brown'>:</a>";
             break;
+        case 12:
+            document.getElementById("stats").style.display = "block";
+            break;
+        case 13:
+            document.getElementById("door").style.display = "block";
     }
 }
 
@@ -254,17 +254,18 @@ function Battle_System(callout) {
     }
     break;
 
-        case 5: // HEAL (Uses Food)
-            if (inv[1] > 0) { 
-                inv[1]--;
-                player.hp += 5; // Use player.hp object
-                if(player.hp > player.mhp) player.hp = player.mhp; // Don't over-heal
-                log.innerHTML = "You ate some food. Tastes like survival.";
-            } else {
-                log.innerHTML = "You're out of food, genius.";
-            }
-            Battle_System(1);
-            break;
+        case 5: // HEAL (Uses Health Pot)
+    if (inv[3] > 0) { // Index 3 is Health Pot
+        inv[3]--;
+        player.hp += 10; 
+        // Note: You currently don't have player.mhp (Max HP) defined, 
+        // you might want to add that to the player object later.
+        log.innerHTML = "You drank a Health Potion.";
+    } else {
+        log.innerHTML = "You're out of potions!";
+    }
+    Battle_System(1);
+    break;
 
         case 13: // THE BRIBE
             if (inv[0] >= bribe_cost) {
@@ -306,22 +307,14 @@ function Battle_System(callout) {
             break;
 
         case 9: // VICTORY
-            rooms_cleared++;
-            log.innerHTML = `The ${enemy.name} is dead. Looting...`;
-            
-            // Add random gold find
-            let loot = Math.floor(Math.random() * 5) + 1;
-            inv[0] += loot;
-            
-            setTimeout(() => { 
-                if(rooms_cleared <= 9) {
-                    hud(11); // Switch back to Door Scene
-                } else {
-                    alert("You Won!");
-                    Start();
-                }
-            }, 2000);
-            break;
+        rooms_cleared++;
+        log.innerHTML = `The ${enemy.name} is dead.`;
+        
+        // Trigger the new scaling loot system instead of just flat gold
+        setTimeout(() => { 
+            processLootDrop(rooms_cleared); 
+        }, 1500);
+        break;
     }
 }
 
@@ -352,4 +345,99 @@ function enemy_turn() {
         log.innerHTML = "You died. The Narrator is laughing at your corpse.";
         setTimeout(() => { location.reload(); }, 3000);
     }
+}
+
+function getBagCount() {
+    // We sum every value in the inv array starting from index 1
+    let total = 0;
+    for (let i = 1; i < inv.length; i++) {
+        total += inv[i];
+    }
+    return total;
+}
+
+function pickUpItem(idx, qty = 1) {
+    if (idx === 0) { // Gold always fits
+        inv[0] += qty;
+        return true; 
+    }
+    
+    if (getBagCount() + qty <= bag_limit) {
+        inv[idx] += qty;
+        return true;
+    }
+    return false; // Returns false if it doesn't fit
+}
+
+// The Generator: Specific to combat/dungeon drops
+// The Generator: Updated to trigger the Loot UI
+function processLootDrop(floor) {
+    let itemIdx = getLootDrop(floor); // Use your weighted math
+    let lootText = document.getElementById("loot_text");
+    
+    // Switch to Loot Screen
+    document.getElementById("battle").style.display = "none";
+    document.getElementById("loot").style.display = "block";
+
+    if (itemIdx === 0) {
+        // Gold handling: Always fits, so we just add it
+        let goldAmount = Math.floor(Math.random() * 5) + 1;
+        inv[0] += goldAmount;
+        lootText.innerHTML = `You found ${goldAmount} Gold!`;
+    } else {
+        // Consumable handling: Check the Gatekeeper
+        let success = pickUpItem(itemIdx);
+        
+        if (success) {
+            lootText.innerHTML = `Found ${itm_nm[itemIdx]}!<br><small>Inventory: ${getBagCount()}/${bag_limit}</small>`;
+        } else {
+            lootText.innerHTML = `<span style="color:red;">Bag Full!</span><br>You had to leave the ${itm_nm[itemIdx]} behind.`;
+        }
+    }
+}
+
+// Function to close the loot screen and go back to doors
+function closeLootUI() {
+    document.getElementById("loot").style.display = "none";
+    if(rooms_cleared <= 9) {
+        hud(11); // Switch back to Door Scene
+    } else {
+        alert("You Won!");
+        Start();
+    }
+}
+
+function upgradeBag(newLimit) {
+    bag_limit = newLimit;
+    logMessage("Bag upgraded! You can now carry " + bag_limit + " items.");
+}
+
+function updateInventoryUI() {
+    let current = getBagCount();
+    // Update a div or ASCII line in your HTML
+    document.getElementById("bag-status").innerText = `Bag: ${current} / ${bag_limit}`;
+    
+    // Example: Inventory: Gold: 10 | Dmg: 0 | Str: 0 | HP: 1 | Scroll: 0
+    let invString = itm_nm.map((name, i) => `${name}: ${inv[i]}`).join(" | ");
+    document.getElementById("inventory-list").innerText = invString;
+}
+
+function Stats(){
+    updateInventoryUI();
+    hud(12);
+}
+
+function getLootDrop(floor) {
+    let roll = Math.floor(Math.random() * 100) + floor; // Floor adds to the roll
+
+    if (roll < 40) return 0;      // Gold (Still common)
+    if (roll < 70) return 3;      // Health Potion
+    if (roll < 85) return 1;      // Dmg Potion
+    if (roll < 95) return 2;      // Str Potion
+    return 4;                     // Scrolls (Rare)
+}
+
+function getEliteLoot() {
+    // Elites never drop Gold; they only drop consumables (Indices 1-4)
+    return Math.floor(Math.random() * 4) + 1; 
 }
