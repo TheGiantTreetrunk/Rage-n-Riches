@@ -435,3 +435,60 @@ button:disabled {
     text-align: right;
     padding-right: 5px;
 }
+
+.combat_book {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 10px;                      /* Space between buttons */
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.book_action {
+    width: 100%;
+    padding: 12px 5px;
+    font-family: 'main';
+    font-size: 12px;
+    text-transform: uppercase;
+    background: #222;
+    color: #fff;
+    border: 2px solid #444;
+    cursor: pointer;
+}
+
+.book_action:active {
+    background: #444;
+    border-color: #fff;
+}
+
+.stats_group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.inv_line {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dotted #333;
+    padding: 2px 0;
+}
+
+/* Centering the Stats screen to match Menu and Battle */
+#stats {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px; /* Keeps it from getting too wide on desktop */
+    height: auto;
+    max-height: 85vh; /* Prevents it from bleeding off the top/bottom */
+    overflow-y: auto; /* Adds scroll if the inventory gets huge */
+    background-color: #000; /* Ensures it masks the background */
+    padding: 15px;
+    box-sizing: border-box;
+    z-index: 100; /* Keeps it above the dungeon floor */
+}

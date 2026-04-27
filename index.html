@@ -119,16 +119,72 @@
         <button class="play_bttn" onclick="Stats()">Player Stats</button>
     </div>
 
-    <div id="stats">
-        <h1>Stats</h1>
-        <h3 id="name_of_class1" style="text-align: center">class name</h3>
-        <p id="class_description1" style="text-align: center">'class description'</p>
-        <p id="class_icon1" class="icns" style="text-align: center">@</p>
-        <p id="class_stats1" style="text-align: center">1,0,0,1</p>
-        <p id="bag-status"></p>
-        <p id="inventory-list"></p>
-        <button onclick="hud(13)">Back</button>
+<div id="stats" style="display: none; text-align: center;">
+    
+    <h2 id="stat_class_name" style="letter-spacing: 2px;">---</h2>
+    
+    <table style="margin: 10px auto; width: 90%;">
+        <tr>
+            <td><span class="red icns" style="font-size: 20px;">~</span><br><small id="stat_hp">0</small></td>
+            <td><span class="yellow icns" style="font-size: 20px;">|</span><br><small id="stat_str">0</small></td>
+            <td><span class="purple icns" style="font-size: 20px;">{</span><br><small id="stat_thp">0</small></td>
+        </tr>
+    </table>
+    
+    <div id="player_mental_state_stats" style="font-size: 12px; margin: 10px 0; font-weight: bold;">MIND: CALM</div>
+
+    <hr style="width: 40%; border: 1px solid #333; margin: 15px auto;">
+
+    <h3 style="font-size: 10px; color: #888; letter-spacing: 1px;">CARGO BAY</h3>
+    <table id="inventory_grid" style="margin: auto; border-spacing: 8px;">
+        <tr>
+            <td>
+                <button class="class_select" style="cursor: default;">
+                    <a class="icns cyan">!</a><br>
+                    <span id="inv_qty_1" style="font-family: 'main'; font-size: 10px;">0</span>
+                </button>
+            </td>
+            <td>
+                <button class="class_select" style="cursor: default;">
+                    <a class="icns blue">%</a><br>
+                    <span id="inv_qty_2" style="font-family: 'main'; font-size: 10px;">0</span>
+                </button>
+            </td>
+            <td>
+                <button class="class_select" style="cursor: default;">
+                    <a class="icns red">~</a><br>
+                    <span id="inv_qty_3" style="font-family: 'main'; font-size: 10px;">0</span>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="class_select" style="cursor: default;">
+                    <a class="icns magenta">?</a><br>
+                    <span id="inv_qty_4" style="font-family: 'main'; font-size: 10px;">0</span>
+                </button>
+            </td>
+            <td>
+                <button class="class_select" style="cursor: default;">
+                    <a class="icns yellow">$</a><br>
+                    <span id="inv_qty_0" style="font-family: 'main'; font-size: 10px;">0</span>
+                </button>
+            </td>
+            <td>
+                <button class="class_select" disabled style="opacity: 0.3;">
+                    <a class="icns gray">.</a><br>
+                    <span style="font-size: 10px;">-</span>
+                </button>
+            </td>
+        </tr>
+    </table>
+    
+    <p id="bag_status_text" style="font-size: 10px; color: #555; margin-top: 10px;">SYSTEM CAPACITY: 0/10</p>
+    
+    <div style="margin-top: 20px;">
+        <button class="play_bttn" onclick="hud(11)" style="padding: 10px 40px;">RETURN</button>
     </div>
+</div>
 
     <div id="battle" style="display: none;">
         <h2 style="text-align: center;">BATTLE</h2>
@@ -136,7 +192,9 @@
         <br>
         <table style="width: 100%; table-layout: fixed; text-align: center;">
             <tr>
-                <td id="player_status" style="font-size: 10px; color: gray;">FOCUSED</td>
+                <td id="player_status" style="font-size: 10px; color: #00ff00;">
+                    BUFFS: <span id="dmg_buff_val">0</span> ATK | <span id="arm_buff_val">0</span> DEF
+                </td>
                 <td id="enemy_status" style="font-size: 10px; color: gray;">NORMAL</td>
             </tr>
             <tr>
@@ -151,6 +209,11 @@
                 <td><span class="blue icns">%</span> <a id="player_battle_armor">10</a></td>
                 <td><span class="blue icns">%</span> <a id="enemy_battle_armor">10</a></td>
             </tr>
+
+            <tr>
+                <td id="player_mental_state" style="font-size: 10px; letter-spacing: 1px;">MIND: CALM</td>
+                <td></td>
+            </tr>
         </table>
 
         <div style="height: 50px; text-align: center; margin-top: 5px; padding: 0 10px;">
@@ -160,14 +223,18 @@
         <hr>
 
         <div class="combat_book">
-                <button class="book_action" onclick="Battle_System(2)">SWORD STRIKE</button>
-                <button class="book_action" onclick="Battle_System(15)">PIMP SLAP</button>
-                <button id="repair_btn" class="book_action" onclick="Battle_System(16)">REPAIR (3G)</button>
-                <button id="bribe_btn" class="book_action" onclick="Battle_System(13)">BRIBE (5G)</button>
-                <button class="book_action" onclick="Battle_System(11)">ANALYZE</button>
-                <button class="book_action" onclick="Battle_System(5)">HEAL (1x FOOD)</button>
-                <button class="book_action" onclick="Battle_System(12)">BREATHE</button>
-        </div>
+    <button class="book_action" onclick="Battle_System(2)">ATTACK</button>
+    <button class="book_action" onclick="Battle_System(11)">ANALYZE</button>
+    
+    <button class="book_action" onclick="Battle_System(20)">DMG POT</button>
+    <button class="book_action" onclick="Battle_System(21)">STR POT</button>
+
+    <button class="book_action" onclick="Battle_System(5)">HEAL</button>
+    <button class="book_action" onclick="Battle_System(12)">BREATHE</button>
+    
+    <button id="bribe_btn" class="book_action" onclick="Battle_System(13)">BRIBE</button>
+    <button class="book_action" onclick="Battle_System(15)">SLAP</button>
+</div>
     </div>
 
     <div id="loot" style="display: none; text-align: center;">

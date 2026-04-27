@@ -40,7 +40,11 @@ var player = {
     thp: 20,     // Starting Armor baseline
     str: 10,     // Baseline Damage
     stv: 0,
-	status: "Normal"
+	status: "Normal",
+    dmg_buff: 0,
+    arm_buff: 0,
+    stress: 0,
+    stress_stage: "Calm" // Stages: Calm, Anxious, Stressed, Panicked
 };
 
 
@@ -238,34 +242,71 @@ function Battle_System(callout) {
                 document.getElementById("bribe_btn").innerHTML = `BRIBE (${bribe_cost}G)`;
             if(document.getElementById("repair_btn")) 
                 document.getElementById("repair_btn").innerHTML = `REPAIR (${repair_cost}G)`;
+
+            // Update the new buff indicators
+            document.getElementById("dmg_buff_val").innerHTML = player.dmg_buff;
+            document.getElementById("arm_buff_val").innerHTML = player.arm_buff;
+
+            // Change color if buffs are active to grab attention
+            if (player.dmg_buff > 0 || player.arm_buff > 0) {
+                document.getElementById("player_status").style.color = "#00ff00"; // Neon green for active
+            } else {
+                document.getElementById("player_status").style.color = "gray";
+            }
+            
+           let mentalEl = document.getElementById("player_mental_state");
+            if (mentalEl) {
+                mentalEl.innerHTML = `MIND: ${player.stress_stage}`;
+                mentalEl.style.color = getStressColor();
+            }
             break;
 
         case 2: // SWORD STRIKE
-    enemy.hp -= player.str; 
-    log.innerHTML = `You hit the ${enemy.name} for ${player.str} damage.`;
+            let total_dmg = player.str + player.dmg_buff;
     
-    Battle_System(1); // Refresh health
+            // Attacking while heavily buffed is mentally taxing
+            if (player.dmg_buff > 0 || player.arm_buff > 0) {
+                player.stress += 5;
+                updateStressStage();
+            }
 
-    if (enemy.hp <= 0) {
-        Battle_System(9); // Victory!
-    } else {
-        // The enemy is still alive, so it's their turn
-        setTimeout(enemy_turn, 800); 
-    }
-    break;
+            enemy.hp -= total_dmg;
+            log.innerHTML = `You hit the ${enemy.name} for ${total_dmg} damage.`;
+            
+            Battle_System(1);
+            if (enemy.hp <= 0) {
+                // Reset stress slightly on victory for that 'relief' feel
+                player.stress = Math.max(0, player.stress - 15);
+                player.dmg_buff = 0;
+                player.arm_buff = 0;
+                updateStressStage();
+                Battle_System(9); 
+            } else {
+                setTimeout(enemy_turn, 800); 
+            }
+            break;
 
         case 5: // HEAL (Uses Health Pot)
-    if (inv[3] > 0) { // Index 3 is Health Pot
-        inv[3]--;
-        player.hp += 10; 
-        // Note: You currently don't have player.mhp (Max HP) defined, 
-        // you might want to add that to the player object later.
-        log.innerHTML = "You drank a Health Potion.";
-    } else {
-        log.innerHTML = "You're out of potions!";
-    }
-    Battle_System(1);
-    break;
+            if (inv[3] > 0) { // Index 3 is Health Pot
+                inv[3]--;
+                player.hp += 10; 
+                // Note: You currently don't have player.mhp (Max HP) defined, 
+                // you might want to add that to the player object later.
+                log.innerHTML = "You drank a Health Potion.";
+            } else {
+                log.innerHTML = "You're out of potions!";
+            }
+            Battle_System(1);
+            break;
+
+        case 11: // ANALYZE
+            log.innerHTML = `<b>Target:</b> ${enemy.name}<br>`;
+            log.innerHTML += `<b>Attack:</b> ${enemy.dmg} | <b>Armor:</b> ${enemy.arm}`;
+            
+            // Always a quick action so players actually use it
+            log.innerHTML += "<br><i>Tactical advantage gained! (Free Action)</i>";
+            Battle_System(1);
+            break;
 
         case 13: // THE BRIBE
             if (inv[0] >= bribe_cost) {
@@ -306,45 +347,101 @@ function Battle_System(callout) {
             Battle_System(1);
             break;
 
+        // Replace your potion cases (20 and 21) in Battle_System with this logic
+        case 20: // USE DMG POTION
+            if (inv[1] > 0) {
+                inv[1]--;
+                player.dmg_buff += 5;
+                player.stress += 10; // "Chemical" stress
+                updateStressStage();
+                log.innerHTML = "Dmg Potion consumed. Mind racing...";
+                
+                // Quick Action Check: 40% chance to keep your turn
+                if (Math.random() > 0.6) {
+                    log.innerHTML += "<br><b>QUICK ACTION!</b> You still have an move.";
+                    Battle_System(1);
+                } else {
+                    setTimeout(enemy_turn, 800);
+                }
+            }
+            break;
+
+        case 21: // USE STR POTION
+            if (inv[2] > 0) {
+                inv[2]--;
+                player.arm_buff += 5;
+                player.thp += 5;
+                player.stress += 10;
+                updateStressStage();
+                log.innerHTML = "Str Potion consumed. Body tensing...";
+
+                if (Math.random() > 0.6) {
+                    log.innerHTML += "<br><b>QUICK ACTION!</b> You still have an move.";
+                    Battle_System(1);
+                } else {
+                    setTimeout(enemy_turn, 800);
+                }
+            }
+            break;
+
+        // Inside Battle_System switch
+        case 22: // USE STRESS RELIEF (Index 4 - Scrolls/Holy Water)
+            if (inv[4] > 0) {
+                inv[4]--;
+                player.stress = Math.max(0, player.stress - 30);
+                if (player.isPanicked && player.stress < 50) {
+                    player.isPanicked = false;
+                    player.str += 5; // Recovery
+                    log.innerHTML = "You regained your composure.";
+                }
+                log.innerHTML = "Stress reduced!";
+            }
+            Battle_System(1);
+            break;
+
         case 9: // VICTORY
-        rooms_cleared++;
-        log.innerHTML = `The ${enemy.name} is dead.`;
-        
-        // Trigger the new scaling loot system instead of just flat gold
-        setTimeout(() => { 
-            processLootDrop(rooms_cleared); 
-        }, 1500);
-        break;
+            rooms_cleared++;
+            log.innerHTML = `The ${enemy.name} is dead.`;
+            
+            // Reset combat-only buffs
+            player.dmg_buff = 0;
+            player.arm_buff = 0;
+
+            setTimeout(() => { 
+                processLootDrop(rooms_cleared); 
+            }, 1500);
+            break;
     }
 }
 
 function enemy_turn() {
     let log = document.getElementById("encounter_battle_test");
-    
-    // Calculate damage: Enemy Dmg - (tiny bit of player mobility luck)
-    let damage = enemy.dmg; 
-    
-    // 1. Check Armor (THP) first
-    if (player.thp > 0) {
-        let armorDamage = Math.min(player.thp, damage);
-        player.thp -= armorDamage;
-        damage -= armorDamage;
-        log.innerHTML += `<br>Your armor soaked up ${armorDamage} damage!`;
-    }
+    let decision = Math.random();
 
-    // 2. Remaining damage hits HP
-    if (damage > 0) {
+    // 1. Desperation Move: If enemy is low health, they might "Berserk"
+    if (enemy.hp < (enemy.max_hp * 0.3) && decision > 0.5) {
+        let critDmg = Math.floor(enemy.dmg * 1.5);
+        player.hp -= critDmg;
+        log.innerHTML = `The ${enemy.name} goes into a frenzy! You take ${critDmg} damage!`;
+        addStress(10); // Dealing big damage causes player stress
+    } 
+    // 2. Tactical Move: If player has high armor buffs, enemy might "Sunder"
+    else if (player.arm_buff > 0 && decision > 0.7) {
+        player.arm_buff = Math.max(0, player.arm_buff - 5);
+        player.thp = Math.max(0, player.thp - 5);
+        log.innerHTML = `The ${enemy.name} sunders your defenses! Armor reduced.`;
+        addStress(5);
+    }
+    // 3. Standard Attack
+    else {
+        let damage = enemy.dmg;
+        // ... (Your existing armor-soaking logic)
         player.hp -= damage;
-        log.innerHTML += `<br>The ${enemy.name} hits you for ${damage} HP!`;
+        log.innerHTML = `The ${enemy.name} strikes for ${damage} damage.`;
     }
 
-    // 3. Update UI and check for Death
-    Battle_System(1); // Refresh the bars
-    
-    if (player.hp <= 0) {
-        log.innerHTML = "You died. The Narrator is laughing at your corpse.";
-        setTimeout(() => { location.reload(); }, 3000);
-    }
+    Battle_System(1);
+    checkPlayerDeath();
 }
 
 function getBagCount() {
@@ -422,9 +519,37 @@ function updateInventoryUI() {
     document.getElementById("inventory-list").innerText = invString;
 }
 
-function Stats(){
-    updateInventoryUI();
-    hud(12);
+function Stats() {
+    // 1. Identification
+    // Use the player_class array to get the name string
+    document.getElementById("stat_class_name").innerText = player_class[player.class].toUpperCase();
+    
+    // 2. Core Vitals
+    document.getElementById("stat_hp").innerText = "HP: " + player.hp;
+    document.getElementById("stat_str").innerText = "ATK: " + player.str;
+    document.getElementById("stat_thp").innerText = "ARM: " + player.thp;
+    
+    // 3. Mental State Styling
+    let mentalStat = document.getElementById("player_mental_state_stats");
+    mentalStat.innerText = `MIND STATUS: ${player.stress_stage}`;
+    mentalStat.style.color = getStressColor(); // Uses your purple/yellow/orange/red logic
+
+    // 4. Inventory Slot Updates
+    // Loop through the known item indices (0: Gold, 1: Dmg, 2: Str, 3: HP, 4: Scrolls)
+    for (let i = 0; i < 5; i++) {
+        let qtyEl = document.getElementById(`inv_qty_${i}`);
+        if (qtyEl) {
+            qtyEl.innerText = inv[i];
+            // Dim the button if the slot is empty for a "ghost" effect
+            qtyEl.parentElement.style.opacity = (inv[i] > 0) ? "1.0" : "0.4";
+        }
+    }
+
+    // 5. Capacity Check
+    let currentTotal = getBagCount(); // Helper from your code
+    document.getElementById("bag_status_text").innerText = `SYSTEM CAPACITY: ${currentTotal} / ${bag_limit}`;
+    
+    hud(12); // Display the screen
 }
 
 function getLootDrop(floor) {
@@ -440,4 +565,63 @@ function getLootDrop(floor) {
 function getEliteLoot() {
     // Elites never drop Gold; they only drop consumables (Indices 1-4)
     return Math.floor(Math.random() * 4) + 1; 
+}
+
+function addStress(amount) {
+    player.stress += amount;
+    if (player.stress >= player.max_stress) {
+        player.stress = player.max_stress;
+        triggerPanic();
+    }
+    updateUI();
+}
+
+function triggerPanic() {
+    if (!player.isPanicked) {
+        player.isPanicked = true;
+        player.str -= 5; // Panic reduces effectiveness
+        logMessage("HEART RATE INCREASING... You are PANICKED! (-5 DMG)");
+    }
+}
+
+function updateStressStage() {
+    if (player.stress < 20) {
+        player.stress_stage = "CALM";
+    } else if (player.stress < 50) {
+        player.stress_stage = "ANXIOUS";
+    } else if (player.stress < 80) {
+        player.stress_stage = "STRESSED";
+    } else {
+        player.stress_stage = "PANIC";
+    }
+}
+
+function getStressColor() {
+    switch(player.stress_stage) {
+        case "CALM": return "#ff00ff";     // Classic 8-bit Purple
+        case "ANXIOUS": return "yellow";
+        case "STRESSED": return "orange";
+        case "PANIC": return "red";
+        default: return "white";
+    }
+}
+
+function checkPlayerDeath() {
+    if (player.hp <= 0) {
+        // The roast for the final failure
+        let log = document.getElementById("encounter_battle_test");
+        if (log) {
+            log.innerHTML = "You died. The Narrator is laughing at your corpse.";
+        } else {
+            alert("You actually died. That's impressive.");
+        }
+
+        // Delay the reload so the player can process the loss
+        setTimeout(() => { 
+            location.reload(); 
+        }, 3000);
+        
+        return true; // The player is dead
+    }
+    return false; // The player lives to fight another round
 }
