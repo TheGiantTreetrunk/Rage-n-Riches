@@ -492,3 +492,18 @@ button:disabled {
     box-sizing: border-box;
     z-index: 100; /* Keeps it above the dungeon floor */
 }
+
+#loot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 350px;
+    background-color: #000;
+    border: none; /* Removed the yellow/white border */
+    padding: 20px;
+    text-align: center;
+    z-index: 999;
+    box-sizing: border-box;
+}

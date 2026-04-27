@@ -90,6 +90,7 @@ function Start() {
 	document.getElementById("battle").style.display = "none";
 	document.getElementById("door").style.display = "none";
     document.getElementById("stats").style.display = "none";
+    document.getElementById("loot").style.display = "none";
     rooms_cleared = 0;
 }
 
@@ -100,6 +101,7 @@ function hud(callout) {
     document.getElementById("door").style.display = "none";
     document.getElementById("battle").style.display = "none";
     document.getElementById("stats").style.display = "none";
+    document.getElementById("loot").style.display = "none";
 
     switch(callout) {
         case 0: // Splash -> Class Select
@@ -122,6 +124,10 @@ function hud(callout) {
             break;
         case 13:
             document.getElementById("door").style.display = "block";
+            break;
+        case 15: 
+            document.getElementById("loot").style.display = "block"; 
+            break;
     }
 }
 
@@ -466,30 +472,32 @@ function pickUpItem(idx, qty = 1) {
     return false; // Returns false if it doesn't fit
 }
 
-// The Generator: Specific to combat/dungeon drops
-// The Generator: Updated to trigger the Loot UI
-function processLootDrop(floor) {
-    let itemIdx = getLootDrop(floor); // Use your weighted math
-    let lootText = document.getElementById("loot_text");
-    
-    // Switch to Loot Screen
-    document.getElementById("battle").style.display = "none";
-    document.getElementById("loot").style.display = "block";
+var pendingItem = 0;
 
-    if (itemIdx === 0) {
-        // Gold handling: Always fits, so we just add it
-        let goldAmount = Math.floor(Math.random() * 5) + 1;
-        inv[0] += goldAmount;
-        lootText.innerHTML = `You found ${goldAmount} Gold!`;
+function processLootDrop(floor) {
+    pendingItem = getLootDrop(floor); 
+    
+    const iconMap = ["$", "!", "%", "~", "?"];
+    const colorMap = ["yellow", "cyan", "blue", "red", "magenta"];
+    
+    document.getElementById("loot_icon").innerText = iconMap[pendingItem];
+    document.getElementById("loot_icon").className = "icns " + colorMap[pendingItem];
+    document.getElementById("loot_item_name").innerText = itm_nm[pendingItem].toUpperCase();
+    
+    // Check if bag is full
+    let isFull = getBagCount() >= bag_limit;
+    document.getElementById("loot_cap_msg").style.visibility = isFull ? "visible" : "hidden";
+
+    hud(15); // This triggers the centering and display
+}
+
+function acceptLoot() {
+    if (getBagCount() < bag_limit) {
+        inv[pendingItem]++;
+        logMessage("Stashed " + itm_nm[pendingItem]);
+        hud(11); // Return to dungeon
     } else {
-        // Consumable handling: Check the Gatekeeper
-        let success = pickUpItem(itemIdx);
-        
-        if (success) {
-            lootText.innerHTML = `Found ${itm_nm[itemIdx]}!<br><small>Inventory: ${getBagCount()}/${bag_limit}</small>`;
-        } else {
-            lootText.innerHTML = `<span style="color:red;">Bag Full!</span><br>You had to leave the ${itm_nm[itemIdx]} behind.`;
-        }
+        logMessage("Bag is full! You can't carry anymore.");
     }
 }
 

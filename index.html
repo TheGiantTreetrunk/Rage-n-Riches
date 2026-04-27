@@ -237,15 +237,26 @@
 </div>
     </div>
 
-    <div id="loot" style="display: none; text-align: center;">
-        <h1>Loot Found!</h1>
-        <hr>
-        <div id="loot_display" style="margin: 20px 0;">
-            <p id="loot_text" style="font-size: 18px; color: yellow;"></p>
+<div id="loot">
+    <h1 style="font-size: 16px; color: #fff;">LOOT DETECTED</h1>
+    <hr style="border: 1px solid #fff; width: 60%; margin: 10px auto;">
+    
+    <p id="loot_text" style="font-size: 11px; margin: 10px 0;">Enemy dropped cargo:</p>
+
+    <div style="display: flex; justify-content: center; margin: 15px 0;">
+        <div class="class_select" style="border-color: #fff; cursor: default; width: 70px; height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <a id="loot_icon" class="icns" style="font-size: 24px;">?</a>
+            <span id="loot_item_name" style="font-size: 9px; color: #fff; margin-top: 4px;">ITEM</span>
         </div>
-        <hr>
-        <button class="play_bttn" onclick="closeLootUI()">OK!</button>
     </div>
+
+    <p id="loot_cap_msg" style="font-size: 9px; color: #fff; visibility: hidden;">CARGO BAY FULL</p>
+
+    <div style="display: flex; justify-content: center; gap: 8px; margin-top: 15px;">
+        <button class="play_bttn" onclick="acceptLoot()" style="border-color: #fff; flex: 1;">STASH</button>
+        <button class="play_bttn" onclick="hud(11)" style="border-color: #fff; flex: 1;">LEAVE</button>
+    </div>
+</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
