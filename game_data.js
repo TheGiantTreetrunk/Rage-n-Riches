@@ -210,7 +210,7 @@ function Door_Action(type) {
 function Battle_System(callout) {
     let log = document.getElementById("encounter_battle_test");
     // Scaling Costs based on your global trackers
-    let bribe_cost = 5 + (bribes_given * 5);
+    let bribe_cost = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
     let repair_cost = 3 + (repairs_made * 4);
 
     switch(callout) {
@@ -265,6 +265,11 @@ function Battle_System(callout) {
                 mentalEl.innerHTML = `MIND: ${player.stress_stage}`;
                 mentalEl.style.color = getStressColor();
             }
+
+            let dynamic_bribe = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
+            if(document.getElementById("bribe_btn")) {
+                document.getElementById("bribe_btn").innerHTML = `BRIBE (${dynamic_bribe}G)`;
+            }
             break;
 
         case 2: // SWORD STRIKE
@@ -315,19 +320,27 @@ function Battle_System(callout) {
             break;
 
         case 13: // THE BRIBE
-            if (inv[0] >= bribe_cost) {
-                inv[0] -= bribe_cost;
+            // Calculate cost locally for the check
+            let current_bribe = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
+
+            if (inv[0] >= current_bribe) {
+                inv[0] -= current_bribe;
+                
+                // 70% Success Rate - The more you bribe, the more "notorious" you get
                 if (Math.random() > 0.3) { 
                     bribes_given++;
                     log.innerHTML = getRoast("bribe_success");
-                    setTimeout(() => { hud(11); }, 1500); // Back to next door
+                    
+                    // Short delay so they can read the roast before the screen swaps
+                    setTimeout(() => { hud(11); }, 1500); 
                 } else {
                     log.innerHTML = "They took the money and stayed. FAFO.";
+                    // Still refresh UI to show the lost gold
+                    Battle_System(1);
                 }
             } else {
                 log.innerHTML = "Too broke to be this lazy.";
             }
-            Battle_System(1);
             break;
 
         case 15: // THE PIMP SLAP
@@ -475,29 +488,38 @@ function pickUpItem(idx, qty = 1) {
 var pendingItem = 0;
 
 function processLootDrop(floor) {
-    pendingItem = getLootDrop(floor); 
-    
-    const iconMap = ["$", "!", "%", "~", "?"];
-    const colorMap = ["yellow", "cyan", "blue", "red", "magenta"];
-    
-    document.getElementById("loot_icon").innerText = iconMap[pendingItem];
-    document.getElementById("loot_icon").className = "icns " + colorMap[pendingItem];
-    document.getElementById("loot_item_name").innerText = itm_nm[pendingItem].toUpperCase();
-    
-    // Check if bag is full
-    let isFull = getBagCount() >= bag_limit;
-    document.getElementById("loot_cap_msg").style.visibility = isFull ? "visible" : "hidden";
+    // 1. Roll for a random item ID (skipping index 0 if that's reserved for Gold)
+    pendingItem = Math.floor(Math.random() * (itm_nm.length - 1)) + 1; 
 
-    hud(15); // This triggers the centering and display
+    // 2. Update the UI icon and text
+    const iconMap = ["<", "<", "<", "<", "<", "<"]; // Ensure this matches your itm_nm indices
+    document.getElementById("loot_icon").innerText = iconMap[pendingItem] || "?";
+    document.getElementById("loot_item_name").innerText = itm_nm[pendingItem].toUpperCase();
+    document.getElementById("loot_item_name").style.fontFamily = "main";
+    
+    // 3. Reset the "Full" message visibility
+    document.getElementById("loot_cap_msg").style.visibility = "hidden";
+
+    // 4. Show the monochrome loot window
+    hud(15); 
 }
 
 function acceptLoot() {
-    if (getBagCount() < bag_limit) {
-        inv[pendingItem]++;
-        logMessage("Stashed " + itm_nm[pendingItem]);
-        hud(11); // Return to dungeon
+    // Calculate total items currently in bag (excluding Gold at index 0)
+    let bagCount = 0;
+    for (let i = 1; i < inv.length; i++) {
+        bagCount += inv[i];
+    }
+
+    if (bagCount < 10) { // Your 10-item limit
+        inv[pendingItem]++; // THE FIX: Increment the actual inventory array
+        //logMessage(`${itm_nm[pendingItem]} STASHED IN CARGO.`);
+        
+        pendingItem = -1; // Clear the floor
+        hud(11); // Return to the dungeon/next door
     } else {
-        logMessage("Bag is full! You can't carry anymore.");
+        // Trigger your "CARGO BAY FULL" warning in the UI
+        document.getElementById("loot_cap_msg").style.visibility = "visible";
     }
 }
 
@@ -555,7 +577,7 @@ function Stats() {
 
     // 5. Capacity Check
     let currentTotal = getBagCount(); // Helper from your code
-    document.getElementById("bag_status_text").innerText = `SYSTEM CAPACITY: ${currentTotal} / ${bag_limit}`;
+    document.getElementById("bag_status_text").innerText = `Total Capacity: ${currentTotal} / ${bag_limit}`;
     
     hud(12); // Display the screen
 }
