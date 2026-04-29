@@ -50,10 +50,10 @@ var player = {
 
 var player_class = ["Hooman","Fighter","Alchemist","Theologian","Ranger","Monk","Knight","Troubadour","Artillerist"];
 var player_colors = ["white","red","blue","brown","green","yellow","purple","cyan","magenta"];
-var player_class_health = [0,12,6,12,10,8,14,10,8];
-var player_class_damage = [0,4,5,2,3,2,3,2,5];
-var player_class_stv = [0,10,1,6,4,2,12,6,4];
-var player_class_thp = [0,10,0,6,4,2,15,6,4];
+var player_class_health = [0, 15, 8, 15, 12, 10, 17, 12, 10];
+var player_class_damage = [0, 6, 6, 3, 4, 3, 6, 3, 8];
+var player_class_stv    = [0, 12, 2, 8, 5, 3, 15, 8, 5];
+var player_class_thp    = [0, 12, 0, 8, 5, 3, 18, 8, 5];
 var player_class_unique_weapon = ["Zweihandler","Musket","Mace","Long Bow","Quarterstaff","Long Sword","Rapier","Rifle"];
 var player_class_unique_armor = ["Field Plate","Simple Clothes","Brigandine","Leather Coat","Padded Gambeson","Gothic Plate","Mail Hauberk","Leather Coat"];
 var player_class_unique_shield = ["None","None","Heater","None","None","Kite","Buckler","None"];
@@ -149,27 +149,36 @@ function class_selection(class_num, button_element) {
     player.str = player_class_damage[class_num];
     player.thp = player_class_thp[class_num];
     player.stv = player_class_stv[class_num];
+    
+    // Set the starting Multiplier and Reset Status
+    player.weapon_mult = 1.0; 
+    player.isPanicked = false;
+    player.stress = 0;
 
     // 3. Handle the CSS Color and Icon Logic
+    // class_data contains the Name and Descriptions
     if (class_data[class_num]) {
         var selected_class = class_data[class_num];
-        var selectedColorClass = player_colors[class_num]; // e.g., "red", "blue"
+        var selectedColorClass = player_colors[class_num]; 
 
-        // Update the Class Select Menu UI
-        document.getElementById("name_of_class").innerHTML = selected_class.name;
+        // Update the Class Select Menu UI Text
+        document.getElementById("name_of_class").innerHTML = selected_class.name.toUpperCase();
         document.getElementById("class_description").innerHTML = selected_class.description;
         
-        // This keeps your @ icon colored correctly
+        // Update Icons & Color (matching your monochrome/color-class logic)
         document.getElementById("class_icon").innerHTML = `<a class='icns ${selectedColorClass}'>@</a>`;
-        
-        // Update the Battle Icon color ahead of time
         document.getElementById("player_battle_icon").className = `icns ${selectedColorClass}`;
         
-        // Display stats in the menu
+        // 4. Display Weapon/Armor Info + Stats in the menu
+        // This adds that "Legit" feel by showing their gear names
+        let gearInfo = `<br><span style='font-size:10px; color:#888;'>WEAPON: ${player_class_unique_weapon[class_num-1]}<br>
+                        ARMOR: ${player_class_unique_armor[class_num-1]}</span>`;
+
         document.getElementById("class_stats").innerHTML = `
-            <a class='red icns'>~</a> ${player_class_health[class_num]}
-            <a class='yellow icns'>|</a> ${player_class_damage[class_num]} 
-            <a class='purple icns'>{</a> ${player_class_thp[class_num]}`;
+            <a class='red icns'>~</a> ${player.hp} 
+            <a class='yellow icns'>|</a> ${player.str} 
+            <a class='purple icns'>{</a> ${player.thp}
+            ${gearInfo}`;
     }
 }
 
@@ -217,19 +226,23 @@ function Battle_System(callout) {
         case 0: // SPAWN ENEMY
             enemy_type = Math.floor(Math.random() * enemy_nme.length);
             
-            // Set the active stats for this specific fight into the object
+            // Calculate Scaled Health: Base HP + (Floor * Scaling Factor)
+            // Example: Floor 1 adds 5 HP, Floor 10 adds 50 HP.
+            let base_hp = enemy_hth[enemy_type];
+            let scaled_hp = base_hp + (rooms_cleared * 5); 
+
             enemy = {
                 name: enemy_nme[enemy_type],
-                hp: enemy_hth[enemy_type],
-                max_hp: enemy_hth[enemy_type],
-                dmg: enemy_dmg[enemy_type],
+                hp: scaled_hp,
+                max_hp: scaled_hp, // Important for the "Berserk" logic
+                dmg: enemy_dmg[enemy_type] + Math.floor(rooms_cleared / 2), // Tiny dmg scale too
                 arm: enemy_arm[enemy_type],
                 icon: enemy_icn[enemy_type],
                 color: enemy_clr[enemy_type]
             };
 
             log.innerHTML = getRoast("battle_start", enemy.name);
-            Battle_System(1); // Refresh UI to show new enemy
+            Battle_System(1); // Refresh UI to show new scaled stats
             break;
 
         case 1: // REFRESH UI
@@ -253,9 +266,10 @@ function Battle_System(callout) {
             document.getElementById("dmg_buff_val").innerHTML = player.dmg_buff;
             document.getElementById("arm_buff_val").innerHTML = player.arm_buff;
 
-            // Change color if buffs are active to grab attention
+            // Look for this inside Battle_System case 1:
             if (player.dmg_buff > 0 || player.arm_buff > 0) {
-                document.getElementById("player_status").style.color = "#00ff00"; // Neon green for active
+                // Change "#00ff00" to "white" if you want to remove the green too
+                document.getElementById("player_status").style.color = "white"; 
             } else {
                 document.getElementById("player_status").style.color = "gray";
             }
@@ -436,27 +450,65 @@ function Battle_System(callout) {
 function enemy_turn() {
     let log = document.getElementById("encounter_battle_test");
     let decision = Math.random();
+    let damageToApply = 0;
+    let attackType = "";
 
-    // 1. Desperation Move: If enemy is low health, they might "Berserk"
+    // 1. Determine Base Damage & Attack Type
     if (enemy.hp < (enemy.max_hp * 0.3) && decision > 0.5) {
-        let critDmg = Math.floor(enemy.dmg * 1.5);
-        player.hp -= critDmg;
-        log.innerHTML = `The ${enemy.name} goes into a frenzy! You take ${critDmg} damage!`;
-        addStress(10); // Dealing big damage causes player stress
+        damageToApply = Math.floor(enemy.dmg * 1.5);
+        attackType = "BERSERK";
     } 
-    // 2. Tactical Move: If player has high armor buffs, enemy might "Sunder"
     else if (player.arm_buff > 0 && decision > 0.7) {
+        // SUNDER: Stays direct because it's a debuff, not just raw damage
         player.arm_buff = Math.max(0, player.arm_buff - 5);
         player.thp = Math.max(0, player.thp - 5);
         log.innerHTML = `The ${enemy.name} sunders your defenses! Armor reduced.`;
         addStress(5);
+        // Skip the health damage logic below
+        damageToApply = 0; 
     }
-    // 3. Standard Attack
     else {
-        let damage = enemy.dmg;
-        // ... (Your existing armor-soaking logic)
-        player.hp -= damage;
-        log.innerHTML = `The ${enemy.name} strikes for ${damage} damage.`;
+        damageToApply = enemy.dmg;
+        attackType = "STANDARD";
+    }
+
+    // 2. SHIELD-FIRST DAMAGE LOGIC
+    // Only run this if an attack actually dealt damage
+    if (damageToApply > 0) {
+        let finalDamage = damageToApply;
+        
+        if (player.thp > 0) {
+            if (player.thp >= finalDamage) {
+                // Armor absorbs all
+                player.thp -= finalDamage;
+                log.innerHTML = attackType === "BERSERK" 
+                    ? `FRENZY! Your armor absorbed all ${finalDamage} damage!` 
+                    : `The ${enemy.name} hits your armor for ${finalDamage}.`;
+                finalDamage = 0; 
+            } else {
+                // Armor shatters, spillover to HP
+                let spillover = finalDamage - player.thp;
+                player.thp = 0;
+                player.hp -= spillover;
+                log.innerHTML = attackType === "BERSERK"
+                    ? `FRENZY! Armor shattered! You took ${spillover} spillover damage!`
+                    : `Armor destroyed! You took ${spillover} damage to vitals.`;
+                finalDamage = spillover;
+            }
+        } else {
+            // No armor, direct hit
+            player.hp -= finalDamage;
+            log.innerHTML = attackType === "BERSERK"
+                ? `FRENZY! You took ${finalDamage} raw damage!`
+                : `The ${enemy.name} strikes for ${finalDamage} damage.`;
+        }
+
+        // 3. Stress scaling
+        if (attackType === "BERSERK") {
+            addStress(10);
+        } else if (finalDamage > 0) {
+            addStress(5);
+        }
     }
 
     Battle_System(1);
@@ -488,21 +540,50 @@ function pickUpItem(idx, qty = 1) {
 var pendingItem = 0;
 
 function processLootDrop(floor) {
-    // 1. Roll for a random item ID (skipping index 0 if that's reserved for Gold)
-    pendingItem = Math.floor(Math.random() * (itm_nm.length - 1)) + 1; 
+    // 1. Determine how many items drop based on floor milestones
+    let lootCount = 1;
+    if (floor >= 8) {
+        lootCount = 4;
+    } else if (floor >= 6) {
+        lootCount = 3;
+    } else if (floor >= 4) {
+        lootCount = 2;
+    }
 
-    // 2. Update the UI icon and text
-    const iconMap = ["<", "<", "<", "<", "<", "<"]; // Ensure this matches your itm_nm indices
+    // 2. Clear the floor/loot screen state
+    document.getElementById("loot_cap_msg").style.visibility = "hidden";
+    
+    // 3. Roll the loot! 
+    // If multiple items drop, we can either stack them or just show the first one.
+    // For a single-file "Accept" screen, the cleanest way is to give Gold 
+    // for the extra items and let the player choose 1 physical item.
+    
+    if (lootCount > 1) {
+        let bonusGold = (lootCount - 1) * (Math.floor(Math.random() * 5) + 5);
+        inv[0] += bonusGold;
+        // Optional: log or show that they got bonus gold for the extra kills
+    }
+
+    // 4. Roll for the physical item the player can "STASH"
+    pendingItem = Math.floor(Math.random() * (itm_nm.length - 1)) + 1;
+
+    // 5. Update UI
+    const iconMap = ["$", "!", "%", "~", "?", "*"];
     document.getElementById("loot_icon").innerText = iconMap[pendingItem] || "?";
     document.getElementById("loot_item_name").innerText = itm_nm[pendingItem].toUpperCase();
     document.getElementById("loot_item_name").style.fontFamily = "main";
     
-    // 3. Reset the "Full" message visibility
-    document.getElementById("loot_cap_msg").style.visibility = "hidden";
+    // If on a high floor, maybe change the icon color to show it's "High Tier"
+    if (lootCount > 1) {
+        document.getElementById("loot_icon").style.color = "yellow";
+    } else {
+        document.getElementById("loot_icon").style.color = "white";
+    }
 
-    // 4. Show the monochrome loot window
     hud(15); 
 }
+
+
 
 function acceptLoot() {
     // Calculate total items currently in bag (excluding Gold at index 0)
@@ -599,19 +680,28 @@ function getEliteLoot() {
 
 function addStress(amount) {
     player.stress += amount;
-    if (player.stress >= player.max_stress) {
-        player.stress = player.max_stress;
+    updateStressStage();
+    
+    // Check if we hit the limit
+    if (player.stress >= 100) {
+        player.stress = 100;
         triggerPanic();
     }
-    updateUI();
+
+    // THE FIX: Use your existing Battle_System refresh case
+    // This updates the health, armor, and stress stage on the screen.
+    Battle_System(1); 
 }
 
 function triggerPanic() {
     if (!player.isPanicked) {
         player.isPanicked = true;
-        player.str -= 5; // Panic reduces effectiveness
-        logMessage("HEART RATE INCREASING... You are PANICKED! (-5 DMG)");
+        player.str -= 5; 
+        // If you cleared out logMessage earlier, make sure this doesn't crash
+        let log = document.getElementById("encounter_battle_test");
+        if(log) log.innerHTML = "HEART RATE INCREASING... You are PANICKED! (-5 DMG)";
     }
+    Battle_System(1); // Keep the UI updated with the new panic state
 }
 
 function updateStressStage() {
@@ -628,10 +718,10 @@ function updateStressStage() {
 
 function getStressColor() {
     switch(player.stress_stage) {
-        case "CALM": return "#ff00ff";     // Classic 8-bit Purple
-        case "ANXIOUS": return "yellow";
-        case "STRESSED": return "orange";
-        case "PANIC": return "red";
+        case "CALM": return "white";     // Classic 8-bit Purple
+        case "ANXIOUS": return "white";
+        case "STRESSED": return "white";
+        case "PANIC": return "white";
         default: return "white";
     }
 }
