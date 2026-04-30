@@ -44,7 +44,8 @@ var player = {
     dmg_buff: 0,
     arm_buff: 0,
     stress: 0,
-    stress_stage: "Calm" // Stages: Calm, Anxious, Stressed, Panicked
+    stress_stage: "Calm", // Stages: Calm, Anxious, Stressed, Panicked
+    trait: ""
 };
 
 
@@ -154,6 +155,20 @@ function class_selection(class_num, button_element) {
     player.weapon_mult = 1.0; 
     player.isPanicked = false;
     player.stress = 0;
+
+    const traits = [
+        "",             // Hooman (Base)
+        "STEADY",       // Fighter: Reduced stress from standard combat
+        "CHEMIST",      // Alchemist: -50% stress from potions
+        "FORTITUDE",    // Theologian: Higher stress threshold before Panic
+        "CRIT",         // Ranger: Chance for double damage
+        "FOCUS",        // Monk: Buffs don't cause stress
+        "HEAVY",        // Knight: High armor, but Bribes cost 2x (too heavy to run)
+        "MORALE",       // Troubadour: Slapping enemies reduces player stress
+        "GLASS"         // Artillerist: Massive damage, but takes +5 stress on every hit
+    ];
+
+    player.trait = traits[class_num];
 
     // 3. Handle the CSS Color and Icon Logic
     // class_data contains the Name and Descriptions
@@ -287,7 +302,16 @@ function Battle_System(callout) {
             break;
 
         case 2: // SWORD STRIKE
-            let total_dmg = player.str + player.dmg_buff;
+            let base = player.str + player.dmg_buff;
+            let total_dmg = Math.floor((base * player.weapon_mult) + (Math.random() * 4));
+
+            // Ranger Passive: 20% chance to CRIT for 1.5x damage
+            if (player.trait === "CRIT" && Math.random() > 0.8) {
+                total_dmg = Math.floor(total_dmg * 1.5);
+                log.innerHTML = `CRITICAL HIT! You dealt ${total_dmg} damage!`;
+            } else {
+                log.innerHTML = `You dealt ${total_dmg} damage.`;
+            }
     
             // Attacking while heavily buffed is mentally taxing
             if (player.dmg_buff > 0 || player.arm_buff > 0) {
@@ -336,7 +360,8 @@ function Battle_System(callout) {
         case 13: // THE BRIBE
             // Calculate cost locally for the check
             let current_bribe = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
-
+            if (player.trait === "HEAVY") current_bribe *= 2; // Heavy armor makes it harder to slip away
+            
             if (inv[0] >= current_bribe) {
                 inv[0] -= current_bribe;
                 
@@ -360,7 +385,11 @@ function Battle_System(callout) {
         case 15: // THE PIMP SLAP
             if (Math.random() > 0.7) {
                 log.innerHTML = getRoast("slap_success", enemy.name);
-                enemy.hp -= 1; // Emotional Damage
+                enemy.hp -= 1;
+                if (player.trait === "MORALE") {
+                    player.stress = Math.max(0, player.stress - 10); // Troubadour relief
+                    log.innerHTML += " Your confidence grows!";
+                }
             } else {
                 log.innerHTML = getRoast("slap_fail");
                 player.hp -= 1; // Hurt your dignity (and HP)
@@ -388,6 +417,12 @@ function Battle_System(callout) {
                 player.stress += 10; // "Chemical" stress
                 updateStressStage();
                 log.innerHTML = "Dmg Potion consumed. Mind racing...";
+
+                // Inside Case 20 (Dmg Potion)
+                let stressGain = 10;
+                if (player.trait === "CHEMIST") stressGain = 5; // Alchemist passive
+                if (player.trait === "FOCUS") stressGain = 0;   // Monk passive
+                addStress(stressGain);
                 
                 // Quick Action Check: 40% chance to keep your turn
                 if (Math.random() > 0.6) {
@@ -408,6 +443,12 @@ function Battle_System(callout) {
                 updateStressStage();
                 log.innerHTML = "Str Potion consumed. Body tensing...";
 
+                // Inside Case 20 (Dmg Potion)
+                let stressGain = 10;
+                if (player.trait === "CHEMIST") stressGain = 5; // Alchemist passive
+                if (player.trait === "FOCUS") stressGain = 0;   // Monk passive
+                addStress(stressGain);
+
                 if (Math.random() > 0.6) {
                     log.innerHTML += "<br><b>QUICK ACTION!</b> You still have an move.";
                     Battle_System(1);
@@ -418,16 +459,14 @@ function Battle_System(callout) {
             break;
 
         // Inside Battle_System switch
-        case 22: // USE STRESS RELIEF (Index 4 - Scrolls/Holy Water)
-            if (inv[4] > 0) {
+        case 22: // USE SCROLL (Upgrade Weapon)
+            if (inv[4] > 0) { 
                 inv[4]--;
-                player.stress = Math.max(0, player.stress - 30);
-                if (player.isPanicked && player.stress < 50) {
-                    player.isPanicked = false;
-                    player.str += 5; // Recovery
-                    log.innerHTML = "You regained your composure.";
-                }
-                log.innerHTML = "Stress reduced!";
+                player.weapon_mult += 0.5; // This enables the scaling we planned
+                addStress(15); 
+                log.innerHTML = `ANCIENT TEXT READ. Weapon Multiplier: ${player.weapon_mult}x!`;
+            } else {
+                log.innerHTML = "You have no scrolls to read.";
             }
             Battle_System(1);
             break;
@@ -464,7 +503,6 @@ function enemy_turn() {
         player.thp = Math.max(0, player.thp - 5);
         log.innerHTML = `The ${enemy.name} sunders your defenses! Armor reduced.`;
         addStress(5);
-        // Skip the health damage logic below
         damageToApply = 0; 
     }
     else {
@@ -473,20 +511,17 @@ function enemy_turn() {
     }
 
     // 2. SHIELD-FIRST DAMAGE LOGIC
-    // Only run this if an attack actually dealt damage
     if (damageToApply > 0) {
         let finalDamage = damageToApply;
         
         if (player.thp > 0) {
             if (player.thp >= finalDamage) {
-                // Armor absorbs all
                 player.thp -= finalDamage;
                 log.innerHTML = attackType === "BERSERK" 
                     ? `FRENZY! Your armor absorbed all ${finalDamage} damage!` 
                     : `The ${enemy.name} hits your armor for ${finalDamage}.`;
                 finalDamage = 0; 
             } else {
-                // Armor shatters, spillover to HP
                 let spillover = finalDamage - player.thp;
                 player.thp = 0;
                 player.hp -= spillover;
@@ -496,19 +531,20 @@ function enemy_turn() {
                 finalDamage = spillover;
             }
         } else {
-            // No armor, direct hit
             player.hp -= finalDamage;
             log.innerHTML = attackType === "BERSERK"
                 ? `FRENZY! You took ${finalDamage} raw damage!`
                 : `The ${enemy.name} strikes for ${finalDamage} damage.`;
         }
 
-        // 3. Stress scaling
-        if (attackType === "BERSERK") {
-            addStress(10);
-        } else if (finalDamage > 0) {
-            addStress(5);
-        }
+        // 3. SPECIALIZED STRESS SCALING
+        let baseStress = (attackType === "BERSERK") ? 10 : 5;
+
+        // Apply Class Passives
+        if (player.trait === "STEADY") baseStress -= 2; // Fighter (Battle Hardened)
+        if (player.trait === "GLASS") baseStress += 5;  // Artillerist (High Tension)
+
+        addStress(baseStress);
     }
 
     Battle_System(1);
@@ -559,9 +595,11 @@ function processLootDrop(floor) {
     // for the extra items and let the player choose 1 physical item.
     
     if (lootCount > 1) {
-        let bonusGold = (lootCount - 1) * (Math.floor(Math.random() * 5) + 5);
-        inv[0] += bonusGold;
-        // Optional: log or show that they got bonus gold for the extra kills
+    // This rewards the player for the "extra" items dropped
+    let bonusGold = (lootCount - 1) * (Math.floor(Math.random() * 5) + 5);
+    inv[0] += bonusGold;
+    // Visually signal the extra loot
+    document.getElementById("loot_text").innerHTML = `Loot x${lootCount} detected! (${bonusGold}G bonus added)`;
     }
 
     // 4. Roll for the physical item the player can "STASH"
@@ -682,14 +720,13 @@ function addStress(amount) {
     player.stress += amount;
     updateStressStage();
     
-    // Check if we hit the limit
-    if (player.stress >= 100) {
-        player.stress = 100;
+    // Theologian (FORTITUDE) panics at 130, everyone else at 100
+    let panicLimit = (player.trait === "FORTITUDE") ? 130 : 100;
+
+    if (player.stress >= panicLimit) {
+        player.stress = panicLimit;
         triggerPanic();
     }
-
-    // THE FIX: Use your existing Battle_System refresh case
-    // This updates the health, armor, and stress stage on the screen.
     Battle_System(1); 
 }
 
