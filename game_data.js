@@ -1,13 +1,3 @@
-/**
-dice unicodes
-⚀ &#9856; (Dice-1)
-⚁ &#9857; (Dice-2)
-⚂ &#9858; (Dice-3)
-⚃ &#9859; (Dice-4)
-⚄ &#9860; (Dice-5)
-⚅ &#9861; (Dice-6)
-**/
-
 var bribes_given = 0; 
 var repairs_made = 0;
 
@@ -32,19 +22,19 @@ var inv = [10, 0, 0, 1, 0];
 var bag_limit = 10;
 var score = 0;
 
-// --- PLAYER BASELINE ATTRIBUTES ---
+
 var player = {
     nme: "Adventurer",
     class: "None",
-    hp: 40,      // Baseline increased from 20
-    thp: 20,     // Starting Armor baseline
-    str: 10,     // Baseline Damage
+    hp: 40,  
+    thp: 20,   
+    str: 10, 
     stv: 0,
 	status: "Normal",
     dmg_buff: 0,
     arm_buff: 0,
     stress: 0,
-    stress_stage: "Calm", // Stages: Calm, Anxious, Stressed, Panicked
+    stress_stage: "Calm", 
     trait: ""
 };
 
@@ -96,7 +86,6 @@ function Start() {
 }
 
 function hud(callout) {
-    // Hide all containers to prevent overlap
     document.getElementById("splash").style.display = "none";
     document.getElementById("menu").style.display = "none";
     document.getElementById("door").style.display = "none";
@@ -105,15 +94,15 @@ function hud(callout) {
     document.getElementById("loot").style.display = "none";
 
     switch(callout) {
-        case 0: // Splash -> Class Select
+        case 0: 
             document.getElementById("menu").style.display = "block";
             break;
-        case 10: // SHOW BATTLE
+        case 10: 
             document.getElementById("battle").style.display = "block";
             break;
-        case 11: // SHOW DOOR
+        case 11: 
             document.getElementById("door").style.display = "block";
-            // Ensure the roast text is reset for the new room
+            
             document.getElementById("door_text").innerHTML = "A new door. What's the plan, Chief?";
             for (var i = 0; i < 10; i++) {
                document.getElementById(`floor_${i}_id`).innerHTML = "<a class='door white'>_</a><a class='door brown'>:</a>"; 
@@ -137,55 +126,49 @@ function Radar(rooms_cleared) {
 }
 
 function class_selection(class_num, button_element) {
-    // 1. Manage Button Selection Visuals
+    
     var buttons = document.querySelectorAll('.class_select');
     buttons.forEach(function(button) {
         button.classList.remove('selected');
     });
     button_element.classList.add('selected');
 
-    // 2. Set the Technical Stats in the Player Object
+    
     player.class = class_num;
     player.hp = player_class_health[class_num];
     player.str = player_class_damage[class_num];
     player.thp = player_class_thp[class_num];
     player.stv = player_class_stv[class_num];
     
-    // Set the starting Multiplier and Reset Status
+    
     player.weapon_mult = 1.0; 
     player.isPanicked = false;
     player.stress = 0;
 
     const traits = [
-        "",             // Hooman (Base)
-        "STEADY",       // Fighter: Reduced stress from standard combat
-        "CHEMIST",      // Alchemist: -50% stress from potions
-        "FORTITUDE",    // Theologian: Higher stress threshold before Panic
-        "CRIT",         // Ranger: Chance for double damage
-        "FOCUS",        // Monk: Buffs don't cause stress
-        "HEAVY",        // Knight: High armor, but Bribes cost 2x (too heavy to run)
-        "MORALE",       // Troubadour: Slapping enemies reduces player stress
-        "GLASS"         // Artillerist: Massive damage, but takes +5 stress on every hit
+        "",       
+        "STEADY",      
+        "CHEMIST",    
+        "FORTITUDE",
+        "CRIT",   
+        "FOCUS",  
+        "HEAVY",  
+        "MORALE", 
+        "GLASS"  
     ];
 
     player.trait = traits[class_num];
 
-    // 3. Handle the CSS Color and Icon Logic
-    // class_data contains the Name and Descriptions
     if (class_data[class_num]) {
         var selected_class = class_data[class_num];
         var selectedColorClass = player_colors[class_num]; 
 
-        // Update the Class Select Menu UI Text
         document.getElementById("name_of_class").innerHTML = selected_class.name.toUpperCase();
         document.getElementById("class_description").innerHTML = selected_class.description;
         
-        // Update Icons & Color (matching your monochrome/color-class logic)
         document.getElementById("class_icon").innerHTML = `<a class='icns ${selectedColorClass}'>@</a>`;
         document.getElementById("player_battle_icon").className = `icns ${selectedColorClass}`;
         
-        // 4. Display Weapon/Armor Info + Stats in the menu
-        // This adds that "Legit" feel by showing their gear names
         let gearInfo = `<br><span style='font-size:10px; color:#888;'>WEAPON: ${player_class_unique_weapon[class_num-1]}<br>
                         ARMOR: ${player_class_unique_armor[class_num-1]}</span>`;
 
@@ -205,16 +188,15 @@ function Door_Action(type) {
             doorLog.innerHTML = "SUCCESS! You dynamic-entered that room.";
             
             setTimeout(() => { 
-                hud(10);          // Switch to Battle Screen
-                Battle_System(0); // Spawn the enemy
+                hud(10); 
+                Battle_System(0);
             }, 1000);
             
         } else {
-            // FIX: Changed player_hp to player.hp to match your object
+            
             player.hp -= 1; 
             doorLog.innerHTML = getRoast("door_fail");
             
-            // Safety check: if you die from kicking a door
             if (player.hp <= 0) {
                 alert("You actually died kicking a door. That's impressive.");
                 location.reload(); 
@@ -233,57 +215,50 @@ function Door_Action(type) {
 
 function Battle_System(callout) {
     let log = document.getElementById("encounter_battle_test");
-    // Scaling Costs based on your global trackers
+    
     let bribe_cost = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
     let repair_cost = 3 + (repairs_made * 4);
 
     switch(callout) {
-        case 0: // SPAWN ENEMY
+        case 0: 
             enemy_type = Math.floor(Math.random() * enemy_nme.length);
             
-            // Calculate Scaled Health: Base HP + (Floor * Scaling Factor)
-            // Example: Floor 1 adds 5 HP, Floor 10 adds 50 HP.
             let base_hp = enemy_hth[enemy_type];
             let scaled_hp = base_hp + (rooms_cleared * 5); 
 
             enemy = {
                 name: enemy_nme[enemy_type],
                 hp: scaled_hp,
-                max_hp: scaled_hp, // Important for the "Berserk" logic
-                dmg: enemy_dmg[enemy_type] + Math.floor(rooms_cleared / 2), // Tiny dmg scale too
+                max_hp: scaled_hp,
+                dmg: enemy_dmg[enemy_type] + Math.floor(rooms_cleared / 2),
                 arm: enemy_arm[enemy_type],
                 icon: enemy_icn[enemy_type],
                 color: enemy_clr[enemy_type]
             };
 
             log.innerHTML = getRoast("battle_start", enemy.name);
-            Battle_System(1); // Refresh UI to show new scaled stats
+            Battle_System(1); 
             break;
 
-        case 1: // REFRESH UI
-            // Update Player Stats from the player object
+        case 1:
+            
             document.getElementById("player_battle_health").innerHTML = player.hp;
             document.getElementById("player_battle_armor").innerHTML = player.thp;
             
-            // Update Enemy Stats from the active enemy object
             document.getElementById("enemy_battle_health").innerHTML = enemy.hp;
             document.getElementById("enemy_battle_armor").innerHTML = enemy.arm;
             document.getElementById("enemy_battle_icon").innerHTML = enemy.icon;
             document.getElementById("enemy_battle_icon").className = `icns ${enemy.color}`;
 
-            // Update Dynamic Button Text
             if(document.getElementById("bribe_btn")) 
                 document.getElementById("bribe_btn").innerHTML = `BRIBE (${bribe_cost}G)`;
             if(document.getElementById("repair_btn")) 
                 document.getElementById("repair_btn").innerHTML = `REPAIR (${repair_cost}G)`;
 
-            // Update the new buff indicators
             document.getElementById("dmg_buff_val").innerHTML = player.dmg_buff;
             document.getElementById("arm_buff_val").innerHTML = player.arm_buff;
 
-            // Look for this inside Battle_System case 1:
             if (player.dmg_buff > 0 || player.arm_buff > 0) {
-                // Change "#00ff00" to "white" if you want to remove the green too
                 document.getElementById("player_status").style.color = "white"; 
             } else {
                 document.getElementById("player_status").style.color = "gray";
@@ -301,11 +276,10 @@ function Battle_System(callout) {
             }
             break;
 
-        case 2: // SWORD STRIKE
+        case 2:
             let base = player.str + player.dmg_buff;
             let total_dmg = Math.floor((base * player.weapon_mult) + (Math.random() * 4));
 
-            // Ranger Passive: 20% chance to CRIT for 1.5x damage
             if (player.trait === "CRIT" && Math.random() > 0.8) {
                 total_dmg = Math.floor(total_dmg * 1.5);
                 log.innerHTML = `CRITICAL HIT! You dealt ${total_dmg} damage!`;
@@ -313,7 +287,6 @@ function Battle_System(callout) {
                 log.innerHTML = `You dealt ${total_dmg} damage.`;
             }
     
-            // Attacking while heavily buffed is mentally taxing
             if (player.dmg_buff > 0 || player.arm_buff > 0) {
                 player.stress += 5;
                 updateStressStage();
@@ -324,7 +297,6 @@ function Battle_System(callout) {
             
             Battle_System(1);
             if (enemy.hp <= 0) {
-                // Reset stress slightly on victory for that 'relief' feel
                 player.stress = Math.max(0, player.stress - 15);
                 player.dmg_buff = 0;
                 player.arm_buff = 0;
@@ -335,12 +307,10 @@ function Battle_System(callout) {
             }
             break;
 
-        case 5: // HEAL (Uses Health Pot)
-            if (inv[3] > 0) { // Index 3 is Health Pot
+        case 5: 
+            if (inv[3] > 0) {
                 inv[3]--;
                 player.hp += 10; 
-                // Note: You currently don't have player.mhp (Max HP) defined, 
-                // you might want to add that to the player object later.
                 log.innerHTML = "You drank a Health Potion.";
             } else {
                 log.innerHTML = "You're out of potions!";
@@ -348,33 +318,28 @@ function Battle_System(callout) {
             Battle_System(1);
             break;
 
-        case 11: // ANALYZE
+        case 11:
             log.innerHTML = `<b>Target:</b> ${enemy.name}<br>`;
             log.innerHTML += `<b>Attack:</b> ${enemy.dmg} | <b>Armor:</b> ${enemy.arm}`;
             
-            // Always a quick action so players actually use it
             log.innerHTML += "<br><i>Tactical advantage gained! (Free Action)</i>";
             Battle_System(1);
             break;
 
-        case 13: // THE BRIBE
-            // Calculate cost locally for the check
+        case 13:
             let current_bribe = Math.floor((enemy.hp + enemy.dmg) * 1.5) + (bribes_given * 10);
-            if (player.trait === "HEAVY") current_bribe *= 2; // Heavy armor makes it harder to slip away
+            if (player.trait === "HEAVY") current_bribe *= 2; 
             
             if (inv[0] >= current_bribe) {
                 inv[0] -= current_bribe;
                 
-                // 70% Success Rate - The more you bribe, the more "notorious" you get
                 if (Math.random() > 0.3) { 
                     bribes_given++;
                     log.innerHTML = getRoast("bribe_success");
                     
-                    // Short delay so they can read the roast before the screen swaps
                     setTimeout(() => { hud(11); }, 1500); 
                 } else {
                     log.innerHTML = "They took the money and stayed. FAFO.";
-                    // Still refresh UI to show the lost gold
                     Battle_System(1);
                 }
             } else {
@@ -382,26 +347,26 @@ function Battle_System(callout) {
             }
             break;
 
-        case 15: // THE PIMP SLAP
+        case 15:
             if (Math.random() > 0.7) {
                 log.innerHTML = getRoast("slap_success", enemy.name);
                 enemy.hp -= 1;
                 if (player.trait === "MORALE") {
-                    player.stress = Math.max(0, player.stress - 10); // Troubadour relief
+                    player.stress = Math.max(0, player.stress - 10);
                     log.innerHTML += " Your confidence grows!";
                 }
             } else {
                 log.innerHTML = getRoast("slap_fail");
-                player.hp -= 1; // Hurt your dignity (and HP)
+                player.hp -= 1;
             }
             Battle_System(1);
             break;
 
-        case 16: // REPAIR ARMOR
+        case 16:
             if (inv[0] >= repair_cost) {
                 inv[0] -= repair_cost;
                 repairs_made++;
-                player.thp += 5; // Restore Armor in player object
+                player.thp += 5;
                 log.innerHTML = getRoast("repair_success", "", repair_cost);
             } else {
                 log.innerHTML = "Parts are expensive. You're broke.";
@@ -409,22 +374,20 @@ function Battle_System(callout) {
             Battle_System(1);
             break;
 
-        // Replace your potion cases (20 and 21) in Battle_System with this logic
-        case 20: // USE DMG POTION
+        
+        case 20:
             if (inv[1] > 0) {
                 inv[1]--;
                 player.dmg_buff += 5;
-                player.stress += 10; // "Chemical" stress
+                player.stress += 10;
                 updateStressStage();
                 log.innerHTML = "Dmg Potion consumed. Mind racing...";
 
-                // Inside Case 20 (Dmg Potion)
                 let stressGain = 10;
-                if (player.trait === "CHEMIST") stressGain = 5; // Alchemist passive
-                if (player.trait === "FOCUS") stressGain = 0;   // Monk passive
+                if (player.trait === "CHEMIST") stressGain = 5;
+                if (player.trait === "FOCUS") stressGain = 0;
                 addStress(stressGain);
                 
-                // Quick Action Check: 40% chance to keep your turn
                 if (Math.random() > 0.6) {
                     log.innerHTML += "<br><b>QUICK ACTION!</b> You still have an move.";
                     Battle_System(1);
@@ -434,7 +397,7 @@ function Battle_System(callout) {
             }
             break;
 
-        case 21: // USE STR POTION
+        case 21:
             if (inv[2] > 0) {
                 inv[2]--;
                 player.arm_buff += 5;
@@ -443,10 +406,10 @@ function Battle_System(callout) {
                 updateStressStage();
                 log.innerHTML = "Str Potion consumed. Body tensing...";
 
-                // Inside Case 20 (Dmg Potion)
+                
                 let stressGain = 10;
-                if (player.trait === "CHEMIST") stressGain = 5; // Alchemist passive
-                if (player.trait === "FOCUS") stressGain = 0;   // Monk passive
+                if (player.trait === "CHEMIST") stressGain = 5;
+                if (player.trait === "FOCUS") stressGain = 0;
                 addStress(stressGain);
 
                 if (Math.random() > 0.6) {
@@ -458,11 +421,10 @@ function Battle_System(callout) {
             }
             break;
 
-        // Inside Battle_System switch
-        case 22: // USE SCROLL (Upgrade Weapon)
+        case 22:
             if (inv[4] > 0) { 
                 inv[4]--;
-                player.weapon_mult += 0.5; // This enables the scaling we planned
+                player.weapon_mult += 0.5; 
                 addStress(15); 
                 log.innerHTML = `ANCIENT TEXT READ. Weapon Multiplier: ${player.weapon_mult}x!`;
             } else {
@@ -471,11 +433,10 @@ function Battle_System(callout) {
             Battle_System(1);
             break;
 
-        case 9: // VICTORY
+        case 9:
             rooms_cleared++;
             log.innerHTML = `The ${enemy.name} is dead.`;
             
-            // Reset combat-only buffs
             player.dmg_buff = 0;
             player.arm_buff = 0;
 
@@ -492,13 +453,11 @@ function enemy_turn() {
     let damageToApply = 0;
     let attackType = "";
 
-    // 1. Determine Base Damage & Attack Type
     if (enemy.hp < (enemy.max_hp * 0.3) && decision > 0.5) {
         damageToApply = Math.floor(enemy.dmg * 1.5);
         attackType = "BERSERK";
     } 
     else if (player.arm_buff > 0 && decision > 0.7) {
-        // SUNDER: Stays direct because it's a debuff, not just raw damage
         player.arm_buff = Math.max(0, player.arm_buff - 5);
         player.thp = Math.max(0, player.thp - 5);
         log.innerHTML = `The ${enemy.name} sunders your defenses! Armor reduced.`;
@@ -510,7 +469,6 @@ function enemy_turn() {
         attackType = "STANDARD";
     }
 
-    // 2. SHIELD-FIRST DAMAGE LOGIC
     if (damageToApply > 0) {
         let finalDamage = damageToApply;
         
@@ -537,12 +495,10 @@ function enemy_turn() {
                 : `The ${enemy.name} strikes for ${finalDamage} damage.`;
         }
 
-        // 3. SPECIALIZED STRESS SCALING
         let baseStress = (attackType === "BERSERK") ? 10 : 5;
 
-        // Apply Class Passives
-        if (player.trait === "STEADY") baseStress -= 2; // Fighter (Battle Hardened)
-        if (player.trait === "GLASS") baseStress += 5;  // Artillerist (High Tension)
+        if (player.trait === "STEADY") baseStress -= 2;
+        if (player.trait === "GLASS") baseStress += 5;
 
         addStress(baseStress);
     }
@@ -552,7 +508,6 @@ function enemy_turn() {
 }
 
 function getBagCount() {
-    // We sum every value in the inv array starting from index 1
     let total = 0;
     for (let i = 1; i < inv.length; i++) {
         total += inv[i];
@@ -561,7 +516,7 @@ function getBagCount() {
 }
 
 function pickUpItem(idx, qty = 1) {
-    if (idx === 0) { // Gold always fits
+    if (idx === 0) {
         inv[0] += qty;
         return true; 
     }
@@ -570,13 +525,12 @@ function pickUpItem(idx, qty = 1) {
         inv[idx] += qty;
         return true;
     }
-    return false; // Returns false if it doesn't fit
+    return false;
 }
 
 var pendingItem = 0;
 
 function processLootDrop(floor) {
-    // 1. Determine how many items drop based on floor milestones
     let lootCount = 1;
     if (floor >= 8) {
         lootCount = 4;
@@ -586,32 +540,21 @@ function processLootDrop(floor) {
         lootCount = 2;
     }
 
-    // 2. Clear the floor/loot screen state
     document.getElementById("loot_cap_msg").style.visibility = "hidden";
     
-    // 3. Roll the loot! 
-    // If multiple items drop, we can either stack them or just show the first one.
-    // For a single-file "Accept" screen, the cleanest way is to give Gold 
-    // for the extra items and let the player choose 1 physical item.
-    
     if (lootCount > 1) {
-    // This rewards the player for the "extra" items dropped
     let bonusGold = (lootCount - 1) * (Math.floor(Math.random() * 5) + 5);
     inv[0] += bonusGold;
-    // Visually signal the extra loot
     document.getElementById("loot_text").innerHTML = `Loot x${lootCount} detected! (${bonusGold}G bonus added)`;
     }
 
-    // 4. Roll for the physical item the player can "STASH"
     pendingItem = Math.floor(Math.random() * (itm_nm.length - 1)) + 1;
 
-    // 5. Update UI
     const iconMap = ["$", "!", "%", "~", "?", "*"];
     document.getElementById("loot_icon").innerText = iconMap[pendingItem] || "?";
     document.getElementById("loot_item_name").innerText = itm_nm[pendingItem].toUpperCase();
     document.getElementById("loot_item_name").style.fontFamily = "main";
     
-    // If on a high floor, maybe change the icon color to show it's "High Tier"
     if (lootCount > 1) {
         document.getElementById("loot_icon").style.color = "yellow";
     } else {
@@ -624,29 +567,25 @@ function processLootDrop(floor) {
 
 
 function acceptLoot() {
-    // Calculate total items currently in bag (excluding Gold at index 0)
     let bagCount = 0;
     for (let i = 1; i < inv.length; i++) {
         bagCount += inv[i];
     }
 
-    if (bagCount < 10) { // Your 10-item limit
-        inv[pendingItem]++; // THE FIX: Increment the actual inventory array
-        //logMessage(`${itm_nm[pendingItem]} STASHED IN CARGO.`);
+    if (bagCount < 10) {
+        inv[pendingItem]++;
         
-        pendingItem = -1; // Clear the floor
-        hud(11); // Return to the dungeon/next door
+        pendingItem = -1;
+        hud(11);
     } else {
-        // Trigger your "CARGO BAY FULL" warning in the UI
         document.getElementById("loot_cap_msg").style.visibility = "visible";
     }
 }
 
-// Function to close the loot screen and go back to doors
 function closeLootUI() {
     document.getElementById("loot").style.display = "none";
     if(rooms_cleared <= 9) {
-        hud(11); // Switch back to Door Scene
+        hud(11);
     } else {
         alert("You Won!");
         Start();
@@ -660,59 +599,48 @@ function upgradeBag(newLimit) {
 
 function updateInventoryUI() {
     let current = getBagCount();
-    // Update a div or ASCII line in your HTML
     document.getElementById("bag-status").innerText = `Bag: ${current} / ${bag_limit}`;
     
-    // Example: Inventory: Gold: 10 | Dmg: 0 | Str: 0 | HP: 1 | Scroll: 0
     let invString = itm_nm.map((name, i) => `${name}: ${inv[i]}`).join(" | ");
     document.getElementById("inventory-list").innerText = invString;
 }
 
 function Stats() {
-    // 1. Identification
-    // Use the player_class array to get the name string
     document.getElementById("stat_class_name").innerText = player_class[player.class].toUpperCase();
     
-    // 2. Core Vitals
     document.getElementById("stat_hp").innerText = "HP: " + player.hp;
     document.getElementById("stat_str").innerText = "ATK: " + player.str;
     document.getElementById("stat_thp").innerText = "ARM: " + player.thp;
     
-    // 3. Mental State Styling
     let mentalStat = document.getElementById("player_mental_state_stats");
     mentalStat.innerText = `MIND STATUS: ${player.stress_stage}`;
-    mentalStat.style.color = getStressColor(); // Uses your purple/yellow/orange/red logic
+    mentalStat.style.color = getStressColor();
 
-    // 4. Inventory Slot Updates
-    // Loop through the known item indices (0: Gold, 1: Dmg, 2: Str, 3: HP, 4: Scrolls)
     for (let i = 0; i < 5; i++) {
         let qtyEl = document.getElementById(`inv_qty_${i}`);
         if (qtyEl) {
             qtyEl.innerText = inv[i];
-            // Dim the button if the slot is empty for a "ghost" effect
             qtyEl.parentElement.style.opacity = (inv[i] > 0) ? "1.0" : "0.4";
         }
     }
 
-    // 5. Capacity Check
-    let currentTotal = getBagCount(); // Helper from your code
+    let currentTotal = getBagCount();
     document.getElementById("bag_status_text").innerText = `Total Capacity: ${currentTotal} / ${bag_limit}`;
     
-    hud(12); // Display the screen
+    hud(12);
 }
 
 function getLootDrop(floor) {
-    let roll = Math.floor(Math.random() * 100) + floor; // Floor adds to the roll
+    let roll = Math.floor(Math.random() * 100) + floor;
 
-    if (roll < 40) return 0;      // Gold (Still common)
-    if (roll < 70) return 3;      // Health Potion
-    if (roll < 85) return 1;      // Dmg Potion
-    if (roll < 95) return 2;      // Str Potion
-    return 4;                     // Scrolls (Rare)
+    if (roll < 40) return 0;
+    if (roll < 70) return 3; 
+    if (roll < 85) return 1; 
+    if (roll < 95) return 2; 
+    return 4; 
 }
 
 function getEliteLoot() {
-    // Elites never drop Gold; they only drop consumables (Indices 1-4)
     return Math.floor(Math.random() * 4) + 1; 
 }
 
@@ -720,7 +648,6 @@ function addStress(amount) {
     player.stress += amount;
     updateStressStage();
     
-    // Theologian (FORTITUDE) panics at 130, everyone else at 100
     let panicLimit = (player.trait === "FORTITUDE") ? 130 : 100;
 
     if (player.stress >= panicLimit) {
@@ -734,11 +661,10 @@ function triggerPanic() {
     if (!player.isPanicked) {
         player.isPanicked = true;
         player.str -= 5; 
-        // If you cleared out logMessage earlier, make sure this doesn't crash
         let log = document.getElementById("encounter_battle_test");
         if(log) log.innerHTML = "HEART RATE INCREASING... You are PANICKED! (-5 DMG)";
     }
-    Battle_System(1); // Keep the UI updated with the new panic state
+    Battle_System(1);
 }
 
 function updateStressStage() {
@@ -755,7 +681,7 @@ function updateStressStage() {
 
 function getStressColor() {
     switch(player.stress_stage) {
-        case "CALM": return "white";     // Classic 8-bit Purple
+        case "CALM": return "white";
         case "ANXIOUS": return "white";
         case "STRESSED": return "white";
         case "PANIC": return "white";
@@ -765,20 +691,17 @@ function getStressColor() {
 
 function checkPlayerDeath() {
     if (player.hp <= 0) {
-        // The roast for the final failure
         let log = document.getElementById("encounter_battle_test");
         if (log) {
             log.innerHTML = "You died. The Narrator is laughing at your corpse.";
         } else {
             alert("You actually died. That's impressive.");
         }
-
-        // Delay the reload so the player can process the loss
         setTimeout(() => { 
             location.reload(); 
         }, 3000);
         
-        return true; // The player is dead
+        return true;
     }
-    return false; // The player lives to fight another round
+    return false;
 }
