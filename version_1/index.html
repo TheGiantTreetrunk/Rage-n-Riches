@@ -1,0 +1,196 @@
+<html>
+    <head>
+        <title>Rage 'n' Riches</title>
+        <meta charset="UTF-8">
+        <meta name="MobileOptimized" content="480"/>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <meta name="keywords" content="Adventure">
+        <meta name="description" content="A Game">
+        <meta name="author" content="Austin Elke">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="HandheldFriendly" content="true"/>
+
+        <link href='css/game_style.css?=v1.0' rel='stylesheet'>
+        <script defer type="text/javascript" src="js/game_core.js?=v1.0"></script>
+        <script defer type="text/javascript" src="js/player_class_core.js?=v1.0"></script>
+        <script defer type="text/javascript" src="js/text_adventure_core.js?=v1.0"></script>
+    </head>
+
+    <body onload="Hud(0)">
+        <div id="mm">
+            <h1>Rage 'n' Riches</h1>
+            <button onclick="Hud(1)">Play Now</button>
+            <br>
+            <button onclick="Hud(2)">How To Play</button>
+        </div>
+
+        <div id="htp">
+            <h1>How To Play</h1>
+
+            <p>
+                <ul>
+                    <li>Pick your Hero! (There are lots to pick from!)</li>
+                    <li>Buy Potions to boost your heroes attacks!</li>
+                    <li>Level Up your Hero to fight more powerful enemies</li>
+                    <li>Make it to the top! (or die trying...)</li>
+                </ul>
+            </p>
+            <br>
+            <br><br>
+            <button onclick="Hud(0)">Ok, Got It</button>
+        </div>
+
+        <div id="rooster">
+            <h1 style="text-align: center">Class Select</h1> 
+            <h3 id="name_of_class" style="text-align: center">Pick A Class</h3>
+            <p id="class_description" style="text-align: center">It's too dangerous to go in alone</p>
+            <p id="class_icon" class="icns" style="text-align: center">@</p>
+            <p id="class_stats" style="text-align: center">Look! So many to choose from.<br><br></p>
+
+            <div id="class_selection_container">
+                
+            </div>
+
+            <div style="text-align: center">
+                <button class="play_bttn" onclick="Hud(3)">Play!</button>
+            </div>
+        </div>
+
+        <div id="store_front">
+            <h1 style="text-align: center">A Simple Camp</h1> 
+            <h3 id="tavern_day" style="text-align: center">Day 0 <br> Distance Traveled 1km</h3>
+            <p id="name_of_class1" style="text-align: center">the class description</p>
+            <p id="class_icon1" class="icns" style="text-align: center">@</p>
+            <p id="class_level" style="text-align: center">Level 1</p>
+            <p id="class_stats1" style="text-align: center">the class stats<br><br></p>
+
+            <table class="tavern" style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr class="tavern">
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 196, 0);">/</a><br><a id="gold_total">1</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 0, 0);"><</a><sup class="icns" style="color: rgb(255, 0, 0);">~</sup><br><a id="hth_pot_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(55, 255, 0);"><</a><sup class="icns" style="color: rgb(55, 255, 0);">{</sup><br><a id="pos_pot_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(153, 0, 255);"><</a><sup class="icns" style="color: rgb(153, 0, 255);">%</sup><br><a id="arm_pot_total">10</a></td>
+                </tr>
+                <tr class="tavern">
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 85, 0);"><</a><sup class="icns" style="color: rgb(255, 85, 0);">=</sup><br><a id="dmg_pot_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(0, 204, 255);"><</a><sup class="icns" style="color: rgb(0, 204, 255);">|</sup><br><a id="spd_pot_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(0, 183, 255);"><</a><br><a id="food_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 136, 0);"><</a><br><a id="water_total">10</a></td>
+                </tr>
+                <tr class="tavern">
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(80, 27, 0);"><</a><br><a id="wood_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 255, 255);"><</a><br><a id="steel_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 0, 0);"><</a><br><a id="ruby_total">10</a></td>
+                    <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(147, 224, 221);"><</a><br><a id="daimond_total">10</a></td>
+                </tr>
+            </table>
+
+            <br><br>
+            
+            <table style="margin-left: auto; margin-right: auto;">
+                <tr>
+                    <th><button class="tavern" onclick="">Actions</button></th>
+                    <th><button class="tavern" onclick="Hud(5)">Embark</button></th>
+                    <th><button class="tavern" onclick="">Rest</button></th>
+                </tr>
+            </table>
+
+        </div>
+
+            <fieldset id="story_board">
+                <div id="inventory-display">Inventory: Empty</div>
+                <br><br>
+                <div class="description-section" id="story-text">
+                    <p>This is a test description area. It can contain story text, encounter details, or any other introductory layout you need.</p>
+                </div>
+                
+                <div class="action-section" id="choices-container">
+                    
+                </div>
+            </fieldset>
+        
+
+
+            
+
+
+        <div id="fadeElement" class="fade-out"></div>
+
+        <div id="day_counter_hud">
+            <h3 id="embark_day_counter">Day 1</h3>
+            <p id="embark_distance_counter">Distance Traveled 1km</p>
+
+            <br><br><br>
+
+            <button id="embark_cont_bttn" onclick="Hud(6)">Continue</button>
+        </div>
+
+
+        <div id="battle" style="display: none;">
+        <h2 style="text-align: center;">BATTLE</h2>
+        <hr>
+        <br>
+        <table style="width: 100%; table-layout: fixed; text-align: center;">
+            <tr>
+                <td id="player_status" style="font-size: 10px; color: #00ff00;">
+                    BUFFS: <span id="dmg_buff_val">0</span> ATK | <span id="arm_buff_val">0</span> DEF
+                </td>
+                <td id="enemy_status" style="font-size: 10px; color: gray;">NORMAL</td>
+            </tr>
+            <tr>
+                <td id="player_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">@</td>
+                <td id="enemy_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">&</td>
+            </tr>
+            <tr>
+                <td><span class="red icns">~</span> <a id="player_battle_health">20</a></td>
+                <td><span class="red icns">~</span> <a id="enemy_battle_health">10</a></td>
+            </tr>
+            <tr>
+                <td><span class="blue icns">%</span> <a id="player_battle_armor">10</a></td>
+                <td><span class="blue icns">%</span> <a id="enemy_battle_armor">10</a></td>
+            </tr>
+
+            <tr>
+                <td id="player_mental_state" style="font-size: 10px; letter-spacing: 1px;">MIND: CALM</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div style="height: 50px; text-align: center; margin-top: 5px; padding: 0 10px;">
+            <h4 id="encounter_battle_test" style="font-size: 12px; color: white;"></h4>
+        </div>
+
+        <hr>
+
+        <div class="combat_book">
+            <button class="book_action" onclick="">ATTACK</button>
+            <button class="book_action" onclick="">ANALYZE</button>
+            
+            <button class="book_action" onclick="">DMG POT</button>
+            <button class="book_action" onclick="">STR POT</button>
+
+            <button class="book_action" onclick="">HEAL</button>
+            <button class="book_action" onclick="">BREATHE</button>
+            
+            <button id="bribe_btn" class="book_action" onclick="">BRIBE</button>
+            <button class="book_action" onclick="">SLAP</button>
+        </div>
+    </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const classButtons = document.querySelectorAll('.class_select');
+            classButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const classNum = button.dataset.classNum;
+                    if (classNum) {
+                        if (typeof class_selection === 'function') {
+                            class_selection(parseInt(classNum, 10), button);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    </body>
+</html>
