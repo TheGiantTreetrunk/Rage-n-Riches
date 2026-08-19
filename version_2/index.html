@@ -14,7 +14,14 @@
         <script defer type="text/javascript" src="js/core.js?=v1.0"></script>
     </head>
 
-    <body>
+    <body onload="Start()">
+        <div id="ss">
+            <hr>
+            <h1>Splash Screen</h1>
+            <p>name of engine</p>
+            <hr>
+        </div>
+
         <div id="mm">
             <hr>
             <h1>Rage 'n' Rickes</h1>
@@ -28,30 +35,7 @@
 
         <div id="cs">
             <hr>
-            <h2>Character Setup</h2>
-            <p>Pick Your Starting Weapon</p>
-            <form action="">
-            <label for="weapon">Pick Your Starting Weapon:</label>
-            <select name="weapon" id="weapon">
-                <optgroup label="Starting Weapons">
-                <option value="sword">Sword</option>
-                <option value="club">Club</option>
-                </optgroup>
-                <optgroup label="Expansion Weapons">
-                <option value="comson">Coming Soon!</option>
-                </optgroup>
-            </select>
-            <br>
-            <label for="colour">Pick Your Hero Colour:</label>
-            <select name="colour" id="colour">
-                <optgroup label="Basic Colours">
-                <option value="black">Black</option>
-                <option value="red">Red</option>
-                </optgroup>
-                <optgroup label="Epic Colours">
-                <option value="comson">Coming Soon!</option>
-                </optgroup>
-            </select>
+            <p>class information here like in original version</p>
             <br><br>
             <input type="submit" value="Play Now">
             </form>
@@ -100,6 +84,33 @@
             <p>Tic Tac Toe</p>
             <br>
             <p>battle outcome message</p>
+            <button>continue</button>
+        </div>
+
+        <div id="enout">
+            <hr>
+            <h3>Outcome</h3>
+            <p>Window for finishing the task challenge or battle!</p>
+            <br>
+            <p>you either beat it or didnt...</p>
+            <button>continue</button>
+        </div>
+
+        <div id="ad">
+            <hr>
+            <h3>Ad Time</h3>
+            <p>Window for showing ads</p>
+            <br>
+            <p>'places ad in this window'</p>
+            <button>continue</button>
+        </div>
+
+        <div id="eg">
+            <hr>
+            <h3>Victory / Defeat Condition</h3>
+            <p>Window for showing either a game over or a game won</p>
+            <br>
+            <p>shows the players score</p>
             <button>continue</button>
         </div>
     </body>

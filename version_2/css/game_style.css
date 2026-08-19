@@ -1,0 +1,73 @@
+.body_class_main_menu {
+    background-color: #2a2a2b;
+	font-family: 'main';
+    border: 8px solid #45494d;
+    border-style: dashed;
+}
+
+.body_class_hut {
+    background-color: #7f3004;
+	font-family: 'main';
+    border: 8px solid #cf763b;
+    border-style: dashed;
+}
+
+.body_class_bazzar {
+    background-color: #7c142c;
+	font-family: 'main';
+    border: 8px solid #9c6b65;
+    border-style: dashed;
+}
+
+.body_class_battle {
+    background-color: #373838;
+	font-family: 'main';
+    border: 8px solid #45494d;
+    border-style: dashed;
+}
+
+.body_class_dominica_garden {
+    background-color: #475c6c;
+	font-family: 'main';
+    border: 8px solid #8a8583;
+    border-style: dashed;
+}
+
+.body_class_arabiana_desert {
+    background-color: #eed7a1;
+	font-family: 'main';
+    border: 8px solid #f7efd3;
+    border-style: dashed;
+}
+
+.body_class_samarsha_swamp {
+    background-color: #a0b023;
+	font-family: 'main';
+    border: 8px solid #a2d01f;
+    border-style: dashed;
+}
+
+.body_class_podzil_woodlands {
+    background-color: #5f3426;
+	font-family: 'main';
+    border: 8px solid #a59075;
+    border-style: dashed;
+}
+
+.body_class_tropicanza_isles {
+    background-color: #76eff2;
+	font-family: 'main';
+    border: 8px solid #feffae;
+    border-style: dashed;
+}
+
+.body_class_farma_flatlands {
+    background-color: #9db055;
+	font-family: 'main';
+    border: 8px solid #f2d662;
+    border-style: dashed;
+}
+
+img {
+	image-rendering: pixelated;
+}
