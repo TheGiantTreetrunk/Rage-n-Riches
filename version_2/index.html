@@ -27,7 +27,7 @@
             <h1>Rage 'n' Rickes</h1>
             <p>version two</p>
             <br>
-            <button>Play Now</button>
+            <button onclick="Engine_Hud(1)">Play Now</button>
             <br>
             <p>[C] 2026 Austin Elke. All Rights Reserved</p>
             <hr>
@@ -37,26 +37,26 @@
             <hr>
             <p>class information here like in original version</p>
             <br><br>
-            <input type="submit" value="Play Now">
-            </form>
+            <button onclick="Engine_Hud(2)">Play Now</button>
             <hr>
         </div>
 
         <div id="cl">
             <hr>
-            <h3>Loading...</h3>
-            <p>Creating your adventure</p>
+            <h3 id="cl_h_tit">Loading...</h3>
+            <p id="cl_p_diag">Creating your adventure</p>
             <br>
-            <button>Play Now</button>
+            <button id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
             <hr>
         </div>
-
+ 
         <div id="dr">
             <hr>
             <h3>Door '1'</h3>
             <p>'image of door'</p>
             <br>
-            <button>Enter Room</button>
+            <p id="dr_hp"></p>
+            <button onclick="Core_Door_Randomizer(1)">Enter Room</button>
             <hr>
         </div>
 
@@ -82,6 +82,15 @@
             <hr>
             <h3>Encounter</h3>
             <p>Tic Tac Toe</p>
+            <br>
+            <p>battle outcome message</p>
+            <button>continue</button>
+        </div>
+
+        <div id="en3">
+            <hr>
+            <h3>Encounter</h3>
+            <p>whack a mole</p>
             <br>
             <p>battle outcome message</p>
             <button>continue</button>
@@ -113,5 +122,23 @@
             <p>shows the players score</p>
             <button>continue</button>
         </div>
+
+        <div id="fadeElement" class="fade-out"></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const classButtons = document.querySelectorAll('.class_select');
+                classButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const classNum = button.dataset.classNum;
+                        if (classNum) {
+                            if (typeof class_selection === 'function') {
+                                class_selection(parseInt(classNum, 10), button);
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
