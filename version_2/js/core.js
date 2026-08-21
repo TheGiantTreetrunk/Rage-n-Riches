@@ -186,6 +186,8 @@ function Core_Encounter_RPS (comand) {
     if(comand == 0) {
         rps_player_score = 0;
         rps_demon_score = 0;
+        document.getElementById("rps_options").style.display = "block";
+        document.getElementById("rps_end_of").style.display = "none";
     }
 
     if(comand == 1) {
@@ -239,10 +241,16 @@ function Core_Encounter_RPS (comand) {
     document.getElementById("c_en_rps_sc").innerHTML = "Score <br>" + "You " + rps_player_score + " : " + rps_demon_score + " Demon";
 
     if(rps_player_score >= rps_game_match) {
-        alert("Player wins!");
+        //alert("Player wins!");
+        document.getElementById("c_en_rps_oc").innerHTML = "You beat the demon at their own game!";
+        document.getElementById("rps_options").style.display = "none";
+        document.getElementById("rps_end_of").style.display = "block";
     }
     if(rps_demon_score >= rps_game_match) {
-        alert("Demon wins!")
+        //alert("Demon wins!");
+        document.getElementById("c_en_rps_oc").innerHTML = "The demon snickers at his win over you!";
+        document.getElementById("rps_options").style.display = "none";
+        document.getElementById("rps_end_of").style.display = "block";
     }
 
 }
