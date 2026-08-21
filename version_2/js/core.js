@@ -263,3 +263,11 @@ var fac_game_match = 3;
 function Core_Encounter_FAC (comand) {
 
 }
+
+var wam_time_limit = 60;
+var wam_score_quote = 10;
+var wam_map = [0,0,0,0,0,0,0,0,0];
+
+function Core_Encounter_WAM(comand) {
+
+}
