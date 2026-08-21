@@ -92,6 +92,7 @@ function Engine_Hud(comand) {
     document.getElementById("en1").style.display = "none";
     document.getElementById("en2").style.display = "none";
     document.getElementById("en3").style.display = "none";
+    document.getElementById("en4").style.display = "none";
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
@@ -144,7 +145,8 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 7) {
-        //the battle encounter function
+        //plugged drain en4
+        document.getElementById("en4").style.display = "block";
     }
 }
 
@@ -257,11 +259,37 @@ function Core_Encounter_RPS (comand) {
 
 var fac_player_score = 0;
 var fac_demon_score = 0;
+var fac_demon_choice = 0;
 var fac_choices = ["Heads","Tails"];
 var fac_game_match = 3;
 
 function Core_Encounter_FAC (comand) {
+    if(comand == 0) {
+        fac_demon_score = 0;
+        fac_player_score = 0;
+    }
 
+    if(comand == 1) {
+        fac_demon_choice = Math.floor(Math.random() * fac_choices.length);
+        if(fac_demon_choice == 0) {
+            fac_player_score += 1;
+        }
+
+        if(fac_demon_choice == 1) {
+            fac_demon_score += 1;
+        }
+    }
+
+    if(comand == 2) {
+        fac_demon_choice = Math.floor(Math.random() * fac_choices.length);
+        if(fac_demon_choice == 0) {
+            fac_demon_score += 1;
+        }
+
+        if(fac_demon_choice == 1) {
+            fac_player_score += 1;
+        }
+    }
 }
 
 var wam_time_limit = 60;
