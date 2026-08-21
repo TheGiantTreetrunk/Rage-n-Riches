@@ -17,90 +17,134 @@
     <body onload="Start()">
         <div id="ss">
             <hr>
-            <h1>Splash Screen</h1>
-            <p>name of engine</p>
+            <h1 style="text-align: center">Splash Screen</h1>
+            <p style="text-align: center">name of engine</p>
             <hr>
         </div>
 
         <div id="mm">
             <hr>
-            <h1>Rage 'n' Rickes</h1>
-            <p>version two</p>
+            <h1 style="text-align: center">Rage 'n' Rickes</h1>
+            <p style="text-align: center">version two</p>
             <br>
-            <button onclick="Engine_Hud(1)">Play Now</button>
+            <center>
+                <button onclick="Engine_Hud(1)" style="text-align: center">Play Now</button>
+            </center>
             <br>
-            <p>[C] 2026 Austin Elke. All Rights Reserved</p>
+            <p style="text-align: center">[C] 2026 Austin Elke. All Rights Reserved</p>
             <hr>
         </div>
 
         <div id="cs">
             <hr>
-            <p>class information here like in original version</p>
-            <br><br>
-            <button onclick="Engine_Hud(2)">Play Now</button>
+            <h1 style="text-align: center">Class Select</h1> 
+            <h3 id="name_of_class" style="text-align: center">Pick A Class</h3>
+            <p id="class_description" style="text-align: center">It's too dangerous to go in alone</p>
+            <p id="class_icon" class="icns" style="text-align: center">@</p>
+            <p id="class_stats" style="text-align: center">Look! So many to choose from.</p>
+            
+            <table style="margin: auto; text-align: center;">
+                <tr>
+                    <td><button data-class-num="1" class="class_select"><a class="icns red">@</a></button></td>
+                    <td><button data-class-num="2" class="class_select"><a class="icns blue">@</a></button></td>
+                    <td><button data-class-num="3" class="class_select"><a class="icns brown">@</a></button></td>
+                </tr>
+                <tr>
+                    <td><button data-class-num="4" class="class_select"><a class="icns green">@</a></button></td>
+                    <td><button data-class-num="5" class="class_select"><a class="icns yellow">@</a></button></td>
+                    <td><button data-class-num="6" class="class_select"><a class="icns purple">@</a></button></td>
+                </tr>
+                <tr>
+                    <td><button data-class-num="7" class="class_select"><a class="icns cyan">@</a></button></td>
+                    <td><button data-class-num="8" class="class_select"><a class="icns magenta">@</a></button></td>
+                </tr>
+            </table>
+
+            <br>
+            <div style="text-align: center">
+                <button onclick="Engine_Hud(2)">Play Now</button>
+            </div>
+            
             <hr>
         </div>
 
         <div id="cl">
             <hr>
-            <h3 id="cl_h_tit">Loading...</h3>
-            <p id="cl_p_diag">Creating your adventure</p>
+            <h3 id="cl_h_tit" style="text-align: center">Loading...</h3>
+            <p id="cl_p_diag" style="text-align: center">Creating your adventure</p>
             <br>
-            <button id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
+            <center>
+                <button id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
+            </center>
             <hr>
         </div>
  
         <div id="dr">
             <hr>
-            <h3>Door '1'</h3>
-            <p>'image of door'</p>
+            <h3 style="text-align: center">Door '1'</h3>
+            <p style="text-align: center">'image of door'</p>
             <br>
-            <p id="dr_hp"></p>
+            <p id="dr_hp" style="text-align: center"></p>
+            <center>
             <button onclick="Core_Door_Randomizer(1)">Enter Room</button>
+            <br>
+            <button onclick="Engine_Hud(5)">EN RPS</button>
+            <button onclick="Engine_Hud(4)">EN FAC</button>
+            <button onclick="Engine_Hud(6)">EN WAM</button>
+            </center>
             <hr>
         </div>
 
         <div id="bs">
             <hr>
-            <h3>Encounter</h3>
-            <p>battle scene</p>
+            <h3 style="text-align: center">Encounter</h3>
+            <p style="text-align: center">battle scene</p>
             <br>
-            <p>battle outcome message</p>
+            <p style="text-align: center">battle outcome message</p>
             <button>continue</button>
         </div>
 
         <div id="en1">
             <hr>
-            <h2>Encounter</h2>
-            <p>A Demon wants to play a game with you</p>
+            <h2 style="text-align: center">Encounter</h2>
+            <p style="text-align: center">A Demon wants to play a game with you</p>
             <br>
-            <h3 id="c_en_rps_sc">Score You 1 Demon 1</h3>
-            <button onclick="Core_Encounter_RPS(1)">Rock</button>
-            <button onclick="Core_Encounter_RPS(2)">Paper</button>
-            <button onclick="Core_Encounter_RPS(3)"">Scissors</button>
-            <p id="c_en_rps_oc">battle outcome message</p>
-            <button onclick="Core_Encounter_RPS(4)">continue</button>
+            <h3 id="c_en_rps_sc" style="text-align: center">Score You 1 Demon 1</h3>
+            <center>
+                <button onclick="Core_Encounter_RPS(1)">Rock</button>
+                <button onclick="Core_Encounter_RPS(2)">Paper</button>
+                <button onclick="Core_Encounter_RPS(3)"">Scissors</button>
+                <p id="c_en_rps_oc">battle outcome message</p>
+                <button onclick="Core_Encounter_RPS(4)">continue</button>
+            </center>
+            <hr>
         </div>
 
         <div id="en2">
             <hr>
-            <h3>Encounter</h3>
-            <p>A Ghost wants to play a game of chance with you</p>
+            <h3 style="text-align: center">Encounter</h3>
+            <p style="text-align: center">A Ghost wants to play a game of chance with you</p>
             <br>
-            <h3 id="c_en_fac_sc">Score You 1 Demon 1</h3>
-            <button onclick="Core_Encounter_FAC(1)">Heads</button>
-            <button onclick="Core_Encounter_FAC(2)">Tails</button>
-            <p id="c_en_fac_oc">battle outcome message</p>
-            <button onclick="Core_Encounter_FAC(3)">continue</button>
+            <center>
+                <h3 id="c_en_fac_sc" style="text-align: center">Score You 1 Demon 1</h3>
+                <button onclick="Core_Encounter_FAC(1)">Heads</button>
+                <button onclick="Core_Encounter_FAC(2)">Tails</button>
+                <p id="c_en_fac_oc" style="text-align: center">battle outcome message</p>
+                <button onclick="Core_Encounter_FAC(3)">continue</button>
+            </center>
+            <hr>
         </div>
 
         <div id="en3">
             <hr>
-            <h3>Encounter</h3>
-            <p>whack a mole</p>
+            <h3 style="text-align: center">Encounter</h3>
+            <p style="text-align: center">whack a mole</p>
             <br>
-            <p>battle outcome message</p>
-            <button>continue</button>
+            <center>
+                <p style="text-align: center">battle outcome message</p>
+                <button>continue</button>
+            </center>
+            <hr>
         </div>
 
         <div id="enout">
@@ -110,6 +154,7 @@
             <br>
             <p>you either beat it or didnt...</p>
             <button>continue</button>
+            <hr>
         </div>
 
         <div id="ad">
@@ -119,6 +164,7 @@
             <br>
             <p>'places ad in this window'</p>
             <button>continue</button>
+            <hr>
         </div>
 
         <div id="eg">
@@ -128,6 +174,7 @@
             <br>
             <p>shows the players score</p>
             <button>continue</button>
+            <hr>
         </div>
 
         <div id="fadeElement" class="fade-out"></div>
