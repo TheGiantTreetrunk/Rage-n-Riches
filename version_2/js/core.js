@@ -178,6 +178,7 @@ function Core_World_Generator () {
 
 var rps_player_score = 0;
 var rps_demon_score = 0;
+var rps_demon_choice = 0;
 var rps_choices = ["Rock","Paper","Scissors"];
 var rps_game_match = 3;
 
@@ -185,6 +186,63 @@ function Core_Encounter_RPS (comand) {
     if(comand == 0) {
         rps_player_score = 0;
         rps_demon_score = 0;
+    }
+
+    if(comand == 1) {
+        //player picks rock 
+        rps_demon_choice = Math.floor(Math.random() * rps_choices.length);
+        if(rps_demon_choice == 0) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You both pick rock";
+        }
+        if(rps_demon_choice == 1) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You pick rock, the demon beat you with paper!";
+            rps_demon_score += 1;
+        }
+        if(rps_demon_choice == 2) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You pick rock, the demons scissors is no match!";
+            rps_player_score += 1;
+        }
+    }
+
+    if(comand == 2) {
+        //player picks paper 
+        rps_demon_choice = Math.floor(Math.random() * rps_choices.length);
+        if(rps_demon_choice == 0) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You pick paper, and cover the demons rock!";
+            rps_player_score += 1;
+        }
+        if(rps_demon_choice == 1) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You both pick paper!";
+        }
+        if(rps_demon_choice == 2) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You pick paper, the demons scissors cuts up your paper!";
+            rps_demon_score += 1;
+        }
+    }
+
+    if(comand == 3) {
+        //player picks scissors 
+        rps_demon_choice = Math.floor(Math.random() * rps_choices.length);
+        if(rps_demon_choice == 0) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You pick paper, and the demon crushed your scissors with a rock!";
+            rps_demon_score += 1;
+        }
+        if(rps_demon_choice == 1) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You both pick Scissors, and chop up the demons paper!";
+            rps_player_score += 1;
+        }
+        if(rps_demon_choice == 2) {
+            document.getElementById("c_en_rps_oc").innerHTML = "You both pick Scissors!";
+        }
+    }
+    
+    document.getElementById("c_en_rps_sc").innerHTML = "Score <br>" + "You " + rps_player_score + " : " + rps_demon_score + " Demon";
+
+    if(rps_player_score >= rps_game_match) {
+        alert("Player wins!");
+    }
+    if(rps_demon_score >= rps_game_match) {
+        alert("Demon wins!")
     }
 
 }
