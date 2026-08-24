@@ -92,6 +92,9 @@
             <button onclick="Engine_Hud(4)">EN FAC</button>
             <button onclick="Engine_Hud(6)">EN WAM</button>
             <button onclick="Engine_Hud(7)">EN PLGDR</button>
+            <button onclick="Engine_Hud(9)">HP ROOM</button>
+            <button onclick="Engine_Hud(10)">TR ROOM</button>
+            <button onclick="Engine_Hud(8)">MERCHNT</button>
             </center>
             <hr>
         </div>
@@ -150,24 +153,24 @@
         <div id="en3">
             <hr>
             <h3 style="text-align: center">Encounter</h3>
-            <p style="text-align: center">whack a mole</p>
+            <p style="text-align: center">The Goblin Hole</p>
             <h3 id="c_en_wam_sc" style="text-align: center">Score 1 <br> Quota 10</h3>
             <p id="c_en_wam_oc" style="text-align: center">battle outcome message</p>
             <center>
             <div id="en_wam_board">
-                    <button onclick="whack(0)">0</button>
-                    <button onclick="whack(1)">1</button>
-                    <button onclick="whack(2)">2</button>
+                    <button id="wam_0" onclick="en_wam_wack(0)">0</button>
+                    <button id="wam_1" onclick="en_wam_wack(1)">1</button>
+                    <button id="wam_2" onclick="en_wam_wack(2)">2</button>
                     <br>
-                    <button onclick="whack(3)">3</button>
-                    <button onclick="whack(4)">4</button>
-                    <button onclick="whack(5)">5</button>
+                    <button id="wam_3" onclick="en_wam_wack(3)">3</button>
+                    <button id="wam_4" onclick="en_wam_wack(4)">4</button>
+                    <button id="wam_5" onclick="en_wam_wack(5)">5</button>
                     <br>
-                    <button onclick="whack(6)">6</button>
-                    <button onclick="whack(7)">7</button>
-                    <button onclick="whack(8)">8</button>
+                    <button id="wam_6" onclick="en_wam_wack(6)">6</button>
+                    <button id="wam_7" onclick="en_wam_wack(7)">7</button>
+                    <button id="wam_8" onclick="en_wam_wack(8)">8</button>
             </div>
-            <div id="">
+            <div id="en_wam_end">
                 <button>continue</button>
             </div>
             </center>
@@ -246,13 +249,13 @@
                 Death!
             </p>
             <center>
-                <div>
-                    <button>Drink the water</button>
+                <div id="en_hp_op">
+                    <button onclick="Core_Encounter_HP(1)">Drink the water</button>
                     <br>
-                    <button>Pass</button>
+                    <button onclick="Core_Encounter_HP(2)">Pass</button>
                 </div>
             
-            <div id="">
+            <div id="en_hp_end">
                 <button>continue</button>
             </div>
             </center>
@@ -263,14 +266,14 @@
             <hr>
             <h3 style="text-align: center">Encounter</h3>
             <p style="text-align: center">A Trapped Room</p>
-            <p id="c_en_wam_oc" style="text-align: center">You have discovered a trap in this room.</p>
+            <p id="c_en_tr_oc" style="text-align: center">You have discovered a trap in this room.</p>
             <center>
-                <div>
-                    <button>Disarm</button>
-                    <button>Bypass</button>
+                <div id="en_tr_op">
+                    <button onclick="Core_Encounter_TR(1)">Disarm</button>
+                    <button onclick="Core_Encounter_TR(2)">Bypass</button>
                 </div>
             
-            <div id="">
+            <div id="en_tr_end">
                 <button>continue</button>
             </div>
             </center>

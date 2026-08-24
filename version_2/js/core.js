@@ -89,10 +89,13 @@ function Engine_Hud(comand) {
     document.getElementById("cl").style.display = "none";
     document.getElementById("dr").style.display = "none";
     document.getElementById("bs").style.display = "none";
-    //document.getElementById("en1").style.display = "none";
-    //document.getElementById("en2").style.display = "none";
-    //document.getElementById("en3").style.display = "none";
-    //document.getElementById("en4").style.display = "none";
+    document.getElementById("en1").style.display = "none";
+    document.getElementById("en2").style.display = "none";
+    document.getElementById("en3").style.display = "none";
+    document.getElementById("en4").style.display = "none";
+    document.getElementById("en5").style.display = "none";
+    document.getElementById("en6").style.display = "none";
+    document.getElementById("en7").style.display = "none";
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
@@ -143,11 +146,27 @@ function Engine_Hud(comand) {
     if(comand == 6) {
         //whack a mole ish en3
         document.getElementById("en3").style.display = "block";
+        Core_Encounter_WAM(0);
     }
 
     if(comand == 7) {
         //plugged drain en4
         document.getElementById("en4").style.display = "block";
+    }
+
+    if(comand == 8) {
+        //plugged MERCHANT
+        document.getElementById("en5").style.display = "block";
+    }
+
+    if(comand == 9) {
+        //plugged HEALING POOL
+        document.getElementById("en6").style.display = "block";
+    }
+
+    if(comand == 10) {
+        //plugged TRAPPED ROOM
+        document.getElementById("en7").style.display = "block";
     }
 }
 
@@ -178,6 +197,12 @@ function Core_Door_Randomizer(fun) {
 function Core_World_Generator () {
     
 }
+
+
+//encounters
+var encounter_outcome = 0;
+//1 loss
+//2 win
 
 var rps_player_score = 0;
 var rps_demon_score = 0;
@@ -318,11 +343,13 @@ function Core_Encounter_FAC (comand) {
     }
 }
 
-var en_hp_choices = ["Death","Nothing","Fight","+2 Health","+5 Health","+10 Health"];
+var en_hp_choices = ["Death","Fight","Nothing","+2 Health","+5 Health","+10 Health"];
 
 function Core_Encounter_HP(comand) {
     if(comand == 0) {
         document.getElementById("c_en_fac_oc").innerHTML = "You have discovered a healing pool!";
+        document.getElementById("en_hp_op").style.display = "block";
+        document.getElementById("en_hp_end").style.display = "none";
     }
 
     if(comand == 1) {
@@ -330,23 +357,206 @@ function Core_Encounter_HP(comand) {
 
         if(hp_choice == 0) {
             //death
-
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool to only discover its acid...";
         }
+
+        if(hp_choice == 1) {
+            //Fight
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and are attacked!";
+        }
+
+        if(hp_choice == 2) {
+            //nothing
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and feel no effects!";
+        }
+
+        if(hp_choice == 3) {
+            //2 health
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 2 health!";
+        }
+
+        if(hp_choice == 4) {
+            //2 health
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 5 health!";
+        }
+
+        if(hp_choice == 5) {
+            //2 health
+            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 10 health!";
+        }
+
+        document.getElementById("en_hp_op").style.display = "none";
+        document.getElementById("en_hp_end").style.display = "block";
+    }
+
+    if(comand == 2) {
+        document.getElementById("c_en_fac_oc").innerHTML = "You decided its not worth the risk...";
+        document.getElementById("en_hp_op").style.display = "none";
+        document.getElementById("en_hp_end").style.display = "block";
     }
 }
 
-var en_tr_choices = ["Death","-4 Health","-2 Health","Nothing","Nothing","Nothing"];
+var en_tr_choices_disarm = ["Death","-4 Health","-2 Health","Nothing","Nothing","Nothing"];
+var en_tr_choices_bypass = ["-4 Health","-2 Health","Nothing","Nothing","Nothing"];
 
 function Core_Encounter_TR(comand) {
+    if(comand == 0) {
+        document.getElementById("c_en_tr_oc").innerHTML = "You have discovered a trap in this room.";
+        document.getElementById("en_tr_op").style.display = "block";
+        document.getElementById("en_tr_end").style.display = "none";
+    }
 
+    if(comand == 1) {
+        tr_bp_choice = Math.floor(Math.random() * en_tr_choices_disarm.length);
+
+        if(tr_bp_choice == 0) {
+            //death
+            document.getElementById("c_en_tr_oc").innerHTML = "You failed to disable the trap and died!";
+        }
+
+        if(tr_bp_choice == 1) {
+            //-4 health
+            document.getElementById("c_en_tr_oc").innerHTML = "You triggered the trap and lost 4 Health!";
+        }
+
+        if(tr_bp_choice == 2) {
+            //-4 health
+            document.getElementById("c_en_tr_oc").innerHTML = "You triggered the trap and lost 2 Health!";
+        }
+
+        if(tr_bp_choice == 3) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+        }
+
+        if(tr_bp_choice == 4) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+        }
+
+        if(tr_bp_choice == 5) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+        }
+
+        document.getElementById("en_tr_op").style.display = "none";
+        document.getElementById("en_tr_end").style.display = "block";
+    }
+
+    if(comand == 2) {
+        tr_bp_choice = Math.floor(Math.random() * en_tr_choices_bypass.length);
+
+        if(tr_bp_choice == 0) {
+            //-4 health
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap but triggered it and lost 4 health!";
+        }
+
+        if(tr_bp_choice == 1) {
+            //-2 health
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap but triggered it and lost 2 health!";
+        }
+
+        if(tr_bp_choice == 2) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+        }
+
+        if(tr_bp_choice == 3) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+        }
+
+        if(tr_bp_choice == 4) {
+            //nothing
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+        }
+
+        document.getElementById("en_tr_op").style.display = "none";
+        document.getElementById("en_tr_end").style.display = "block";
+    }
 }
 
-var wam_time_limit = 60;
+var wam_score = 100;
 var wam_score_quote = 10;
 var wam_map = [0,0,0,0,0,0,0,0,0];
 var wam_spot_gd = 0;
 var wam_spot_bd = 0;
 
 function Core_Encounter_WAM(comand) {
+    var en_wam_timeout = 0;
+    var en_wam_interval_good = 0;
+    var en_wam_interval_bad = 0;
+    if(comand == 0) {
+        wam_score = 100;
+        document.getElementById("c_en_wam_sc").innerHTML = wam_score + "<br> Goblin Health";
+        document.getElementById("c_en_wam_oc").innerHTML = "Wack the Goblin to grab the key to the door!";
+        en_wam_timeout = setTimeout(function() {Core_Encounter_WAM(1)}, 30000);
+        en_wam_interval_good = setInterval(Core_Encounter_WAM_Gd, 1500);
+        en_wam_interval_good = setInterval(Core_Encounter_WAM_Bd, 2500);
+        document.getElementById("en_wam_end").style.display = "none";
+        document.getElementById("en_wam_board").style.display = "block";
+    }
 
+    if(comand == 1) {
+        //clear out player lost
+        document.getElementById("c_en_wam_oc").innerHTML = "The Goblin is laughing at his trickery over you!";
+        clearInterval(en_wam_interval_good);
+        clearInterval(en_wam_interval_bad);
+        clearTimeout(en_wam_timeout);
+        document.getElementById("en_wam_board").style.display = "none";
+        document.getElementById("en_wam_end").style.display = "block";
+    }
+
+    if(comand == 2) {
+        //clear out player won
+        document.getElementById("c_en_wam_oc").innerHTML = "The goblin grovels in pain and gives you the key.";
+        clearInterval(en_wam_interval_good);
+        clearInterval(en_wam_interval_bad);
+        clearTimeout(en_wam_timeout);
+        document.getElementById("en_wam_board").style.display = "none";
+        document.getElementById("en_wam_end").style.display = "block";
+    }
+}
+
+function Core_Encounter_WAM_Gd() {
+    //clear board
+    var wam_good_spot = Math.floor(Math.random() * wam_map.length);
+    
+    for (let i = 0; i < wam_map.length; i++) {
+        if(i == wam_spot_gd) {
+            document.getElementById(`wam_${wam_spot_gd}`).innerHTML = "_";
+        }
+    }
+
+    wam_spot_gd = wam_good_spot;
+    document.getElementById(`wam_${wam_spot_gd}`).innerHTML = "@";
+}
+
+function Core_Encounter_WAM_Bd() {
+    //clear board
+    var wam_bad_spot = Math.floor(Math.random() * wam_map.length);
+    
+    for (let i = 0; i < wam_map.length; i++) {
+        if(i == wam_spot_bd) {
+            document.getElementById(`wam_${wam_spot_bd}`).innerHTML = "_";
+        }
+    }
+
+    wam_spot_bd = wam_bad_spot;
+    document.getElementById(`wam_${wam_spot_bd}`).innerHTML = "X";
+}
+
+function en_wam_wack(comand) {
+    if(comand == wam_spot_gd) {
+        wam_score -= 20;
+    }
+
+    if(comand == wam_spot_bd) {
+        wam_score += 10;
+    }
+
+    if(wam_score <= 0) {
+        Core_Encounter_WAM(2);
+    }
+    document.getElementById("c_en_wam_sc").innerHTML = wam_score + "<br> Goblin Health";
 }
