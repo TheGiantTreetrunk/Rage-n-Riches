@@ -88,7 +88,7 @@ function Engine_Hud(comand) {
     document.getElementById("cs").style.display = "none";
     document.getElementById("cl").style.display = "none";
     document.getElementById("dr").style.display = "none";
-    //document.getElementById("bs").style.display = "none";
+    document.getElementById("bs").style.display = "none";
     document.getElementById("en1").style.display = "none";
     document.getElementById("en2").style.display = "none";
     document.getElementById("en3").style.display = "none";
@@ -168,6 +168,14 @@ function Engine_Hud(comand) {
     if(comand == 10) {
         //plugged TRAPPED ROOM
         document.getElementById("en7").style.display = "block";
+    }
+
+    if(comand == 11) {
+        document.getElementById("bs").style.display = "block";
+    }
+
+    if(comand == 12) {
+        document.getElementById("enout").style.display = "block";
     }
 }
 

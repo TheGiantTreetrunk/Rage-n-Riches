@@ -117,6 +117,23 @@
                     <td><span class="blue icns">%</span> <a id="enemy_battle_armor">10</a></td>
                 </tr>
             </table>
+
+            <br>
+            <div class="combat_book">
+                <button class="book_action" onclick="">ATTACK</button>
+                <button class="book_action" onclick="">ANALYZE</button>
+                
+                <button class="book_action" onclick="">DMG POT</button>
+                <button class="book_action" onclick="">STR POT</button>
+
+                <button class="book_action" onclick="">HEAL</button>
+                <button class="book_action" onclick="">BREATHE</button>
+            </div>
+
+            <br>
+            <div id="delete_after">
+                <button onclick="Engine_Hud(12)">continue</button>
+            </div>
         </div>
 
         <div id="en1">
@@ -134,7 +151,7 @@
                 </div>
 
                 <div id="rps_end_of">
-                    <button onclick="Core_Encounter_RPS(4)">continue</button>
+                    <button onclick="Engine_Hud(12)">continue</button>
                 </div>
             </center>
             <hr>
@@ -155,7 +172,7 @@
                 </div>
 
                 <div id="en_fac_end_of">
-                    <button onclick="Core_Encounter_FAC(3)">continue</button>
+                    <button onclick="Engine_Hud(12)">continue</button>
                 </div>
             </center>
             <hr>
@@ -182,7 +199,7 @@
                     <button id="wam_8" onclick="en_wam_wack(8)">8</button>
             </div>
             <div id="en_wam_end">
-                <button>continue</button>
+                <button onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -201,12 +218,8 @@
                 </div>
                 <br><br>
                 <div id="en_plgdr_end">
-                    
+                    <button onclick="Engine_Hud(12)">continue</button>
                 </div>
-            
-            <div id="">
-                <button>continue</button>
-            </div>
             </center>
             <hr>
         </div>
@@ -237,7 +250,7 @@
                 </table>
             
             <div id="">
-                <button>continue</button>
+                <button onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -269,7 +282,7 @@
                 </div>
             
             <div id="en_hp_end">
-                <button>continue</button>
+                <button onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -287,7 +300,7 @@
                 </div>
             
             <div id="en_tr_end">
-                <button>continue</button>
+                <button onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -299,7 +312,7 @@
             <p>Window for finishing the task challenge or battle!</p>
             <br>
             <p>you either beat it or didnt...</p>
-            <button>continue</button>
+            <button onclick="Engine_Hud(3)">continue</button>
             <hr>
         </div>
 
