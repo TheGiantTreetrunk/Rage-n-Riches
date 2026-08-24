@@ -88,7 +88,7 @@ function Engine_Hud(comand) {
     document.getElementById("cs").style.display = "none";
     document.getElementById("cl").style.display = "none";
     document.getElementById("dr").style.display = "none";
-    document.getElementById("bs").style.display = "none";
+    //document.getElementById("bs").style.display = "none";
     document.getElementById("en1").style.display = "none";
     document.getElementById("en2").style.display = "none";
     document.getElementById("en3").style.display = "none";

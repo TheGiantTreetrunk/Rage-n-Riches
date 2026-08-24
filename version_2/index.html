@@ -100,12 +100,23 @@
         </div>
 
         <div id="bs">
+            <h2 style="text-align: center;">BATTLE</h2>
             <hr>
-            <h3 style="text-align: center">Encounter</h3>
-            <p style="text-align: center">battle scene</p>
             <br>
-            <p style="text-align: center">battle outcome message</p>
-            <button>continue</button>
+            <table style="width: 100%; table-layout: fixed; text-align: center;">
+                <tr>
+                    <td id="player_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">@</td>
+                    <td id="enemy_battle_icon" class="icns" style="font-size: 32px; padding: 10px 0;">&</td>
+                </tr>
+                <tr>
+                    <td><span class="red icns">~</span> <a id="player_battle_health">20</a></td>
+                    <td><span class="red icns">~</span> <a id="enemy_battle_health">10</a></td>
+                </tr>
+                <tr>
+                    <td><span class="blue icns">%</span> <a id="player_battle_armor">10</a></td>
+                    <td><span class="blue icns">%</span> <a id="enemy_battle_armor">10</a></td>
+                </tr>
+            </table>
         </div>
 
         <div id="en1">
