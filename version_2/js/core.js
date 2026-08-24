@@ -152,6 +152,7 @@ function Engine_Hud(comand) {
     if(comand == 7) {
         //plugged drain en4
         document.getElementById("en4").style.display = "block";
+        Core_Encounter_PLG_DR(0);
     }
 
     if(comand == 8) {
@@ -559,4 +560,55 @@ function en_wam_wack(comand) {
         Core_Encounter_WAM(2);
     }
     document.getElementById("c_en_wam_sc").innerHTML = wam_score + "<br> Goblin Health";
+}
+
+var en_plg_dr_plug_health = 0;
+var en_plg_dr_water_lvl = 0;
+function Core_Encounter_PLG_DR(comand) {
+    var en_plg_dr_interval = 12;
+    if(comand == 0) {
+        en_plg_dr_plug_health = Math.floor(Math.random() * 50) + 1;
+        en_plg_dr_water_lvl = 12;
+        document.getElementById("c_en_plg_dr_oc").innerHTML = "Water starts filling the room. Unclog the drain quickly!";
+        en_plg_dr_interval = setInterval(Core_Encounter_DRN_Prog, 600);
+        document.getElementById("en_plgdr_end").style.display = "none";
+        document.getElementById("en_plgdr_board").style.display = "block";
+    }
+
+    if(comand == 1) {
+        document.getElementById("c_en_plg_dr_oc").innerHTML = "The water has filled the room. Your body floats around like a fish...";
+        document.getElementById("en_plgdr_end").style.display = "block";
+        document.getElementById("en_plgdr_board").style.display = "none";
+        clearInterval(en_plg_dr_interval);
+    }
+
+    if(comand == 2) {
+        document.getElementById("c_en_plg_dr_oc").innerHTML = "You unclogged the drain and succesfully drained out the water of the room!";
+        document.getElementById("en_plgdr_end").style.display = "block";
+        document.getElementById("en_plgdr_board").style.display = "none";
+        clearInterval(en_plg_dr_interval);
+    }
+
+    if(comand == 3) {
+        //unclogg the drain!
+        en_plg_dr_plug_health -= 1;
+
+        if(en_plg_dr_plug_health <= 0) {
+            Core_Encounter_PLG_DR(2);
+        }
+    }
+}
+
+function Core_Encounter_DRN_Prog() {
+    en_plg_dr_water_lvl += 1;
+
+    if(en_plg_dr_water_lvl >= 100) {
+        Core_Encounter_PLG_DR(1);
+    }
+
+    if(en_plg_dr_water_lvl <= 0) {
+        Core_Encounter_PLG_DR(2);
+    }
+
+    document.getElementById("pg_en_plgdr").value = en_plg_dr_water_lvl;
 }
