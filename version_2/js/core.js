@@ -89,10 +89,10 @@ function Engine_Hud(comand) {
     document.getElementById("cl").style.display = "none";
     document.getElementById("dr").style.display = "none";
     document.getElementById("bs").style.display = "none";
-    document.getElementById("en1").style.display = "none";
-    document.getElementById("en2").style.display = "none";
-    document.getElementById("en3").style.display = "none";
-    document.getElementById("en4").style.display = "none";
+    //document.getElementById("en1").style.display = "none";
+    //document.getElementById("en2").style.display = "none";
+    //document.getElementById("en3").style.display = "none";
+    //document.getElementById("en4").style.display = "none";
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
@@ -131,6 +131,7 @@ function Engine_Hud(comand) {
     if(comand == 4) {
         //Flip a Coin en2
         document.getElementById("en2").style.display = "block";
+        Core_Encounter_FAC(0);
     }
 
     if(comand == 5) {
@@ -190,6 +191,8 @@ function Core_Encounter_RPS (comand) {
         rps_demon_score = 0;
         document.getElementById("rps_options").style.display = "block";
         document.getElementById("rps_end_of").style.display = "none";
+        document.getElementById("c_en_rps_oc").innerHTML = " ";
+       
     }
 
     if(comand == 1) {
@@ -267,15 +270,21 @@ function Core_Encounter_FAC (comand) {
     if(comand == 0) {
         fac_demon_score = 0;
         fac_player_score = 0;
+        document.getElementById("en_fac_op").style.display = "block";
+        document.getElementById("en_fac_end_of").style.display = "none";
+        document.getElementById("c_en_fac_oc").innerHTML = " ";
+        
     }
 
     if(comand == 1) {
         fac_demon_choice = Math.floor(Math.random() * fac_choices.length);
         if(fac_demon_choice == 0) {
+            document.getElementById("c_en_fac_oc").innerHTML = "You picked heads, and the ghost got heads!";
             fac_player_score += 1;
         }
 
         if(fac_demon_choice == 1) {
+            document.getElementById("c_en_fac_oc").innerHTML = "You called heads but landed tails";
             fac_demon_score += 1;
         }
     }
@@ -283,13 +292,53 @@ function Core_Encounter_FAC (comand) {
     if(comand == 2) {
         fac_demon_choice = Math.floor(Math.random() * fac_choices.length);
         if(fac_demon_choice == 0) {
+            document.getElementById("c_en_fac_oc").innerHTML = "You called tails but the ghost got heads!";
             fac_demon_score += 1;
         }
 
         if(fac_demon_choice == 1) {
+            document.getElementById("c_en_fac_oc").innerHTML = "You called tails the ghost got tails!";
             fac_player_score += 1;
         }
     }
+
+    document.getElementById("c_en_fac_sc").innerHTML = "Score <br>" + "You " + fac_player_score + " : " + fac_demon_score + "  Ghost";
+
+    if(fac_player_score >= rps_game_match) {
+        //alert("Player wins!");
+        document.getElementById("c_en_fac_oc").innerHTML = "You beat the ghost at their own game!";
+        document.getElementById("en_fac_op").style.display = "none";
+        document.getElementById("en_fac_end_of").style.display = "block";
+    }
+    if(fac_demon_score >= rps_game_match) {
+        //alert("Demon wins!");
+        document.getElementById("c_en_fac_oc").innerHTML = "The ghost snickers at his win over you!";
+        document.getElementById("en_fac_op").style.display = "none";
+        document.getElementById("en_fac_end_of").style.display = "block";
+    }
+}
+
+var en_hp_choices = ["Death","Nothing","Fight","+2 Health","+5 Health","+10 Health"];
+
+function Core_Encounter_HP(comand) {
+    if(comand == 0) {
+        document.getElementById("c_en_fac_oc").innerHTML = "You have discovered a healing pool!";
+    }
+
+    if(comand == 1) {
+        hp_choice = Math.floor(Math.random() * en_hp_choices.length);
+
+        if(hp_choice == 0) {
+            //death
+
+        }
+    }
+}
+
+var en_tr_choices = ["Death","-4 Health","-2 Health","Nothing","Nothing","Nothing"];
+
+function Core_Encounter_TR(comand) {
+
 }
 
 var wam_time_limit = 60;
