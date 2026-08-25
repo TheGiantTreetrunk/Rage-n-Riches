@@ -112,6 +112,7 @@ function Engine_Hud(comand) {
 
     if(comand == 1) {
         //load class select
+        room_number = 0;
         document.getElementById("cs").style.display = "block";
     }
 
@@ -177,15 +178,25 @@ function Engine_Hud(comand) {
     if(comand == 12) {
         document.getElementById("enout").style.display = "block";
     }
+
+    if(comand == 13) {
+        document.getElementById("eg").style.display = "block";
+    }
 }
+var room_number = 0;
+var rooms_en = ["Merchant","BS","RPS","FAC","WAM","BS","PLGDR","HP","TR","BS"];
 
 function Core_Door_Randomizer(fun) {
     
     document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
 
     if(fun == 0) {
+        room_number += 1;
         door_hp = Math.floor(Math.random() * 10) + 1;
         document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
+        document.getElementById("dr_actual_door").innerHTML = ":";
+        document.getElementById("room_id").innerHTML = "Door " + room_number;
+        document.getElementById("dr_actual_door").disabled = false;
     }
 
     if(fun == 1) {
@@ -196,9 +207,51 @@ function Core_Door_Randomizer(fun) {
 
         if(door_hp <= 0) {
             door_hp = 0;
-            document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
-            alert("opening door!");
+            document.getElementById("dr_hp").innerHTML = "You break down the door!";
+            document.getElementById("dr_actual_door").innerHTML = "X";
+            document.getElementById("dr_actual_door").disabled = true;
+            //alert("opening door!");
+            var room_selection_ran = Math.floor(Math.random() * rooms_en.length);
 
+            if(rooms_en[room_selection_ran] == "Merchant") {
+                setTimeout(function(){Engine_Hud(8)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "BS") {
+                setTimeout(function(){Engine_Hud(11)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "RPS") {
+                setTimeout(function(){Engine_Hud(5)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "FAC") {
+                setTimeout(function(){Engine_Hud(4)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "WAM") {
+                setTimeout(function(){Engine_Hud(6)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "PLGDR") {
+                setTimeout(function(){Engine_Hud(7)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "HP") {
+                setTimeout(function(){Engine_Hud(9)}, 1500);
+                
+            }
+
+            if(rooms_en[room_selection_ran] == "TR") {
+                setTimeout(function(){Engine_Hud(10)}, 1500);
+                
+            }
         }
     }
 }

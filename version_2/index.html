@@ -81,27 +81,22 @@
  
         <div id="dr">
             <hr>
-            <h3 style="text-align: center">Door '1'</h3>
-            <p style="text-align: center">'image of door'</p>
+            <h1 id="room_id" style="text-align: center">Door '1'</h1>
+            <h3 id="game_score" style="text-align: center">983 <br> Score</h3>
+            <center>
+                <button id="dr_actual_door" style="text-align: center; font-size: 128px;" onclick="Core_Door_Randomizer(1)">:</button>
+            </center>
+            
             <br>
             <p id="dr_hp" style="text-align: center"></p>
-            <center>
-            <button onclick="Core_Door_Randomizer(1)">Enter Room</button>
             <br>
-            <button onclick="Engine_Hud(5)">EN RPS</button>
-            <button onclick="Engine_Hud(4)">EN FAC</button>
-            <button onclick="Engine_Hud(6)">EN WAM</button>
-            <button onclick="Engine_Hud(7)">EN PLGDR</button>
-            <button onclick="Engine_Hud(9)">HP ROOM</button>
-            <button onclick="Engine_Hud(10)">TR ROOM</button>
-            <button onclick="Engine_Hud(8)">MERCHNT</button>
-            </center>
             <hr>
         </div>
 
         <div id="bs">
-            <h2 style="text-align: center;">BATTLE</h2>
             <hr>
+            <h2 style="text-align: center;">BATTLE</h2>
+            <p id="en_bs_sc">You come across a 'enemy' they look mad...</p>
             <br>
             <table style="width: 100%; table-layout: fixed; text-align: center;">
                 <tr>
@@ -131,9 +126,10 @@
             </div>
 
             <br>
-            <div id="delete_after">
+            <div id="en_bs_end_of">
                 <button onclick="Engine_Hud(12)">continue</button>
             </div>
+            <hr>
         </div>
 
         <div id="en1">
@@ -234,18 +230,22 @@
                     <tr>
                         <th>Item Name</th>
                         <th>Item Price</th>
+                        <th>Buy</th>
                     </tr>
                     <tr>
                         <td>item 1</td>
                         <td>10 gold</td>
+                        <td><button>Buy</button></td>
                     </tr>
                     <tr>
                         <td>item 2</td>
                         <td>5 gold</td>
+                        <td><button>Buy</button></td>
                     </tr>
                     <tr>
                         <td>item 3</td>
                         <td>25 gold</td>
+                        <td><button>Buy</button></td>
                     </tr>
                 </table>
             
@@ -308,31 +308,38 @@
 
         <div id="enout">
             <hr>
-            <h3>Outcome</h3>
-            <p>Window for finishing the task challenge or battle!</p>
+            <h3 style="text-align: center;">Outcome</h3>
+            <p style="text-align: center;">Window for finishing the task challenge or battle!</p>
             <br>
-            <p>you either beat it or didnt...</p>
+            <p style="text-align: center;">you either beat it or didnt...</p>
+            <div id="loot_selection">
+                <center>
+                    <button style="text-align: center; font-size: 48px;">(</button>
+                    <button style="text-align: center; font-size: 48px;">(</button>
+                    <button style="text-align: center; font-size: 48px;">(</button>
+                </center>
+            </div>
             <button onclick="Engine_Hud(3)">continue</button>
             <hr>
         </div>
 
         <div id="ad">
             <hr>
-            <h3>Ad Time</h3>
-            <p>Window for showing ads</p>
+            <h3 style="text-align: center;">Ad Time</h3>
+            <p style="text-align: center;">Window for showing ads</p>
             <br>
-            <p>'places ad in this window'</p>
+            <p style="text-align: center;">'places ad in this window'</p>
             <button>continue</button>
             <hr>
         </div>
 
         <div id="eg">
             <hr>
-            <h3>Victory / Defeat Condition</h3>
-            <p>Window for showing either a game over or a game won</p>
+            <h3 id="eg_title" style="text-align: center;">Victory / Defeat Condition</h3>
+            <p id="eg_sc" style="text-align: center;">Window for showing either a game over or a game won</p>
             <br>
-            <p>shows the players score</p>
-            <button>continue</button>
+            <p id="eg_plyr_scr" style="text-align: center;">shows the players score</p>
+            <button onclick="Engine_Hud(1)">continue</button>
             <hr>
         </div>
 
