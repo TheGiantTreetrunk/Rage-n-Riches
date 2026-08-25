@@ -185,3 +185,71 @@ div {
 img {
 	image-rendering: pixelated;
 }
+
+#class_icon {
+    font-size: 24px;
+}
+
+#class_icon1 {
+    font-size: 36px;
+}
+
+.class_select {
+    width: 48px;
+    height: 48px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    font-family: 'Game_Icns';
+    transition: background-color 0.4s;
+}
+
+.class_select:has(a.red):hover,
+.class_select:has(a.red).selected {
+    background-color: #ff6666;
+}
+
+.class_select:has(a.blue):hover,
+.class_select:has(a.blue).selected {
+    background-color: #6666ff;
+}
+
+.class_select:has(a.brown):hover,
+.class_select:has(a.brown).selected {
+    background-color: #574200;
+}
+
+.class_select:has(a.green):hover,
+.class_select:has(a.green).selected {
+    background-color: #66ff66;
+}
+
+.class_select:has(a.yellow):hover,
+.class_select:has(a.yellow).selected {
+    background-color: #ffff66;
+}
+
+.class_select:has(a.purple):hover,
+.class_select:has(a.purple).selected {
+    background-color: #ff66ff;
+}
+
+.class_select:has(a.lime):hover,
+.class_select:has(a.lime).selected {
+    background-color: #ccff66;
+}
+
+.class_select:has(a.cyan):hover,
+.class_select:has(a.cyan).selected {
+    background-color: #66ffff;
+}
+
+.class_select:has(a.magenta):hover,
+.class_select:has(a.magenta).selected {
+    background-color: #ff66ff;
+}
+
+.class_select:has(a.white):hover,
+.class_select:has(a.white).selected {
+    background-color: #e0e0e0;
+}
