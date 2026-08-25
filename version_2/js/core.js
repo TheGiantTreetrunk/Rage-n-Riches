@@ -318,11 +318,6 @@ function class_selection(class_num, button_element) {
     }
 }
 
-function Core_World_Generator () {
-    
-}
-
-
 //encounters
 var encounter_outcome = 0;
 //1 loss
@@ -734,4 +729,45 @@ function Core_Encounter_DRN_Prog() {
     }
 
     document.getElementById("pg_en_plgdr").value = en_plg_dr_water_lvl;
+}
+
+function Core_Encounter_MERCHANT(comand) {}
+
+function Core_Encounter_BS(comand) {}
+
+var loot_pool = ["Gold","Gold","Health Potion","Food","Gold","Strength Potion","Gold","Food","Armor Potion","Food","Gold","Power Potion","Gold","Gold"];
+var loot_box_1 = 0;
+var loot_box_1_amount = 0;
+var loot_box_2 = 0;
+var loot_box_2_amount = 0;
+var loot_box_3 = 0;
+var loot_box_3_amount = 0;
+
+
+function Core_Loot_Randomizer() {
+    //encounter_outcome
+    if(encounter_outcome == 1) {
+        //just won barely so one loot box
+        loot_box_1 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
+    }
+
+    if(encounter_outcome == 2) {
+        //won so two loot boxes
+        loot_box_1 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
+        loot_box_2 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_2_amount = Math.floor(Math.random() * 5) + 1;
+        
+    }
+
+    if(encounter_outcome == 3) {    
+        //won a battle against an enemy three loot boxes
+        loot_box_1 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
+        loot_box_2 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_2_amount = Math.floor(Math.random() * 5) + 1;
+        loot_box_3 = Math.floor(Math.random() * loot_pool.length);
+        loot_box_3_amount = Math.floor(Math.random() * 5) + 1;
+    }
 }
