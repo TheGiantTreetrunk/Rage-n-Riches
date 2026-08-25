@@ -1,4 +1,5 @@
 var door_hp = 0;
+var rb_core_score = 0;
 
 var enemy_nme = ["Ghost","Glarb","Serpant","Golem","Skeleton","Toad","Blob","Ember","Goblin"];
 var enemy_hth = [3,4,3,8,4,2,2,2,4];
@@ -73,7 +74,12 @@ var class_data = {
 
 
 function Start() {
-    //starts the engine and preloads all data into ram
+
+    if (localStorage.getItem('score') === null) {
+        localStorage.setItem('score', '0');
+    }
+
+    let score = parseInt(localStorage.getItem('score'), 10);
     Engine_Hud(0);
 }
 
@@ -255,6 +261,60 @@ function Core_Door_Randomizer(fun) {
                 
             }
         }
+    }
+}
+
+function class_selection(class_num, button_element) {
+    
+    var buttons = document.querySelectorAll('.class_select');
+    buttons.forEach(function(button) {
+        button.classList.remove('selected');
+    });
+    button_element.classList.add('selected');
+
+    
+    player.class = class_num;
+    player.hp = class_health[class_num];
+    player.str = class_damage[class_num];
+    player.thp = class_armor[class_num];
+    
+    
+    player.weapon_mult = 1.0; 
+    player.isPanicked = false;
+    player.stress = 0;
+
+    const traits = [
+        "",       
+        "STEADY",      
+        "CHEMIST",    
+        "FORTITUDE",
+        "CRIT",   
+        "FOCUS",  
+        "HEAVY",  
+        "MORALE", 
+        "GLASS"  
+    ];
+
+    player.trait = traits[class_num];
+
+    if (class_data[class_num]) {
+        var selected_class = class_data[class_num];
+        var selectedColorClass = class_colors[class_num]; 
+
+        document.getElementById("name_of_class").innerHTML = selected_class.name.toUpperCase();
+        document.getElementById("class_description").innerHTML = selected_class.description;
+        
+        document.getElementById("class_icon").innerHTML = `<a class='icns ${selectedColorClass}'>@</a>`;
+        document.getElementById("player_battle_icon").className = `icns ${selectedColorClass}`;
+        
+        let gearInfo = `<br><span style='font-size:10px; color:#888;'>WEAPON: ${player_class_unique_weapon[class_num-1]}<br>
+                        ARMOR: ${player_class_unique_armor[class_num-1]}</span>`;
+
+        document.getElementById("class_stats").innerHTML = `
+            <a class='red icns'>~</a> ${player.hp} 
+            <a class='yellow icns'>|</a> ${player.str} 
+            <a class='purple icns'>{</a> ${player.thp}
+            ${gearInfo}`;
     }
 }
 
