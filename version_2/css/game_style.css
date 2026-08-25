@@ -1,3 +1,117 @@
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Game_Icns';
+    font-weight: normal;
+    src: url('../font/test.ttf?v=5.00') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'main';
+    font-weight: normal;
+    src: url('../font/font.otf');
+    font-style: normal;
+}
+
+img {
+	image-rendering: pixelated;
+}
+
+hr {
+	border: 2px solid white;
+}
+
+div {
+	image-rendering: pixelated;
+}
+
+
+.icns{
+    font-family: 'Game_Icns';
+}
+
+.black {
+	color: #000000;
+}
+
+.white {
+	color: #ffffff;
+}
+
+.red {
+	color: #ff0000;
+}
+
+.cyan {
+	color: #67b6bd;
+}
+
+.magenta {
+	color: #8b3f96;
+}
+
+.green {
+	color: #55a049;
+}
+
+.blue {
+	color: #40318d;
+}
+
+.yellow {
+	color: #bfce72;
+}
+
+.brown {
+	color: #8b5429;
+}
+
+.dark_brown {
+	color: #574200;
+}
+
+.pink {
+	color: #b86962;
+}
+
+.dark_gray {
+	color: #505050;
+}
+
+.gray {
+	color: #787878;
+}
+
+.lime {
+	color: #94e089;
+}
+
+.purple {
+	color: #7869c4;
+}
+
+.light_gray {
+	color: #9f9f9f;
+}
+
+.window_scenes_base {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    height: auto;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
 .body_class_main_menu {
     background-color: #2a2a2b;
 	font-family: 'main';
