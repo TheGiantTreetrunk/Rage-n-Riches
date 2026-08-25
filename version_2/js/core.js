@@ -109,7 +109,7 @@ function Engine_Hud(comand) {
         setTimeout(function(){ document.getElementById("mm").style.display = "block" }, 4500);
         //document.getElementById("ss").style.display = "block";
         //document.body.classList.remove('body_class_main_menu');
-        //document.body.classList.add('body_class_hut');
+        document.body.classList.add('body_class_main_menu');
     }
 
     if(comand == 1) {
