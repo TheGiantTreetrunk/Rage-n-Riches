@@ -456,12 +456,14 @@ function Core_Encounter_RPS (comand) {
         document.getElementById("c_en_rps_oc").innerHTML = "You beat the demon at their own game!";
         document.getElementById("rps_options").style.display = "none";
         document.getElementById("rps_end_of").style.display = "block";
+        encounter_outcome = 2;
     }
     if(rps_demon_score >= rps_game_match) {
         //alert("Demon wins!");
         document.getElementById("c_en_rps_oc").innerHTML = "The demon snickers at his win over you!";
         document.getElementById("rps_options").style.display = "none";
         document.getElementById("rps_end_of").style.display = "block";
+        encounter_outcome = 0;
     }
 
 }
@@ -515,12 +517,14 @@ function Core_Encounter_FAC (comand) {
         document.getElementById("c_en_fac_oc").innerHTML = "You beat the ghost at their own game!";
         document.getElementById("en_fac_op").style.display = "none";
         document.getElementById("en_fac_end_of").style.display = "block";
+        encounter_outcome = 2;
     }
     if(fac_demon_score >= rps_game_match) {
         //alert("Demon wins!");
         document.getElementById("c_en_fac_oc").innerHTML = "The ghost snickers at his win over you!";
         document.getElementById("en_fac_op").style.display = "none";
         document.getElementById("en_fac_end_of").style.display = "block";
+        encounter_outcome = 0;
     }
 }
 
@@ -539,31 +543,37 @@ function Core_Encounter_HP(comand) {
         if(hp_choice == 0) {
             //death
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool to only discover its acid...";
+            encounter_outcome = 0;
         }
 
         if(hp_choice == 1) {
             //Fight
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and are attacked!";
+            encounter_outcome = 0;
         }
 
         if(hp_choice == 2) {
             //nothing
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and feel no effects!";
+            encounter_outcome = 1;
         }
 
         if(hp_choice == 3) {
             //2 health
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 2 health!";
+            encounter_outcome = 2;
         }
 
         if(hp_choice == 4) {
             //2 health
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 5 health!";
+            encounter_outcome = 2;
         }
 
         if(hp_choice == 5) {
             //2 health
             document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 10 health!";
+            encounter_outcome = 2;
         }
 
         document.getElementById("en_hp_op").style.display = "none";
@@ -574,6 +584,7 @@ function Core_Encounter_HP(comand) {
         document.getElementById("c_en_fac_oc").innerHTML = "You decided its not worth the risk...";
         document.getElementById("en_hp_op").style.display = "none";
         document.getElementById("en_hp_end").style.display = "block";
+        encounter_outcome = 1;
     }
 }
 
@@ -593,31 +604,37 @@ function Core_Encounter_TR(comand) {
         if(tr_bp_choice == 0) {
             //death
             document.getElementById("c_en_tr_oc").innerHTML = "You failed to disable the trap and died!";
+            encounter_outcome = 0;
         }
 
         if(tr_bp_choice == 1) {
             //-4 health
             document.getElementById("c_en_tr_oc").innerHTML = "You triggered the trap and lost 4 Health!";
+            encounter_outcome = 1;
         }
 
         if(tr_bp_choice == 2) {
             //-4 health
             document.getElementById("c_en_tr_oc").innerHTML = "You triggered the trap and lost 2 Health!";
+            encounter_outcome = 1;
         }
 
         if(tr_bp_choice == 3) {
             //nothing
             document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+            encounter_outcome = 2;
         }
 
         if(tr_bp_choice == 4) {
             //nothing
             document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+            encounter_outcome = 2;
         }
 
         if(tr_bp_choice == 5) {
             //nothing
             document.getElementById("c_en_tr_oc").innerHTML = "You disabled the trap!";
+            encounter_outcome = 2;
         }
 
         document.getElementById("en_tr_op").style.display = "none";
@@ -630,26 +647,31 @@ function Core_Encounter_TR(comand) {
         if(tr_bp_choice == 0) {
             //-4 health
             document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap but triggered it and lost 4 health!";
+            encounter_outcome = 1;
         }
 
         if(tr_bp_choice == 1) {
             //-2 health
             document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap but triggered it and lost 2 health!";
+            encounter_outcome = 1;
         }
 
         if(tr_bp_choice == 2) {
             //nothing
             document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+            encounter_outcome = 2;
         }
 
         if(tr_bp_choice == 3) {
             //nothing
             document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+            encounter_outcome = 2;
         }
 
         if(tr_bp_choice == 4) {
             //nothing
-            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!";
+            document.getElementById("c_en_tr_oc").innerHTML = "You bypassed the trap!"; 
+            encounter_outcome = 2;
         }
 
         document.getElementById("en_tr_op").style.display = "none";
@@ -686,6 +708,7 @@ function Core_Encounter_WAM(comand) {
         clearTimeout(en_wam_timeout);
         document.getElementById("en_wam_board").style.display = "none";
         document.getElementById("en_wam_end").style.display = "block";
+        encounter_outcome = 0;
     }
 
     if(comand == 2) {
@@ -696,6 +719,7 @@ function Core_Encounter_WAM(comand) {
         clearTimeout(en_wam_timeout);
         document.getElementById("en_wam_board").style.display = "none";
         document.getElementById("en_wam_end").style.display = "block";
+        encounter_outcome = 2;
     }
 }
 
@@ -760,6 +784,7 @@ function Core_Encounter_PLG_DR(comand) {
         document.getElementById("en_plgdr_end").style.display = "block";
         document.getElementById("en_plgdr_board").style.display = "none";
         clearInterval(en_plg_dr_interval);
+        encounter_outcome = 0;
     }
 
     if(comand == 2) {
@@ -767,6 +792,7 @@ function Core_Encounter_PLG_DR(comand) {
         document.getElementById("en_plgdr_end").style.display = "block";
         document.getElementById("en_plgdr_board").style.display = "none";
         clearInterval(en_plg_dr_interval);
+        encounter_outcome = 2;
     }
 
     if(comand == 3) {
@@ -820,6 +846,9 @@ function Core_Loot_Randomizer() {
         //just won barely so one loot box
         loot_box_1 = Math.floor(Math.random() * loot_pool.length);
         loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
+        document.getElementById("chest_1").style.display = "block"; 
+        document.getElementById("chest_2").style.display = "none";
+        document.getElementById("chest_3").style.display = "none";
     }
 
     if(encounter_outcome == 2) {
@@ -828,7 +857,9 @@ function Core_Loot_Randomizer() {
         loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
         loot_box_2 = Math.floor(Math.random() * loot_pool.length);
         loot_box_2_amount = Math.floor(Math.random() * 5) + 1;
-        
+        document.getElementById("chest_1").style.display = "block";
+        document.getElementById("chest_2").style.display = "block";
+        document.getElementById("chest_3").style.display = "none";
     }
 
     if(encounter_outcome == 3) {    
@@ -839,10 +870,25 @@ function Core_Loot_Randomizer() {
         loot_box_2_amount = Math.floor(Math.random() * 5) + 1;
         loot_box_3 = Math.floor(Math.random() * loot_pool.length);
         loot_box_3_amount = Math.floor(Math.random() * 5) + 1;
+        document.getElementById("chest_1").style.display = "block";
+        document.getElementById("chest_2").style.display = "block";
+        document.getElementById("chest_3").style.display = "block";
     }
 
     if(encounter_outcome == 4) {
         document.getElementById("loot_selection").style.display = "none";
         document.getElementById("end_of_end").style.display = "block";
+    }
+}
+
+function Core_Encounter_Loot_Callout(chest) {
+    if(chest == 1) {
+
+    }
+    if(chest == 2) {
+
+    }
+    if(chest == 3) {
+
     }
 }
