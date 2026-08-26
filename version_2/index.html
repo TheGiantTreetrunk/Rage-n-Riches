@@ -80,7 +80,16 @@
             
             <br>
             <p id="dr_hp" style="text-align: center"></p>
-            <br>
+            <center>
+                <table id="door_nav">
+                    <tr>
+                        <td><button class="icns nav_uix">)</button></td>
+                        <td><button class="icns nav_uix">@</button></td>
+                        <td><button class="icns nav_uix">#</button></td>
+                    </tr>
+                </table>
+            </center>
+            
             <hr>
         </div>
 
@@ -304,9 +313,9 @@
         <div id="enout" class="window_scenes_base">
             <hr>
             <h3 style="text-align: center;">Outcome</h3>
-            <p style="text-align: center;">Window for finishing the task challenge or battle!</p>
+            <p id="loot_oc_end" style="text-align: center;">Window for finishing the task challenge or battle!</p>
+            <p id="loot_comment" style="text-align: center;">you either beat it or didnt...</p>
             <br>
-            <p style="text-align: center;">you either beat it or didnt...</p>
             <div id="loot_selection">
                 <center>
                     <button class="chests" style="text-align: center; font-size: 64px;">(</button>
@@ -314,7 +323,12 @@
                     <button class="chests" style="text-align: center; font-size: 64px;">(</button>
                 </center>
             </div>
-            <button class="en_uix_button" onclick="Engine_Hud(3)">continue</button>
+            <div id="end_of_end">
+                <center>
+                    <button class="en_uix_button" onclick="Engine_Hud(3)">continue</button>
+                </center>
+                
+            </div>
             <hr>
         </div>
 

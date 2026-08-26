@@ -195,6 +195,7 @@ function Engine_Hud(comand) {
 
     if(comand == 12) {
         document.getElementById("enout").style.display = "block";
+        Core_Loot_Randomizer();
     }
 
     if(comand == 13) {
@@ -807,6 +808,14 @@ var loot_box_3_amount = 0;
 
 function Core_Loot_Randomizer() {
     //encounter_outcome
+    if(encounter_outcome == 0) {
+        document.getElementById("loot_selection").style.display = "none";
+        document.getElementById("end_of_end").style.display = "block";
+
+        document.getElementById("loot_oc_end").innerHTML = "You just make it past the encounter...";
+        document.getElementById("loot_comment").innerHTML = "+15 points";
+    }
+
     if(encounter_outcome == 1) {
         //just won barely so one loot box
         loot_box_1 = Math.floor(Math.random() * loot_pool.length);
@@ -830,5 +839,10 @@ function Core_Loot_Randomizer() {
         loot_box_2_amount = Math.floor(Math.random() * 5) + 1;
         loot_box_3 = Math.floor(Math.random() * loot_pool.length);
         loot_box_3_amount = Math.floor(Math.random() * 5) + 1;
+    }
+
+    if(encounter_outcome == 4) {
+        document.getElementById("loot_selection").style.display = "none";
+        document.getElementById("end_of_end").style.display = "block";
     }
 }
