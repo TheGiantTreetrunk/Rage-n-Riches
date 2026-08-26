@@ -1,3 +1,4 @@
+var is_dev = 1;
 var door_hp = 0;
 var rb_core_score = 0;
 
@@ -20,26 +21,6 @@ var enemy = {
 var unlockedClasses = [
     true, true, false, false, false, false, false
 ];
-
-var player = {
-    class: 0,
-	lvl: 1,
-    hp: 40,  
-    dmg: 20,   
-    arm: 10, 
-	inv: {
-        gold: 0,
-		pot_lvl: 0,
-		pot_health: 0,
-		pot_poison: 0,
-		pot_armor: 0,
-		pot_damage: 0,
-        pot_speed: 0,
-        food: 3,
-        water: 3,
-        wood: 0
-	}
-};
 
 var classes = [
     "Hooman",
@@ -70,6 +51,26 @@ var class_data = {
     4: { name: "Theologian", description: "Durable Backline Support & Protector" },
     5: { name: "Ranger", description: "Precision Striker (Speed & High Criticals)" },
     6: { name: "Artillerist", description: "Focused Heavy Firepower (Frail Vanguard)" }
+};
+
+var player = {
+    class: 0,
+	lvl: 1,
+    hp: 40,  
+    dmg: 20,   
+    arm: 10, 
+	inv: {
+        gold: 0,
+		pot_lvl: 0,
+		pot_health: 0,
+		pot_poison: 0,
+		pot_armor: 0,
+		pot_damage: 0,
+        pot_speed: 0,
+        food: 3,
+        water: 3,
+        wood: 0
+	}
 };
 
 
@@ -122,17 +123,26 @@ function Engine_Hud(comand) {
         //load class select
         room_number = 0;
         document.getElementById("cs").style.display = "block";
+        if(is_dev == 0) {
+		    renderClassTable();
+        } else {
+            cheatUnlockAll();
+        }
     }
 
     if(comand == 2) {
         //load dungeon
-        document.getElementById("cl_h_tit").innerHTML = "Loading...";
-        document.getElementById("cl_p_diag").innerHTML = "Creating your adventure";
-        document.getElementById("cl_st_bttn").style.display = "none";
-        document.getElementById("cl").style.display = "block";
-        setTimeout(function(){ document.getElementById("cl_h_tit").innerHTML = "Ready To Embark" }, 4500);
-        setTimeout(function(){ document.getElementById("cl_p_diag").innerHTML = "Your adventure awaits!" }, 4500);
-        setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "block" }, 4500);
+        if(player.class != 0) {
+            document.getElementById("cl_h_tit").innerHTML = "Loading...";
+            document.getElementById("cl_p_diag").innerHTML = "Creating your adventure";
+            document.getElementById("cl_st_bttn").style.display = "none";
+            document.getElementById("cl").style.display = "block";
+            setTimeout(function(){ document.getElementById("cl_h_tit").innerHTML = "Ready To Embark" }, 4500);
+            setTimeout(function(){ document.getElementById("cl_p_diag").innerHTML = "Your adventure awaits!" }, 4500);
+            setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "block" }, 4500);
+        } else {
+            Engine_Hud(1);
+        }
     }
 
     if(comand == 3) {
@@ -200,7 +210,7 @@ function Core_Door_Randomizer(fun) {
 
     if(fun == 0) {
         room_number += 1;
-        door_hp = Math.floor(Math.random() * 10) + 1;
+        door_hp = Math.floor(Math.random() * 25) + 1;
         document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
         document.getElementById("dr_actual_door").innerHTML = ":";
         document.getElementById("room_id").innerHTML = "Door " + room_number;
@@ -264,6 +274,44 @@ function Core_Door_Randomizer(fun) {
     }
 }
 
+function renderClassTable() {
+	document.getElementById("class_selection_container").innerHTML = "";
+	
+    let tableHtml = '<table style="margin: auto; text-align: center;"><tr>';
+    let cols = 3;
+
+    for (let i = 0; i < 7; i++) {
+        if (i > 0 && i % cols === 0) {
+            tableHtml += '</tr><tr>';
+        }
+
+        if (unlockedClasses[i]) {
+            let color = class_colors[i];
+            tableHtml += `<td><button data-class-num="${i}" class="class_select" onclick="class_selection(${i}, this)"><a class="icns ${color}">@</a></button></td>`;
+        } else {
+            tableHtml += `<td><button class="class_select locked" disabled><a class="icns dark_gray">@</a></button></td>`;
+        }
+    }
+
+    tableHtml += '</tr></table>';
+    document.getElementById("class_selection_container").innerHTML = tableHtml;
+}
+
+function unlockNextClass() {
+    for (let i = 0; i < unlockedClasses.length; i++) {
+        if (unlockedClasses[i] === false) {
+            unlockedClasses[i] = true;
+            console.log("New Class Unlocked: " + classes[i]);
+            break;
+        }
+    }
+}
+
+function cheatUnlockAll() {
+    unlockedClasses = new Array(30).fill(true);
+    renderClassTable();
+}
+
 function class_selection(class_num, button_element) {
     
     var buttons = document.querySelectorAll('.class_select');
@@ -283,20 +331,6 @@ function class_selection(class_num, button_element) {
     player.isPanicked = false;
     player.stress = 0;
 
-    const traits = [
-        "",       
-        "STEADY",      
-        "CHEMIST",    
-        "FORTITUDE",
-        "CRIT",   
-        "FOCUS",  
-        "HEAVY",  
-        "MORALE", 
-        "GLASS"  
-    ];
-
-    player.trait = traits[class_num];
-
     if (class_data[class_num]) {
         var selected_class = class_data[class_num];
         var selectedColorClass = class_colors[class_num]; 
@@ -305,16 +339,43 @@ function class_selection(class_num, button_element) {
         document.getElementById("class_description").innerHTML = selected_class.description;
         
         document.getElementById("class_icon").innerHTML = `<a class='icns ${selectedColorClass}'>@</a>`;
-        document.getElementById("player_battle_icon").className = `icns ${selectedColorClass}`;
         
-        let gearInfo = `<br><span style='font-size:10px; color:#888;'>WEAPON: ${player_class_unique_weapon[class_num-1]}<br>
-                        ARMOR: ${player_class_unique_armor[class_num-1]}</span>`;
+        let gearInfo = `<br><span style='font-size:10px; color:#888;'>WEAPON: ${class_unique_weapon[class_num]}<br>
+                        ARMOR: ${class_unique_armor[class_num]}</span>`;
 
         document.getElementById("class_stats").innerHTML = `
-            <a class='red icns'>~</a> ${player.hp} 
-            <a class='yellow icns'>|</a> ${player.str} 
-            <a class='purple icns'>{</a> ${player.thp}
+            <a class='red icns'>~</a> ${class_health[class_num]} 
+            <a class='yellow icns'>$</a> ${class_damage[class_num]} 
+            <a class='purple icns'>%</a> ${class_armor[class_num]}
             ${gearInfo}`;
+    }
+}
+
+function updatePlayerStats() {
+    var classIndex = player.class;
+    var level = player.lvl;
+
+    if (level < 1) level = 1;
+    if (level > 3) level = 3;
+
+    var baseHp  = class_health[classIndex];
+    var baseDmg = class_damage[classIndex];
+    var baseArm = class_armor[classIndex];
+
+    if (level === 1) {
+        player.hp  = baseHp;
+        player.dmg = baseDmg;
+        player.arm = baseArm;
+    } 
+    else if (level === 2) {
+        player.hp  = Math.ceil(baseHp * 1.5);
+        player.dmg = Math.ceil(baseDmg * 1.5);
+        player.arm = Math.ceil(baseArm * 1.5);
+    } 
+    else if (level === 3) {
+        player.hp  = baseHp * 2;
+        player.dmg = baseDmg * 2;
+        player.arm = baseArm * 2;
     }
 }
 
@@ -416,7 +477,7 @@ function Core_Encounter_FAC (comand) {
         fac_player_score = 0;
         document.getElementById("en_fac_op").style.display = "block";
         document.getElementById("en_fac_end_of").style.display = "none";
-        document.getElementById("c_en_fac_oc").innerHTML = " ";
+        document.getElementById("c_en_fac_oc").innerHTML = "The Ghost looks at you for your answer...";
         
     }
 

@@ -32,7 +32,7 @@
             <p style="text-align: center">version two</p>
             <br>
             <center>
-                <button onclick="Engine_Hud(1)" style="text-align: center">Play Now</button>
+                <button class="uix_button" onclick="Engine_Hud(1)" style="text-align: center">Play Now</button>
             </center>
             <br>
             <p style="text-align: center">[C] 2026 Austin Elke. All Rights Reserved</p>
@@ -45,28 +45,15 @@
             <h3 id="name_of_class" style="text-align: center">Pick A Class</h3>
             <p id="class_description" style="text-align: center">It's too dangerous to go in alone</p>
             <p id="class_icon" class="icns" style="text-align: center">@</p>
-            <p id="class_stats" style="text-align: center">Look! So many to choose from.</p>
-            
-            <table style="margin: auto; text-align: center;">
-                <tr>
-                    <td><button data-class-num="1" class="class_select"><a class="icns red">@</a></button></td>
-                    <td><button data-class-num="2" class="class_select"><a class="icns blue">@</a></button></td>
-                    <td><button data-class-num="3" class="class_select"><a class="icns brown">@</a></button></td>
-                </tr>
-                <tr>
-                    <td><button data-class-num="4" class="class_select"><a class="icns green">@</a></button></td>
-                    <td><button data-class-num="5" class="class_select"><a class="icns yellow">@</a></button></td>
-                    <td><button data-class-num="6" class="class_select"><a class="icns purple">@</a></button></td>
-                </tr>
-                <tr>
-                    <td><button data-class-num="7" class="class_select"><a class="icns cyan">@</a></button></td>
-                    <td><button data-class-num="8" class="class_select"><a class="icns magenta">@</a></button></td>
-                </tr>
-            </table>
+            <p id="class_stats" style="text-align: center">Look! So many to choose from.<br><br></p>
+
+            <div id="class_selection_container">
+                
+            </div>
 
             <br>
             <div style="text-align: center">
-                <button onclick="Engine_Hud(2)">Play Now</button>
+                <button class="uix_button" onclick="Engine_Hud(2)">Play Now</button>
             </div>
             
             <hr>
@@ -78,7 +65,7 @@
             <p id="cl_p_diag" style="text-align: center">Creating your adventure</p>
             <br>
             <center>
-                <button id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
+                <button class="uix_button" id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
             </center>
             <hr>
         </div>
@@ -131,7 +118,7 @@
 
             <br>
             <div id="en_bs_end_of">
-                <button onclick="Engine_Hud(12)">continue</button>
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             <hr>
         </div>
@@ -141,17 +128,17 @@
             <h2 style="text-align: center">Encounter</h2>
             <p style="text-align: center">A Demon wants to play a game with you</p>
             <h3 id="c_en_rps_sc" style="text-align: center">Score <br> You 1 : 0 Demon</h3>
-            <p style="text-align: center">@</p>
+            <p style="text-align: center; font-size: 24px;">@</p>
             <p id="c_en_rps_oc" style="text-align: center">battle outcome message</p>
             <center>
                 <div id="rps_options">
-                    <button onclick="Core_Encounter_RPS(1)">Rock</button>
-                    <button onclick="Core_Encounter_RPS(2)">Paper</button>
-                    <button onclick="Core_Encounter_RPS(3)"">Scissors</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_RPS(1)">Rock</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_RPS(2)">Paper</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_RPS(3)"">Scissors</button>
                 </div>
 
                 <div id="rps_end_of">
-                    <button onclick="Engine_Hud(12)">continue</button>
+                    <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
                 </div>
             </center>
             <hr>
@@ -161,18 +148,18 @@
             <hr>
             <h3 style="text-align: center">Encounter</h3>
             <p style="text-align: center">A Ghost wants to play a game of chance with you</p>
-            <br>
             <center>
                 <h3 id="c_en_fac_sc" style="text-align: center">Score <br> You 1 : 1 Ghost</h3>
-                <p style="text-align: center">@</p>
+                <p class="icns" style="text-align: center; font-size: 24px;">&</p>
                 <p id="c_en_fac_oc" style="text-align: center">battle outcome message</p>
+                <br>
                 <div id="en_fac_op">
-                    <button onclick="Core_Encounter_FAC(1)">Heads</button>
-                    <button onclick="Core_Encounter_FAC(2)">Tails</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_FAC(1)">Heads</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_FAC(2)">Tails</button>
                 </div>
 
                 <div id="en_fac_end_of">
-                    <button onclick="Engine_Hud(12)">continue</button>
+                    <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
                 </div>
             </center>
             <hr>
@@ -199,7 +186,7 @@
                     <button id="wam_8" onclick="en_wam_wack(8)">8</button>
             </div>
             <div id="en_wam_end">
-                <button onclick="Engine_Hud(12)">continue</button>
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -214,11 +201,11 @@
                 <div id="en_plgdr_board">
                     <progress id="pg_en_plgdr" value="12" max="100"></progress>
                     <br><br>
-                    <button onclick="Core_Encounter_PLG_DR(3)">Plunge!</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_PLG_DR(3)">Plunge!</button>
                 </div>
                 <br><br>
                 <div id="en_plgdr_end">
-                    <button onclick="Engine_Hud(12)">continue</button>
+                    <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
                 </div>
             </center>
             <hr>
@@ -258,7 +245,7 @@
                 </table>
             
             <div id="">
-                <button onclick="Engine_Hud(12)">continue</button>
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -284,13 +271,13 @@
             </p>
             <center>
                 <div id="en_hp_op">
-                    <button onclick="Core_Encounter_HP(1)">Drink the water</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_HP(1)">Drink the water</button>
                     <br>
-                    <button onclick="Core_Encounter_HP(2)">Pass</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_HP(2)">Pass</button>
                 </div>
             
             <div id="en_hp_end">
-                <button onclick="Engine_Hud(12)">continue</button>
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -303,12 +290,12 @@
             <p id="c_en_tr_oc" style="text-align: center">You have discovered a trap in this room.</p>
             <center>
                 <div id="en_tr_op">
-                    <button onclick="Core_Encounter_TR(1)">Disarm</button>
-                    <button onclick="Core_Encounter_TR(2)">Bypass</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_TR(1)">Disarm</button>
+                    <button class="en_uix_button" onclick="Core_Encounter_TR(2)">Bypass</button>
                 </div>
             
             <div id="en_tr_end">
-                <button onclick="Engine_Hud(12)">continue</button>
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
             <hr>
@@ -327,7 +314,7 @@
                     <button class="chests" style="text-align: center; font-size: 64px;">(</button>
                 </center>
             </div>
-            <button onclick="Engine_Hud(3)">continue</button>
+            <button class="en_uix_button" onclick="Engine_Hud(3)">continue</button>
             <hr>
         </div>
 
@@ -337,7 +324,7 @@
             <p style="text-align: center;">Window for showing ads</p>
             <br>
             <p style="text-align: center;">'places ad in this window'</p>
-            <button>continue</button>
+            <button class="en_uix_button">continue</button>
             <hr>
         </div>
 
@@ -347,7 +334,7 @@
             <p id="eg_sc" style="text-align: center;">Window for showing either a game over or a game won</p>
             <br>
             <p id="eg_plyr_scr" style="text-align: center;">shows the players score</p>
-            <button onclick="Engine_Hud(1)">continue</button>
+            <button class="en_uix_button" onclick="Engine_Hud(1)">continue</button>
             <hr>
         </div>
 
