@@ -312,6 +312,12 @@ img {
     background-color: #e0e0e0;
 }
 
+.box {
+    -webkit-box-reflect: below -75px linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+    position: relative;
+    z-index: 1;
+}
+
 #dr_actual_door {
     font-family: 'Game_Icns';
     background: none;
@@ -320,6 +326,7 @@ img {
     cursor: pointer;
     outline: none;
     color: #8b5429;
+    text-shadow: 7px 7px 0px #000000;
 }
 
 #dr_actual_door:active {
@@ -330,6 +337,7 @@ img {
     cursor: pointer;
     outline: none;
     color: #000000;
+    text-shadow: 7px 7px 0px #8b5429;
 }
 
 .chests {
