@@ -5,7 +5,7 @@
         <meta name="MobileOptimized" content="480"/>
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <meta name="keywords" content="Adventure">
-        <meta name="description" content="A Game">
+        <meta name="description" content="The dungeon crawler you can play on a 15 minute break">
         <meta name="author" content="Austin Elke">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="HandheldFriendly" content="true"/>
@@ -83,9 +83,9 @@
             <center>
                 <table id="door_nav">
                     <tr>
-                        <td><button class="icns nav_uix">)</button></td>
-                        <td><button class="icns nav_uix">@</button></td>
-                        <td><button class="icns nav_uix">#</button></td>
+                        <td><button onclick="Engine_Hud(14)" class="icns nav_uix">)</button></td>
+                        <td><button onclick="Engine_Hud(15)" class="icns nav_uix">@</button></td>
+                        <td><button onclick="Engine_Hud(16)" class="icns nav_uix">#</button></td>
                     </tr>
                 </table>
             </center>
@@ -349,6 +349,63 @@
             <br>
             <p id="eg_plyr_scr" style="text-align: center;">shows the players score</p>
             <button class="en_uix_button" onclick="Engine_Hud(1)">continue</button>
+            <hr>
+        </div>
+
+        <div id="sc_dr_inv" class="window_scenes_base">
+            <hr>
+                <h3 style="text-align: center;">Inventory</h3>
+                <table class="tavern" style="margin-left: auto; margin-right: auto; text-align: center;">
+                    <tr class="tavern">
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 196, 0);">/</a><br><a id="gold_total">1</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 0, 0);"><</a><sup class="icns" style="color: rgb(255, 0, 0);">~</sup><br><a id="hth_pot_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(55, 255, 0);"><</a><sup class="icns" style="color: rgb(55, 255, 0);">{</sup><br><a id="pos_pot_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(153, 0, 255);"><</a><sup class="icns" style="color: rgb(153, 0, 255);">%</sup><br><a id="arm_pot_total">10</a></td>
+                    </tr>
+                    <tr class="tavern">
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 85, 0);"><</a><sup class="icns" style="color: rgb(255, 85, 0);">=</sup><br><a id="dmg_pot_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(0, 204, 255);"><</a><sup class="icns" style="color: rgb(0, 204, 255);">|</sup><br><a id="spd_pot_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(0, 183, 255);"><</a><br><a id="food_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 136, 0);"><</a><br><a id="water_total">10</a></td>
+                    </tr>
+                    <tr class="tavern">
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(80, 27, 0);"><</a><br><a id="wood_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 255, 255);"><</a><br><a id="steel_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 0, 0);"><</a><br><a id="ruby_total">10</a></td>
+                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(147, 224, 221);"><</a><br><a id="daimond_total">10</a></td>
+                    </tr>
+                </table>
+                <br>
+                <center>
+                    <button class="en_uix_button" onclick="Engine_Hud(3)">Close</button>
+                </center>
+            <hr>
+        </div>
+
+        <div id="sc_dr_sts" class="window_scenes_base">
+            <hr>
+                <h3 style="text-align: center;">Hero Stats</h3>
+                <p id="name_of_class1" style="text-align: center">the class description</p>
+                <p id="class_icon1" class="icns" style="text-align: center">@</p>
+                <p id="class_level" style="text-align: center">Level 1</p>
+                <p id="class_stats1" style="text-align: center">the class stats<br><br></p>
+                <br>
+                <center>
+                    <button class="en_uix_button" onclick="Engine_Hud(3)">Close</button>
+                </center>
+            <hr>
+        </div>
+
+        <div id="sc_dr_stry" class="window_scenes_base">
+            <hr>
+                <h3 style="text-align: center;">You Heroes Tale</h3>
+                <div id="story_content">
+                    <p>story goes here</p>
+                </div>
+                <br>
+                <center>
+                    <button class="en_uix_button" onclick="Engine_Hud(3)">Close</button>
+                </center>
             <hr>
         </div>
 

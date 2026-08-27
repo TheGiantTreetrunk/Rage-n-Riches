@@ -107,6 +107,10 @@ function Engine_Hud(comand) {
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
 
+    document.getElementById("sc_dr_inv").style.display = "none";
+    document.getElementById("sc_dr_sts").style.display = "none";
+    document.getElementById("sc_dr_stry").style.display = "none";
+
     if(comand == 0) {
         //load splash screen
         //setTimeout(toggleFade, 2000);
@@ -201,6 +205,18 @@ function Engine_Hud(comand) {
     if(comand == 13) {
         document.getElementById("eg").style.display = "block";
     }
+
+    if(comand == 14) {
+        document.getElementById("sc_dr_inv").style.display = "block";
+    }
+
+    if(comand == 15) {
+        document.getElementById("sc_dr_sts").style.display = "block";
+    }
+
+    if(comand == 16) {
+        document.getElementById("sc_dr_stry").style.display = "block";
+    }
 }
 var room_number = 0;
 var rooms_en = ["Merchant","BS","RPS","FAC","WAM","BS","PLGDR","HP","TR","BS"];
@@ -279,9 +295,9 @@ function renderClassTable() {
 	document.getElementById("class_selection_container").innerHTML = "";
 	
     let tableHtml = '<table style="margin: auto; text-align: center;"><tr>';
-    let cols = 3;
+    let cols = 4;
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 1; i < 7; i++) {
         if (i > 0 && i % cols === 0) {
             tableHtml += '</tr><tr>';
         }
@@ -843,6 +859,9 @@ function Core_Loot_Randomizer() {
     }
 
     if(encounter_outcome == 1) {
+        document.getElementById("loot_selection").style.display = "block";
+        document.getElementById("end_of_end").style.display = "none";
+        document.getElementById("loot_oc_end").innerHTML = "You made it past the encounter but with little loot...";
         //just won barely so one loot box
         loot_box_1 = Math.floor(Math.random() * loot_pool.length);
         loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
@@ -853,6 +872,9 @@ function Core_Loot_Randomizer() {
 
     if(encounter_outcome == 2) {
         //won so two loot boxes
+        document.getElementById("loot_selection").style.display = "block";
+        document.getElementById("end_of_end").style.display = "none";
+        document.getElementById("loot_oc_end").innerHTML = "You made it past the encounter with moderate loot...";
         loot_box_1 = Math.floor(Math.random() * loot_pool.length);
         loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
         loot_box_2 = Math.floor(Math.random() * loot_pool.length);
@@ -864,6 +886,9 @@ function Core_Loot_Randomizer() {
 
     if(encounter_outcome == 3) {    
         //won a battle against an enemy three loot boxes
+        document.getElementById("loot_selection").style.display = "block";
+        document.getElementById("end_of_end").style.display = "none";
+        document.getElementById("loot_oc_end").innerHTML = "You made it past the encounter with substantial loot...";
         loot_box_1 = Math.floor(Math.random() * loot_pool.length);
         loot_box_1_amount = Math.floor(Math.random() * 5) + 1;
         loot_box_2 = Math.floor(Math.random() * loot_pool.length);
