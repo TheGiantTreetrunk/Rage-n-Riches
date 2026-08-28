@@ -252,6 +252,30 @@ img {
     font-size: 36px;
 }
 
+.inventory {
+    color:#574200;
+}
+
+.inventory:hover {
+    color: #291607;
+}
+
+.stats {
+    color: #ffffff;
+}
+
+.stats:hover {
+    color: #000000;
+}
+
+.story {
+    color:#574200;
+}
+
+.story:hover {
+    color: #291607;
+}
+
 .class_select {
     width: 48px;
     height: 48px;
@@ -260,6 +284,7 @@ img {
     border: 3px solid #ffffff;
     font-family: 'Game_Icns';
     transition: background-color 0.4s;
+    box-shadow: 5px 8px #000000;
 }
 
 .class_select:has(a.red):hover,
@@ -310,6 +335,16 @@ img {
 .class_select:has(a.white):hover,
 .class_select:has(a.white).selected {
     background-color: #e0e0e0;
+}
+
+.text_shadow {
+    text-shadow: 3px 3px 0px #000000;
+}
+
+.plyr_shadow {
+    -webkit-box-reflect: below -7px linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+    position: relative;
+    z-index: 1;
 }
 
 .box {
