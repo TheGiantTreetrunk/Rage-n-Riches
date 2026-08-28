@@ -404,3 +404,25 @@ img {
     outline: none;
     color: #000000;
 }
+
+table.tavern {
+    border-collapse: separate;
+    width: auto;
+}
+
+table.tavern tr {
+    display: grid;
+    grid-template-columns: repeat(4, auto); 
+    justify-content: center;                
+    gap: 8px; 
+    margin-bottom: 8px;                                
+}
+
+td.tavern, th.tavern {
+    display: block;
+    box-sizing: border-box;
+    border: 4px solid #ffffff;
+    padding: 8px;
+    aspect-ratio: 1 / 1;
+    width: 65px;
+}

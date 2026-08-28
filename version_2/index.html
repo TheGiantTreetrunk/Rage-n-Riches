@@ -56,6 +56,7 @@
                 <button class="uix_button" onclick="Engine_Hud(2)">Play Now</button>
             </div>
             
+            <br>
             <hr>
         </div>
 
@@ -78,7 +79,7 @@
                 <button class="box" id="dr_actual_door" style="text-align: center; font-size: 128px;" onclick="Core_Door_Randomizer(1)">:</button>
             </center>
             
-            <br>
+            <p id="dr_sc" style="text-align: center">You see a door, we should break it down...</p>
             <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
             <center>
                 <table id="door_nav">
@@ -368,12 +369,6 @@
                         <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(0, 183, 255);"><</a><br><a id="food_total">10</a></td>
                         <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 136, 0);"><</a><br><a id="water_total">10</a></td>
                     </tr>
-                    <tr class="tavern">
-                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(80, 27, 0);"><</a><br><a id="wood_total">10</a></td>
-                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 255, 255);"><</a><br><a id="steel_total">10</a></td>
-                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(255, 0, 0);"><</a><br><a id="ruby_total">10</a></td>
-                        <td class="tavern"><a id="loot_icon" class="icns" style="font-size: 24px; color: rgb(147, 224, 221);"><</a><br><a id="daimond_total">10</a></td>
-                    </tr>
                 </table>
                 <br>
                 <center>
@@ -385,10 +380,10 @@
         <div id="sc_dr_sts" class="window_scenes_base">
             <hr>
                 <h3 style="text-align: center;">Hero Stats</h3>
-                <p id="name_of_class1" style="text-align: center">the class description</p>
-                <p id="class_icon1" class="icns" style="text-align: center">@</p>
-                <p id="class_level" style="text-align: center">Level 1</p>
-                <p id="class_stats1" style="text-align: center">the class stats<br><br></p>
+                <p id="name_of_class1" class="text_shadow" style="text-align: center">the class description</p>
+                <p id="class_icon1" class="icns plyr_shadow text_shadow" style="text-align: center">@</p>
+                <p id="class_level" class="text_shadow" style="text-align: center">Level 1</p>
+                <p id="class_stats1" class="text_shadow" style="text-align: center">the class stats<br><br></p>
                 <br>
                 <center>
                     <button class="en_uix_button" onclick="Engine_Hud(3)">Close</button>

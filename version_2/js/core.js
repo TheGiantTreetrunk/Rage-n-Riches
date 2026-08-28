@@ -2,6 +2,9 @@ var is_dev = 1;
 var door_hp = 0;
 var rb_core_score = 0;
 
+var dr_sc_opt = ["You see a door, we should break it down...","BREAK THE DOOR DOWN!","I bet ya a gold you cant break that door down...","Maybe we should knock on that door?"];
+var dr_sc_end = ["Welp, we broke it","I TOLD YOU TO KNOCK NICELY!","QUICK ROB THE PLACE!","FBI OPEN UP!","Stealth is optional at this point..."]
+
 var enemy_nme = ["Ghost","Glarb","Serpant","Golem","Skeleton","Toad","Blob","Ember","Goblin"];
 var enemy_hth = [3,4,3,8,4,2,2,2,4];
 var enemy_dmg = [3,4,4,6,3,2,4,4,3];
@@ -232,6 +235,8 @@ function Core_Door_Randomizer(fun) {
         document.getElementById("dr_actual_door").innerHTML = ":";
         document.getElementById("room_id").innerHTML = "Door " + room_number;
         document.getElementById("dr_actual_door").disabled = false;
+        var door_scc = Math.floor(Math.random() * dr_sc_opt.length);
+        document.getElementById("dr_sc").innerHTML = dr_sc_opt[door_scc];
     }
 
     if(fun == 1) {
@@ -242,7 +247,9 @@ function Core_Door_Randomizer(fun) {
 
         if(door_hp <= 0) {
             door_hp = 0;
-            document.getElementById("dr_hp").innerHTML = "You break down the door!";
+            var door_scc = Math.floor(Math.random() * dr_sc_end.length);
+            document.getElementById("dr_sc").innerHTML = dr_sc_end[door_scc];
+            document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
             document.getElementById("dr_actual_door").innerHTML = "X";
             document.getElementById("dr_actual_door").disabled = true;
             //alert("opening door!");
