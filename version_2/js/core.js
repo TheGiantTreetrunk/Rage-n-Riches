@@ -240,6 +240,21 @@ function Core_Door_Randomizer(fun) {
     }
 
     if(fun == 1) {
+        const button = document.getElementById('dr_actual_door');
+
+        button.addEventListener('click', () => {
+    // 1. Check if the browser & hardware support the Vibration API
+        if ('vibrate' in navigator) {
+            navigator.vibrate(500);
+
+            // OR trigger a pattern: [Vibrate, Pause, Vibrate]
+            // navigator.vibrate([200, 100, 200]);
+
+            } else {
+            //alert("Vibration API is not supported on this device/browser.");
+            console.log("Vibration API is not supported on this device/browser.");
+            }
+        });
         if(door_hp >= 1) {
             door_hp -= 1;
             document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
