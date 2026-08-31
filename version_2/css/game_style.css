@@ -418,6 +418,7 @@ img {
     cursor: pointer;
     outline: none;
     color: #8b5429;
+    box-shadow: none;
 }
 
 .chests:hover {
