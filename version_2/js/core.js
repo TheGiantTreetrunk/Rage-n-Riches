@@ -14,6 +14,7 @@ var enemy_icn = ["&","?","!",".",",","+",";","=","\x5C"];
 var enemy_clr = ["white","green","lime","gray","white","olive","purple","orange","green"];
 
 var enemy = {
+    id: 0,
     name: "",
     health: 0,
     armor: 0,
@@ -207,6 +208,7 @@ function Engine_Hud(comand) {
 
     if(comand == 13) {
         document.getElementById("eg").style.display = "block";
+        Core_Engine_Game_Over(0);
     }
 
     if(comand == 14) {
@@ -245,7 +247,7 @@ function Core_Door_Randomizer(fun) {
         button.addEventListener('click', () => {
     // 1. Check if the browser & hardware support the Vibration API
         if ('vibrate' in navigator) {
-            navigator.vibrate(500);
+            navigator.vibrate(100);
 
             // OR trigger a pattern: [Vibrate, Pause, Vibrate]
             // navigator.vibrate([200, 100, 200]);
@@ -926,6 +928,11 @@ function Core_Loot_Randomizer() {
         document.getElementById("loot_selection").style.display = "none";
         document.getElementById("end_of_end").style.display = "block";
     }
+
+    if(encounter_outcome == 5) {
+        //player death!
+        Engine_Hud(13);
+    }
 }
 
 function Core_Encounter_Loot_Callout(chest) {
@@ -955,6 +962,7 @@ function Core_Engine_Combat(comand) {
         isincombat = 1;
 
         var enmy = Math.floor(Math.random() * enemy_nme.length);
+        enemy.id = enmy;
         enemy.name = enemy_nme[enmy];
         enemy.health = enemy_hth[enmy];
         enemy.armor = enemy_arm[enmy];
@@ -967,6 +975,25 @@ function Core_Engine_Combat(comand) {
         document.getElementById("en_bs_sc").innerHTML = "You come across a " + enemy.name + " they look mad...";
         Core_Enemy_Speed_Adjust(enemy_spd[enmy]);
     }
+
+    if(comand == 1) {
+        document.getElementById("player_battle_health").innerHTML = player.hp;
+        document.getElementById("player_battle_armor").innerHTML = player.armor;
+        document.getElementById("enemy_battle_health").innerHTML= enemy.health;
+        document.getElementById("enemy_battle_armor").innerHTML = enemy.armor;
+
+        if(player.hp <= 0) {
+            player.hp = 0;
+            isincombat = 0;
+            document.getElementById("en_bs_end_of").style.display = "block";
+            document.getElementById("combat_books").style.display = "none";
+            document.getElementById("en_bs_sc").innerHTML = "You have been defeated by the " + enemy.name + "...";
+            encounter_outcome = 5;
+
+            document.getElementById("en_bs_end_of").style.display = "";
+            document.getElementById("combat_books").style.display = "none";
+        }
+    }
 }
 
 let delay = 2000;
@@ -975,6 +1002,9 @@ let intervalId;
 function Core_Enemy_Damage() {
     if(isincombat == 1) {
         console.log("Hello world!");
+        var dablage = Math.floor(Math.random() * enemy.dmg) + 1;
+        player.hp -= dablage;
+        Core_Engine_Combat(1);
     }
 }
 
@@ -986,4 +1016,11 @@ function Core_Enemy_Interval() {
 function Core_Enemy_Speed_Adjust(newDelay) {
     delay = newDelay;
     Core_Enemy_Interval();
+}
+
+function Core_Engine_Game_Over(comand) {
+    if(comand == 0) {
+        document.getElementById("eg").style.display = "block";
+        document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
+    }
 }
