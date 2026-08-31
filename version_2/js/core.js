@@ -61,7 +61,8 @@ var player = {
 	lvl: 1,
     hp: 40,  
     dmg: 20,   
-    arm: 10, 
+    arm: 10,
+    spd_mlt: 1,
 	inv: {
         gold: 0,
 		pot_lvl: 0,
@@ -71,8 +72,7 @@ var player = {
 		pot_damage: 0,
         pot_speed: 0,
         food: 3,
-        water: 3,
-        wood: 0
+        water: 3
 	}
 };
 
