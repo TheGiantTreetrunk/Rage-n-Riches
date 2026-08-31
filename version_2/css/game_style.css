@@ -290,6 +290,18 @@ img {
     color: #291607;
 }
 
+.wam_boerd {
+    width: 48px;
+    height: 48px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    font-family: 'Game_Icns';
+    transition: background-color 0.4s;
+    box-shadow: 5px 8px #000000;
+    text-shadow: none;
+}
+
 .class_select {
     width: 48px;
     height: 48px;
