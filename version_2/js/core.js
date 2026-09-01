@@ -62,6 +62,7 @@ var player = {
     hp: 40,  
     dmg: 20,   
     arm: 10,
+    thp: 10,
     spd_mlt: 1,
 	inv: {
         gold: 0,
@@ -354,6 +355,29 @@ function cheatUnlockAll() {
 }
 
 function class_selection(class_num, button_element) {
+
+    /*
+    var player = {
+    class: 0,
+	lvl: 1,
+    hp: 40,  
+    dmg: 20,   
+    arm: 10,
+    thp: 10,
+    spd_mlt: 1,
+	inv: {
+        gold: 0,
+		pot_lvl: 0,
+		pot_health: 0,
+		pot_poison: 0,
+		pot_armor: 0,
+		pot_damage: 0,
+        pot_speed: 0,
+        food: 3,
+        water: 3
+	}
+};
+ */
     
     var buttons = document.querySelectorAll('.class_select');
     buttons.forEach(function(button) {
@@ -364,13 +388,12 @@ function class_selection(class_num, button_element) {
     
     player.class = class_num;
     player.hp = class_health[class_num];
-    player.str = class_damage[class_num];
+    player.dmg = class_damage[class_num];
     player.thp = class_armor[class_num];
-    
-    
-    player.weapon_mult = 1.0; 
-    player.isPanicked = false;
-    player.stress = 0;
+    player.arm = class_armor[class_num];
+    player.spd_mlt = 1.0; 
+    player.lvl = 1;
+
 
     if (class_data[class_num]) {
         var selected_class = class_data[class_num];
@@ -385,6 +408,15 @@ function class_selection(class_num, button_element) {
                         ARMOR: ${class_unique_armor[class_num]}</span>`;
 
         document.getElementById("class_stats").innerHTML = `
+            <a class='red icns'>~</a> ${class_health[class_num]} 
+            <a class='yellow icns'>$</a> ${class_damage[class_num]} 
+            <a class='purple icns'>%</a> ${class_armor[class_num]}
+            ${gearInfo}`;
+
+        document.getElementById("name_of_class1").innerHTML = selected_class.name.toUpperCase();
+        document.getElementById("class_icon1").innerHTML = `<a class='icns ${selectedColorClass}'>@</a>`;
+        document.getElementById("class_level").innerHTML = "Level " + player.lvl;
+        document.getElementById("class_stats1").innerHTML = `
             <a class='red icns'>~</a> ${class_health[class_num]} 
             <a class='yellow icns'>$</a> ${class_damage[class_num]} 
             <a class='purple icns'>%</a> ${class_armor[class_num]}
@@ -982,13 +1014,15 @@ function Core_Engine_Combat(comand) {
 
     if(comand == 1) {
         document.getElementById("player_battle_health").innerHTML = player.hp;
-        document.getElementById("player_battle_armor").innerHTML = player.armor;
+        document.getElementById("player_battle_armor").innerHTML = player.thp;
         document.getElementById("enemy_battle_health").innerHTML= enemy.health;
         document.getElementById("enemy_battle_armor").innerHTML = enemy.armor;
 
         if(player.hp <= 0) {
             player.hp = 0;
             isincombat = 0;
+            document.getElementById("player_battle_health").innerHTML = player.hp;
+            document.getElementById("player_battle_armor").innerHTML = player.armor;
             document.getElementById("en_bs_end_of").style.display = "";
             document.getElementById("combat_books").style.display = "none";
             document.getElementById("en_bs_sc").innerHTML = "You have been defeated by the " + enemy.name + "...";

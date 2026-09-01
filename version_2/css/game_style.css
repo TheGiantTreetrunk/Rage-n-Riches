@@ -462,6 +462,7 @@ td.tavern, th.tavern {
     aspect-ratio: 1 / 1;
     width: 65px;
     box-shadow: 5px 8px #000000;
+    margin: 4px;
 }
 
 .combat_book {
