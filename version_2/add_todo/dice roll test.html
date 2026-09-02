@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Unicode Dice 2026</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        #dice-display { 
+            font-size: 100px; 
+            margin: 20px; 
+            min-height: 120px;
+            /* Ensure a font that supports these symbols is used */
+            font-family: "Segoe UI Symbol", "Apple Color Emoji", "Symbola", serif;
+        }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Unicode Dice Roll</h1>
+    
+    <!-- This div will be updated by JavaScript -->
+    <div id="dice-display">⚀</div>
+    
+    <button id="roll-btn">Roll Dice</button>
+
+    <script>
+        // 1. Select DOM elements
+        const diceDisplay = document.getElementById('dice-display');
+        const rollBtn = document.getElementById('roll-btn');
+
+        // 2. Define the roll function
+        function rollDice() {
+            // Generate random number 1-6
+            const roll = Math.floor(Math.random() * 6) + 1;
+
+            // 3. Calculate Unicode code point
+            // Face-1 (⚀) starts at U+2680 (decimal 9856)
+            // Use String.fromCodePoint for modern 2026 JS standards
+            const unicodePoint = 0x267F + roll; 
+            
+            // 4. Update the DOM
+            diceDisplay.textContent = String.fromCodePoint(unicodePoint);
+        }
+
+        // 5. Attach event listener
+        rollBtn.addEventListener('click', rollDice);
+    </script>
+
+</body>
+</html>

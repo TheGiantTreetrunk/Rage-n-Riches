@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Fire Particle Effect</title>
+  <style>
+  /* Dark background to make the embers pop */
+body {
+  margin: 0;
+  background-color: #0b0200;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+  padding-bottom: 10vh;
+}
+
+/* Fire Base Wrapper */
+.fire-container {
+  position: relative;
+  width: 150px;
+  height: 200px;
+}
+
+/* Soft glowing foundation of the fire */
+.fire-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255,68,0,0.4) 0%, rgba(0,0,0,0) 70%);
+  filter: blur(10px);
+}
+
+/* Particle Container Area */
+.particles {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual Spark/Particle Styles */
+.particles span {
+  position: absolute;
+  bottom: 0;
+  left: var(--left);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #ffeb3b 20%, #ff5722 70%, rgba(0,0,0,0) 100%);
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 10px #ff5722, 0 0 20px #ffc107;
+  
+  /* Apply the rise and lateral drift animations */
+  animation: floatUp 3s infinite linear, sway 1.5s infinite ease-in-out alternate;
+  animation-delay: var(--delay);
+}
+
+/* Keyframes: Lift up, shrink, change color from yellow/orange to transparent */
+@keyframes floatUp {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: scale(1);
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: scale(0.2);
+    background: #ff5722;
+  }
+}
+
+/* Keyframes: Lateral shifting (wind/draft simulation) */
+@keyframes sway {
+  0% {
+    margin-left: -15px;
+  }
+  100% {
+    margin-left: 15px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Fire Container -->
+  <div class="fire-container">
+    <!-- Fire Base Glow -->
+    <div class="fire-glow"></div>
+    
+    <!-- Particles/Sparks (With Inline Variables for Timing and Positioning) -->
+    <div class="particles">
+      <span style="--p: 1; --delay: 0s; --left: 20%; --size: 8px;"></span>
+      <span style="--p: 2; --delay: 0.4s; --left: 45%; --size: 12px;"></span>
+      <span style="--p: 3; --delay: 0.8s; --left: 70%; --size: 6px;"></span>
+      <span style="--p: 4; --delay: 1.2s; --left: 30%; --size: 14px;"></span>
+      <span style="--p: 5; --delay: 1.6s; --left: 60%; --size: 10px;"></span>
+      <span style="--p: 6; --delay: 2.0s; --left: 15%; --size: 7px;"></span>
+      <span style="--p: 7; --delay: 2.4s; --left: 80%; --size: 11px;"></span>
+      <span style="--p: 8; --delay: 2.8s; --left: 50%; --size: 9px;"></span>
+    </div>
+  </div>
+
+</body>
+</html>

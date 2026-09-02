@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .game-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .game-container {
+            background-color: #212626;
+            display: grid;
+            grid-template-columns: repeat(3, 160px);
+            gap: 10px;
+            border: 2px solid rgb(216, 216, 216);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .hole {
+            height: 150px;
+            background: #000000;
+            cursor: pointer;
+            border-radius: 100px;
+        }
+
+        .target {
+            background-size: 150px;
+            background-color: #ffffff;
+        }
+    </style>
+    <title>Whac-A-Mole</title>
+</head>
+
+<body>
+    <div class="game-info">
+        <div id="qte_whack_score">Score: 0</div>
+        <div id="qte_whack_timer">Time: 60s</div>
+    </div>
+    <button id="qte_whack_startButton" onclick="qte_whack_startGame()">Start Game</button>
+    <button id="qte_whack_endButton" onclick="qte_whack_endGame()" disabled>End Game</button>
+    <div class="game-container">
+        <div class="hole" id="qte_whack_hole1"></div>
+        <div class="hole" id="qte_whack_hole2"></div>
+        <div class="hole" id="qte_whack_hole3"></div>
+        <div class="hole" id="qte_whack_hole4"></div>
+        <div class="hole" id="qte_whack_hole5"></div>
+        <div class="hole" id="qte_whack_hole6"></div>
+        <div class="hole" id="qte_whack_hole7"></div>
+        <div class="hole" id="qte_whack_hole8"></div>
+        <div class="hole" id="qte_whack_hole9"></div>
+    </div>
+
+    <script>
+        const qte_whack_holes = document.querySelectorAll(".hole");
+        const qte_whack_startButton = document.getElementById("qte_whack_startButton");
+        const qte_whack_endButton = document.getElementById("qte_whack_endButton");
+        const qte_whack_scoreDisplay = document.getElementById("qte_whack_score");
+        const qte_whack_timerDisplay = document.getElementById("qte_whack_timer");
+
+        let qte_whack_timer_val;
+        let qte_whack_score_val = 0;
+        let qte_whack_countdown;
+        let qte_whack_moleInterval;
+
+        // Set the initial state to game over
+        let qte_whack_gameOver = true;
+
+        function qte_whack_comeout() {
+            qte_whack_holes.forEach(qte_whack_hole => {
+                qte_whack_hole.classList.remove('target');
+                qte_whack_hole.removeEventListener('click', qte_whack_handleMoleClick);
+            });
+
+            let qte_whack_random = qte_whack_holes[Math.floor(Math.random() * 9)];
+
+            qte_whack_random.classList.add('target');
+            qte_whack_random.addEventListener('click', qte_whack_handleMoleClick);
+        }
+
+        function qte_whack_handleMoleClick() {
+            if (!qte_whack_gameOver) {
+                qte_whack_score_val++;
+                qte_whack_scoreDisplay.textContent = `Score: ${qte_whack_score_val}`;
+            }
+            this.classList.remove('target');
+        }
+
+        function qte_whack_startGame() {
+            if (!qte_whack_gameOver) {
+                return;
+            }
+
+            qte_whack_gameOver = false;
+            qte_whack_score_val = 0;
+            qte_whack_scoreDisplay.textContent = `Score: ${qte_whack_score_val}`;
+            qte_whack_timer_val = 60;
+            qte_whack_timerDisplay.textContent = `Time: ${qte_whack_timer_val}s`;
+
+            qte_whack_startButton.disabled = true;
+            qte_whack_endButton.disabled = false;
+
+            qte_whack_countdown = setInterval(() => {
+                qte_whack_timer_val--;
+                qte_whack_timerDisplay.textContent = `Time: ${qte_whack_timer_val}s`;
+
+                if (qte_whack_timer_val <= 0) {
+                    clearInterval(qte_whack_countdown);
+                    qte_whack_gameOver = true;
+                    alert(`Game Over!\nYour final score: ${qte_whack_score_val}`);
+                    qte_whack_startButton.disabled = false;
+                    qte_whack_endButton.disabled = true;
+                }
+            }, 1000);
+
+            qte_whack_moleInterval = setInterval(() => {
+                if (!qte_whack_gameOver) qte_whack_comeout();
+            }, 1000);
+        }
+
+        function qte_whack_endGame() {
+            clearInterval(qte_whack_countdown);
+            clearInterval(qte_whack_moleInterval);
+            qte_whack_gameOver = true;
+            alert(`Game Ended!\nYour final score: ${qte_whack_score_val}`);
+            qte_whack_score_val = 0;
+            qte_whack_timer_val = 60;
+            qte_whack_scoreDisplay.textContent = `Score: ${qte_whack_score_val}`;
+            qte_whack_timerDisplay.textContent = `Time: ${qte_whack_timer_val}s`;
+            qte_whack_startButton.disabled = false;
+            qte_whack_endButton.disabled = true;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe vs AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    #status {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      background-color: #333;
+      padding: 5px;
+      border-radius: 10px;
+    }
+
+    .cell {
+      background-color: #fff;
+      border: none;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+
+    .cell:hover {
+      background-color: #e9ecef;
+    }
+
+    .cell.x { color: #dc3545; }
+    .cell.o { color: #007bff; }
+
+    #reset-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    #reset-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tic-Tac-Toe vs AI</h1>
+  <div id="status">Your turn (X)</div>
+  
+  <div class="board" id="board">
+    <button class="cell" data-index="0"></button>
+    <button class="cell" data-index="1"></button>
+    <button class="cell" data-index="2"></button>
+    <button class="cell" data-index="3"></button>
+    <button class="cell" data-index="4"></button>
+    <button class="cell" data-index="5"></button>
+    <button class="cell" data-index="6"></button>
+    <button class="cell" data-index="7"></button>
+    <button class="cell" data-index="8"></button>
+  </div>
+
+  <button id="reset-btn">Restart Game</button>
+
+  <script>
+    const cells = document.querySelectorAll('.cell');
+    const statusText = document.getElementById('status');
+    const resetBtn = document.getElementById('reset-btn');
+
+    let boardState = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X"; // User is always X
+    let isGameActive = true;
+
+    const winningConditions = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+      [0, 4, 8], [2, 4, 6]             // Diagonals
+    ];
+
+    function handleCellClick(e) {
+      const clickedCell = e.target;
+      const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+
+      // Block clicking if cell is taken, game is over, or it's the AI's turn
+      if (boardState[clickedCellIndex] !== "" || !isGameActive || currentPlayer === "O") {
+        return;
+      }
+
+      executeMove(clickedCell, clickedCellIndex);
+
+      if (isGameActive) {
+        currentPlayer = "O";
+        statusText.innerText = "AI is thinking...";
+        // Delay AI move slightly for realism
+        setTimeout(makeAIMove, 500);
+      }
+    }
+
+    function executeMove(cell, index) {
+      boardState[index] = currentPlayer;
+      cell.innerText = currentPlayer;
+      cell.classList.add(currentPlayer.toLowerCase());
+      checkResult();
+    }
+
+    function makeAIMove() {
+      if (!isGameActive) return;
+
+      // 1. Try to win
+      let move = findBestMove("O");
+      
+      // 2. Block player from winning
+      if (move === null) {
+        move = findBestMove("X");
+      }
+
+      // 3. Fallback to random empty space
+      if (move === null) {
+        const availableSpaces = [];
+        boardState.forEach((val, idx) => {
+          if (val === "") availableSpaces.push(idx);
+        });
+        if (availableSpaces.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableSpaces.length);
+          move = availableSpaces[randomIndex];
+        }
+      }
+
+      if (move !== null) {
+        const targetCell = document.querySelector(`[data-index="${move}"]`);
+        executeMove(targetCell, move);
+        
+        if (isGameActive) {
+          currentPlayer = "X";
+          statusText.innerText = "Your turn (X)";
+        }
+      }
+    }
+
+    // Helper to find a cell that completes a winning row/col/diag for a specific player
+    function findBestMove(player) {
+      for (let condition of winningConditions) {
+        const [a, b, c] = condition;
+        const vals = [boardState[a], boardState[b], boardState[c]];
+        
+        // If two matching symbols and one blank space exist in a condition
+        const playerCount = vals.filter(v => v === player).length;
+        const emptyCount = vals.filter(v => v === "").length;
+
+        if (playerCount === 2 && emptyCount === 1) {
+          if (boardState[a] === "") return a;
+          if (boardState[b] === "") return b;
+          if (boardState[c] === "") return c;
+        }
+      }
+      return null;
+    }
+
+    function checkResult() {
+      let roundWon = false;
+
+      for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+          roundWon = true;
+          break;
+        }
+      }
+
+      if (roundWon) {
+        statusText.innerText = currentPlayer === "X" ? "You Win! 🎉" : "AI Wins! 🤖";
+        isGameActive = false;
+        return;
+      }
+
+      if (!boardState.includes("")) {
+        statusText.innerText = "It's a Draw! 🤝";
+        isGameActive = false;
+        return;
+      }
+    }
+
+    function resetGame() {
+      boardState = ["", "", "", "", "", "", "", "", ""];
+      currentPlayer = "X";
+      isGameActive = true;
+      statusText.innerText = "Your turn (X)";
+      cells.forEach(cell => {
+        cell.innerText = "";
+        cell.classList.remove('x', 'o');
+      });
+    }
+
+    cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+    resetBtn.addEventListener('click', resetGame);
+  </script>
+
+</body>
+</html>

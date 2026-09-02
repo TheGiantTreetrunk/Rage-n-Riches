@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple CSS Fireworks</title>
+  <style>
+    /* Reset and dark sky background */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #050510;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container for the central explosion */
+    .firework-center {
+      position: relative;
+      width: 0;
+      height: 0;
+    }
+
+    /* Base particle styling */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #fff 20%, var(--color) 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--color), 0 0 20px var(--color);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      
+      /* Exploding animation */
+      animation: explode 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+      animation-delay: var(--delay);
+    }
+
+    /* The Physics Animation */
+    @keyframes explode {
+      0% {
+        transform: translate(-50%, -50%) translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      80% {
+        opacity: 1;
+      }
+      100% {
+        /* Move particles outwards dynamically using trigonometry mapped to variables */
+        transform: translate(-50%, -50%) 
+                   translate(
+                     calc(cos(var(--angle)) * var(--distance)), 
+                     calc(sin(var(--angle)) * var(--distance) + 40px) /* +40px simulates gravity drop */
+                   ) 
+                   scale(0.2);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- The Firework Element containing its individual particles -->
+  <div class="firework-center">
+    <!-- Row 1: Pink Sparklers -->
+    <div class="particle" style="--angle: 0deg;   --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 45deg;  --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 90deg;  --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 135deg; --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 180deg; --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 225deg; --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 270deg; --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+    <div class="particle" style="--angle: 315deg; --distance: 120px; --color: #ff3377; --delay: 0s;"></div>
+
+    <!-- Row 2: Cyan Inner Sparklers (Shorter distance) -->
+    <div class="particle" style="--angle: 22.5deg;  --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 67.5deg;  --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 112.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 157.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 202.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 247.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 292.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+    <div class="particle" style="--angle: 337.5deg; --distance: 80px; --color: #00f3ff; --delay: 0.1s;"></div>
+  </div>
+
+</body>
+</html>

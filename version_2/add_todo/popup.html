@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Popup Animation</title>
+<style>
+  .minimal-popup {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+  .minimal-popup-content {
+    background: #fff; padding: 20px; border-radius: 4px;
+    transform: scale(0.8); transition: transform 0.2s ease;
+  }
+  .minimal-popup.active { opacity: 1; visibility: visible; }
+  .minimal-popup.active .minimal-popup-content { transform: scale(1); }
+</style>
+</head>
+<body>
+
+  <!-- Trigger Button -->
+  <button class="open-btn" onclick="toggleAppPopup()">Click Me</button>
+
+  <!-- Popup Background Overlay -->
+<div class="minimal-popup" id="appPopup">
+  <div class="minimal-popup-content">
+    <h3>Popup Title</h3>
+    <p>Your content here.</p>
+    <button onclick="toggleAppPopup()">Close</button>
+  </div>
+</div>
+
+<script>
+  function toggleAppPopup() {
+    document.getElementById('appPopup').classList.toggle('active');
+  }
+</script>
+
+</body>
+</html>
