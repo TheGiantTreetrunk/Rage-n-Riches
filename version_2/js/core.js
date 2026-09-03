@@ -116,6 +116,8 @@ function Engine_Hud(comand) {
     document.getElementById("sc_dr_sts").style.display = "none";
     document.getElementById("sc_dr_stry").style.display = "none";
 
+    document.getElementById("rst_pnt").style.display = "none";
+
 
     document.getElementById("stars").style.display = "none";
     document.getElementById("stars2").style.display = "none";
@@ -157,8 +159,10 @@ function Engine_Hud(comand) {
             setTimeout(function(){ document.getElementById("cl_h_tit").innerHTML = "Ready To Embark" }, 4500);
             setTimeout(function(){ document.getElementById("cl_p_diag").innerHTML = "Your adventure awaits!" }, 4500);
             setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "block" }, 4500);
+            setTimeout(function(){ triggerNextCard() }, 500);
         } else {
             Engine_Hud(1);
+            triggerNextCard();
         }
     }
 
