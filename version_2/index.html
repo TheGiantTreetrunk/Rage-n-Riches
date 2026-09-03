@@ -41,20 +41,49 @@
 
         <div id="cs" class="window_scenes_base">
             <hr>
-            <h1 style="text-align: center" class="text_shadow">Class Select</h1> 
-            <h3 id="name_of_class" style="text-align: center" class="text_shadow">Pick A Class</h3>
-            <p id="class_description" style="text-align: center" class="text_shadow">It's too dangerous to go in alone</p>
-            <p id="class_icon" class="icns text_shadow plyr_shadow" style="text-align: center">@</p>
-            <p id="class_stats" style="text-align: center" class="text_shadow">Look! Theres so many to choose from.<br><br></p>
+            <div class="carousel-container">
+                <div class="carousel-track" id="cardTrack">
+                    <div id="char_select" class="card card-1">
+                        <h1 style="text-align: center" class="text_shadow">Class Select</h1> 
+                        <h3 id="name_of_class" style="text-align: center" class="text_shadow">Pick A Class</h3>
+                        <p id="class_description" style="text-align: center" class="text_shadow">It's too dangerous to go in alone</p>
+                        <p id="class_icon" class="icns text_shadow plyr_shadow" style="text-align: center">@</p>
+                        <p id="class_stats" style="text-align: center" class="text_shadow">Look! Theres so many to choose from.<br><br></p>
 
-            <div id="class_selection_container">
-                
-            </div>
+                        <div id="class_selection_container">
+                            
+                        </div>
 
-            <br>
-            <div style="text-align: center">
-                <button class="uix_button" onclick="Engine_Hud(2)">Play Now</button>
+                        <br>
+
+                        <div style="text-align: center">
+                            <button class="uix_button" onclick="triggerNextCard()">Next</button>
+                        </div>
+                    </div>
+
+                    <div id="dungeon_select" class="card card-2">
+                        <h1 style="text-align: center" class="text_shadow">Pick Your Dungeon</h1>
+                        <p style="text-align: center" class="text_shadow">Multiple dungeons to pick from!</p>
+                        <br>
+                        <p id="dungeon_dsc" style="text-align: center">Endless mode challenges the very heart of the hero! Fight through every door to gain points and loot!</p>
+                        <br>
+                        <center>
+                            <select name="dungeon" id="dungeons">
+                                <option class="optn" value="endless">Endless</option>
+                                <option class="optn" value="story_mode">Story Mode (Coming Soon!)</option>
+                            </select>
+                        </center>
+
+                        <br>
+
+                        <div style="text-align: center">
+                            <button class="uix_button" onclick="Engine_Hud(2)">Play Now</button>
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
+            
             
             <br>
             <hr>
@@ -405,6 +434,20 @@
             <hr>
         </div>
 
+        <div id="sc_story_line">
+            <fieldset id="story_board">
+                <div id="inventory-display">Inventory: Empty</div>
+                <br><br>
+                <div class="description-section" id="story-text">
+                    <p>This is a test description area. It can contain story text, encounter details, or any other introductory layout you need.</p>
+                </div>
+                
+                <div class="action-section" id="choices-container">
+                    
+                </div>
+            </fieldset>
+        </div>
+
         <div id="fadeElement" class="fade-out"></div>
 
         <script>
@@ -421,6 +464,32 @@
                     });
                 });
             });
+
+            let currentIndex = 0;
+            const track = document.getElementById('cardTrack');
+            const totalCards = track.children.length;
+
+            // Core function to advance the card
+            function nextCard() {
+            currentIndex = (currentIndex + 1) % totalCards; // Loops back to 0 at the end
+            const offset = -currentIndex * 100;
+            track.style.transform = `translateX(${offset}%)`;
+            }
+
+            // Flag / Custom Logic Integration Example
+            function triggerNextCard() {
+            // Plug your custom function/flag check here
+            const canAdvance = true; // Replace with your custom condition/flag
+
+            if (canAdvance) {
+                nextCard();
+            }
+            }
         </script>
+
+
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
     </body>
 </html>

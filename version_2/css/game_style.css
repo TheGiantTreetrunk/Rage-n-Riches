@@ -2,7 +2,9 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
-
+html {
+	overflow: hidden;
+}
 body {
     font-family: 'main';
     color: #ffffff;
@@ -495,3 +497,124 @@ td.tavern, th.tavern {
     background: #444;
     border-color: #fff;
 }
+
+/* Track containing all cards */
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.carousel-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease-in-out; /* Smooth slide animation */
+}
+
+    /* Individual Cards */
+.card {
+    min-width: 100%;
+    height: 100%;
+}
+
+#dungeons {
+    text-align: center;
+    width: 80%;
+    background-color: #313131;
+    padding: 16px 32px;
+    border: 2px solid white;
+    color: #ffffff;
+    box-shadow: 5px 8px #000000;
+    font-family: "main";
+}
+
+.optn {
+    text-align: left;
+}
+
+#stars {
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 
+        123px 432px #FFF, 842px 1293px #FFF, 1532px 822px #FFF, 342px 1892px #FFF,
+        1892px 421px #FFF, 754px 1432px #FFF, 932px 112px #FFF, 1421px 1654px #FFF,
+        421px 789px #FFF, 1123px 1842px #FFF, 1632px 234px #FFF, 234px 1123px #FFF,
+        1789px 932px #FFF, 542px 1532px #FFF, 1293px 642px #FFF, 822px 1789px #FFF,
+        312px 521px #FFF, 1489px 1312px #FFF, 621px 312px #FFF, 1189px 921px #FFF;
+      animation: animStar 50s linear infinite;
+    }
+
+    #stars:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 1px;
+      height: 1px;
+      background: transparent;
+      box-shadow: 
+        123px 432px #FFF, 842px 1293px #FFF, 1532px 822px #FFF, 342px 1892px #FFF,
+        1892px 421px #FFF, 754px 1432px #FFF, 932px 112px #FFF, 1421px 1654px #FFF,
+        421px 789px #FFF, 1123px 1842px #FFF, 1632px 234px #FFF, 234px 1123px #FFF,
+        1789px 932px #FFF, 542px 1532px #FFF, 1293px 642px #FFF, 822px 1789px #FFF,
+        312px 521px #FFF, 1489px 1312px #FFF, 621px 312px #FFF, 1189px 921px #FFF;
+    }
+
+    #stars2 {
+      width: 2px;
+      height: 2px;
+      background: transparent;
+      box-shadow: 
+        412px 832px #FFF, 1242px 393px #FFF, 932px 1422px #FFF, 1742px 292px #FFF,
+        292px 1742px #FFF, 1154px 832px #FFF, 632px 1512px #FFF, 1821px 654px #FFF,
+        821px 289px #FFF, 323px 1242px #FFF, 1432px 1734px #FFF, 1534px 523px #FFF;
+      animation: animStar 100s linear infinite;
+    }
+
+    #stars2:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 2px;
+      height: 2px;
+      background: transparent;
+      box-shadow: 
+        412px 832px #FFF, 1242px 393px #FFF, 932px 1422px #FFF, 1742px 292px #FFF,
+        292px 1742px #FFF, 1154px 832px #FFF, 632px 1512px #FFF, 1821px 654px #FFF,
+        821px 289px #FFF, 323px 1242px #FFF, 1432px 1734px #FFF, 1534px 523px #FFF;
+    }
+
+    #stars3 {
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: 
+        812px 232px #FFF, 342px 1593px #FFF, 1632px 422px #FFF, 1142px 1292px #FFF,
+        692px 942px #FFF, 1454px 1832px #FFF, 232px 612px #FFF, 1221px 1154px #FFF;
+      animation: animStar 150s linear infinite;
+    }
+
+    #stars3:after {
+      content: " ";
+      position: absolute;
+      top: 2000px;
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: 
+        812px 232px #FFF, 342px 1593px #FFF, 1632px 422px #FFF, 1142px 1292px #FFF,
+        692px 942px #FFF, 1454px 1832px #FFF, 232px 612px #FFF, 1221px 1154px #FFF;
+    }
+
+    @keyframes animStar {
+      from {
+        transform: translateY(0px);
+      }
+      to {
+        transform: translateY(-2000px);
+      }
+    }

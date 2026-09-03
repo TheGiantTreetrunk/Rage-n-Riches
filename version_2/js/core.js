@@ -110,10 +110,16 @@ function Engine_Hud(comand) {
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
+    document.getElementById("sc_story_line").style.display = "none";
 
     document.getElementById("sc_dr_inv").style.display = "none";
     document.getElementById("sc_dr_sts").style.display = "none";
     document.getElementById("sc_dr_stry").style.display = "none";
+
+
+    document.getElementById("stars").style.display = "none";
+    document.getElementById("stars2").style.display = "none";
+    document.getElementById("stars3").style.display = "none";
 
     if(comand == 0) {
         //load splash screen
@@ -131,6 +137,9 @@ function Engine_Hud(comand) {
         //load class select
         room_number = 0;
         document.getElementById("cs").style.display = "block";
+        document.getElementById("stars").style.display = "";
+        document.getElementById("stars2").style.display = "";
+        document.getElementById("stars3").style.display = "";
         if(is_dev == 0) {
 		    renderClassTable();
         } else {
