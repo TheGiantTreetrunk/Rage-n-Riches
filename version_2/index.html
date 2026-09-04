@@ -12,6 +12,8 @@
 
         <link href='css/game_style.css?=v1.0' rel='stylesheet'>
         <script defer type="text/javascript" src="js/core.js?=v1.0"></script>
+        <script defer type="text/javascript" src="js/quest_core.js?=v1.0"></script>
+        <script defer type="text/javascript" src="js/text_adventure_core.js?=v1.0"></script>
     </head>
 
     <body onload="Start()">
@@ -22,7 +24,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.1 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.2 alpha test</p>
             <hr>
         </div>
 
@@ -65,7 +67,7 @@
                         <h1 style="text-align: center" class="text_shadow">Pick Your Dungeon</h1>
                         <p style="text-align: center" class="text_shadow">Multiple dungeons to pick from!</p>
                         <br>
-                        <p id="dungeon_dsc" style="text-align: center">Endless mode challenges the very heart of the hero! Fight through every door to gain points and loot!</p>
+                        <p id="dungeon_dsc" class="text_shadow" style="text-align: center">Endless mode challenges the very heart of the hero! Fight through every door to gain points and loot!</p>
                         <br>
                         <center>
                             <select name="dungeon" id="dungeons">
@@ -115,8 +117,8 @@
                     <tr>
                         <td><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></td>
                         <td><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></td>
-                        <td><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Story</p></td>
-                        <td><button onclick="Engine_Hud(6)" class="icns nav_uix text_shadow story">t</button></td>
+                        <td><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></td>
+                        <td><button onclick="Engine_Hud(9)" class="icns nav_uix text_shadow story">t</button></td>
                     </tr>
                 </table>
             </center>
@@ -294,6 +296,9 @@
             <hr>
             <h3 style="text-align: center">Encounter</h3>
             <p style="text-align: center">Healing Pool</p>
+            <center>
+                <div id="en_hp_dice" class="dice-display">⚀</div>
+            </center>
             <p id="c_en_hp_oc" style="text-align: center">You have discovered a healing pool </p>
             <p style="text-align: center">
                 +10 Health
@@ -334,6 +339,23 @@
                 </div>
             
             <div id="en_tr_end">
+                <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
+            </div>
+            </center>
+            <hr>
+        </div>
+
+        <div id="en8" class="window_scenes_base">
+            <hr>
+            <h3 style="text-align: center">Encounter</h3>
+            <p style="text-align: center">Matching Lock</p>
+            <p id="c_en_ml_oc" style="text-align: center">You have discovered a trap in this room.</p>
+            <center>
+                <div id="en_ml_op">
+                    
+                </div>
+            
+            <div id="en_ml_end">
                 <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
@@ -421,11 +443,17 @@
             <hr>
         </div>
 
-        <div id="sc_dr_stry" class="window_scenes_base">
+        <div id="sc_dr_stry" class="window_scenes_base text_shadow">
             <hr>
-                <h3 style="text-align: center;">You Heroes Tale</h3>
-                <div id="story_content">
-                    <p>story goes here</p>
+                <h2 style="text-align: center">Active Quests</h2>
+                <div id="quest-list" class="quest-container">
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #555; margin: 20px 0;">
+
+                <div class="actions">
+                    <button onclick="performAction('wood')">🪓 Chop Wood</button>
+                    <button onclick="performAction('slime')">⚔️ Slay Slime</button>
                 </div>
                 <br>
                 <center>

@@ -107,6 +107,7 @@ function Engine_Hud(comand) {
     document.getElementById("en5").style.display = "none";
     document.getElementById("en6").style.display = "none";
     document.getElementById("en7").style.display = "none";
+    document.getElementById("en8").style.display = "none";
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
@@ -203,6 +204,7 @@ function Engine_Hud(comand) {
     if(comand == 9) {
         //plugged HEALING POOL
         document.getElementById("en6").style.display = "block";
+        Core_Encounter_HP(0);
     }
 
     if(comand == 10) {
@@ -235,6 +237,7 @@ function Engine_Hud(comand) {
 
     if(comand == 16) {
         document.getElementById("sc_dr_stry").style.display = "block";
+        render();
     }
 }
 var room_number = 0;
@@ -617,47 +620,51 @@ var en_hp_choices = ["Death","Fight","Nothing","+2 Health","+5 Health","+10 Heal
 
 function Core_Encounter_HP(comand) {
     if(comand == 0) {
-        document.getElementById("c_en_fac_oc").innerHTML = "You have discovered a healing pool!";
-        document.getElementById("en_hp_op").style.display = "block";
+        document.getElementById("c_en_hp_oc").innerHTML = "You have discovered a healing pool!";
+        document.getElementById("en_hp_op").style.display = "";
         document.getElementById("en_hp_end").style.display = "none";
     }
 
     if(comand == 1) {
         hp_choice = Math.floor(Math.random() * en_hp_choices.length);
+        const diceDisplay = document.getElementById('en_hp_dice');
+        const unicodePoint = 0x267F + hp_choice;
+
+        diceDisplay.textContent = String.fromCodePoint(unicodePoint);
 
         if(hp_choice == 0) {
             //death
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool to only discover its acid...";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool to only discover its acid...";
             encounter_outcome = 0;
         }
 
         if(hp_choice == 1) {
             //Fight
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and are attacked!";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool and are attacked!";
             encounter_outcome = 0;
         }
 
         if(hp_choice == 2) {
             //nothing
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and feel no effects!";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool and feel no effects!";
             encounter_outcome = 1;
         }
 
         if(hp_choice == 3) {
             //2 health
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 2 health!";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool and gain 2 health!";
             encounter_outcome = 2;
         }
 
         if(hp_choice == 4) {
             //2 health
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 5 health!";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool and gain 5 health!";
             encounter_outcome = 2;
         }
 
         if(hp_choice == 5) {
             //2 health
-            document.getElementById("c_en_fac_oc").innerHTML = "You enter the pool and gain 10 health!";
+            document.getElementById("c_en_hp_oc").innerHTML = "You enter the pool and gain 10 health!";
             encounter_outcome = 2;
         }
 
@@ -666,7 +673,7 @@ function Core_Encounter_HP(comand) {
     }
 
     if(comand == 2) {
-        document.getElementById("c_en_fac_oc").innerHTML = "You decided its not worth the risk...";
+        document.getElementById("c_en_hp_oc").innerHTML = "You decided its not worth the risk...";
         document.getElementById("en_hp_op").style.display = "none";
         document.getElementById("en_hp_end").style.display = "block";
         encounter_outcome = 1;
@@ -1075,3 +1082,75 @@ function Core_Engine_Game_Over(comand) {
         document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
     }
 }
+
+const board = document.getElementById('chapel-display');
+    const symbols = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉'];
+    let cards = [...symbols, ...symbols];
+    let flippedCards = [];
+    let matchedCount = 0;
+    let lockBoard = false;
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function createCard(symbol) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+            <div class="card-face card-front">?</div>
+            <div class="card-face card-back">${symbol}</div>
+        `;
+        card.addEventListener('click', flipCard);
+        return card;
+    }
+
+    function flipCard() {
+        if (lockBoard || this.classList.contains('flipped')) return;
+
+        this.classList.add('flipped');
+        flippedCards.push(this);
+
+        if (flippedCards.length === 2) {
+            checkMatch();
+        }
+    }
+
+    function checkMatch() {
+        lockBoard = true;
+        const [card1, card2] = flippedCards;
+            
+            // Match logic based on text symbol inside the card
+        const symbol1 = card1.querySelector('.card-back').textContent;
+        const symbol2 = card2.querySelector('.card-back').textContent;
+
+        if (symbol1 === symbol2) {
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            resetTurn();
+            matchedCount += 2;
+            if (matchedCount === cards.length) setTimeout(() => alert('You Won!'), 500);
+        } else {
+            setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            resetTurn();
+        }, 1000);
+    }
+}
+
+function resetTurn() {
+    flippedCards = [];
+    lockBoard = false;
+}
+
+function initGame() {
+    board.innerHTML = '';
+    matchedCount = 0;
+    const shuffledCards = shuffle(cards);
+    shuffledCards.forEach(symbol => {
+        board.appendChild(createCard(symbol));
+    });
+}
+
+        //initGame();
