@@ -636,7 +636,7 @@ td.tavern, th.tavern {
     font-family: "Segoe UI Symbol", "Apple Color Emoji", "Symbola", serif;
 }
 
-.card {
+.card1 {
     width: 64px;
     height: 64px;
     position: relative;
@@ -645,11 +645,11 @@ td.tavern, th.tavern {
     cursor: pointer;
 }
 
-.card.flipped {
+.card1.flipped {
     transform: rotateY(180deg);
 }
 
-.card-face {
+.card1-face {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -662,18 +662,18 @@ td.tavern, th.tavern {
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-.card-front {
+.card1-front {
     background-color: var(--card-color);
     color: white;
 }
 
-.card-back {
+.card1-back {
     background-color: #fff;
     transform: rotateY(180deg);
     color: #000;
 }
 
-.card.matched .card-back {
+.card1.matched .card-back {
     background-color: var(--match-color);
     color: white;
 }
