@@ -24,7 +24,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.25 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.275 alpha test</p>
             <hr>
         </div>
 
@@ -34,8 +34,17 @@
             <p style="text-align: center" class="text_shadow">version two</p>
             <br>
             <center>
+                <br>
+                <p>@</p>
+                <br>
                 <button class="uix_button" onclick="Engine_Hud(1)" style="text-align: center">Play Now</button>
+                <br><br><br>
+                <h4 id="login_greeting">Welcome Back!</h4>
+                <div id="login-info">Checking history...</div>
+                <div id="time-away" class="time-diff"></div>
+            
             </center>
+            
             <br>
             <p style="text-align: center" class="text_shadow">[C] 2026 Austin Elke. All Rights Reserved</p>
             <hr>
@@ -134,7 +143,7 @@
                         <td><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></td>
                         <td><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></td>
                         <td><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></td>
-                        <td><button onclick="Engine_Hud(9)" class="icns nav_uix text_shadow story">t</button></td>
+                        <td><button onclick="Engine_Hud(7)" class="icns nav_uix text_shadow story">t</button></td>
                     </tr>
                 </table>
             </center>
@@ -250,22 +259,32 @@
         </div>
 
         <div id="en4" class="window_scenes_base">
-            <hr>
-            <h3 style="text-align: center">Encounter</h3>
-            <p style="text-align: center">Plugged Drain</p>
+            <h3 style="text-align: center">Encounter</h3><br>
+            <p style="text-align: center">Plugged Drain</p><br>
             <p id="c_en_plg_dr_oc" style="text-align: center">Water starts filling the room. Unclog the drain quickly!</p>
+            <br><br>
             <center>
                 <div id="en_plgdr_board">
                     <progress id="pg_en_plgdr" value="12" max="100"></progress>
-                    <br><br>
+                    <br><br><br>
                     <button class="en_uix_button" onclick="Core_Encounter_PLG_DR(3)">Plunge!</button>
                 </div>
-                <br><br>
-                <div id="en_plgdr_end">
-                    <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
+                <div id="en_plgdr_end" style="display: none;">
+                    <button class="en_uix_button" onclick="Engine_Hud(12)">Continue</button>
                 </div>
             </center>
-            <hr>
+        </div>
+
+        <div class="water-container" id="water_container">
+            <div class="pixel-wave"></div>
+            <div class="pixel-wave-sub"></div>
+
+            <!-- 8-Bit Pixel Bubbles -->
+            <div class="pixel-bubble"></div>
+            <div class="pixel-bubble"></div>
+            <div class="pixel-bubble"></div>
+            <div class="pixel-bubble"></div>
+            <div class="pixel-bubble"></div>
         </div>
 
         <div id="en5" class="window_scenes_base">
@@ -449,6 +468,7 @@
                 </table>
                 <br>
                 <center>
+                    <button class="open-btn" onclick="toggleAppPopup()">Click Me</button>
                     <button class="en_uix_button" onclick="Engine_Hud(3)">Close</button>
                 </center>
             <hr>
@@ -559,5 +579,29 @@
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
+
+        <div id="firefly1" class="firefly"></div>
+        <div id="firefly2" class="firefly"></div>
+        <div id="firefly3" class="firefly"></div>
+        <div id="firefly4" class="firefly"></div>
+        <div id="firefly5" class="firefly"></div>
+        <div id="firefly6" class="firefly"></div>
+        <div id="firefly7" class="firefly"></div>
+        <div id="firefly8" class="firefly"></div>
+        <div id="firefly9" class="firefly"></div>
+        <div id="firefly10" class="firefly"></div>
+        <div id="firefly11" class="firefly"></div>
+        <div id="firefly12" class="firefly"></div>
+        <div id="firefly13" class="firefly"></div>
+        <div id="firefly14" class="firefly"></div>
+        <div id="firefly15" class="firefly"></div>
+
+        <div class="minimal-popup" id="appPopup">
+            <div class="minimal-popup-content">
+                <h3>Popup Title</h3>
+                <p>Your content here.</p>
+                <button onclick="toggleAppPopup()">Close</button>
+            </div>
+        </div>
     </body>
 </html>

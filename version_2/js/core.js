@@ -92,6 +92,46 @@ function Hud_Effect_Fade() {
     document.getElementById('fadeElement').classList.toggle('fade-out');
 }
 
+function trackLogin() {
+    const displayElement = document.getElementById('login-info');
+    const awayElement = document.getElementById('time-away');
+    
+    // 1. Get current time in milliseconds
+    const now = Date.now(); 
+
+    // 2. Retrieve the previous login (stored as a number string)
+    const lastLoginMillis = localStorage.getItem('lastLoginMillis');
+
+    if (lastLoginMillis) {
+        const lastDate = new Date(parseInt(lastLoginMillis, 10));
+        displayElement.innerHTML = `Last login: <b>${lastDate.toLocaleString()}</b>`;
+
+        // 3. Calculate the difference
+        const diffInMs = now - parseInt(lastLoginMillis, 10);
+        awayElement.innerText = `You were away for: ${formatTime(diffInMs)}`;
+    } else {
+        // Updated welcome text and cleared away element for new players
+        displayElement.innerHTML = "Welcome new hero!";
+        if (awayElement) awayElement.innerText = "";
+    }
+
+    // 4. Update localStorage with the current time for next time
+    localStorage.setItem('lastLoginMillis', now);
+}
+
+// Helper function to turn milliseconds into a readable string
+function formatTime(ms) {
+    let seconds = Math.floor(ms / 1000);
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ${hours % 24}h ${minutes % 60}m`;
+    if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
+}
+
 function Engine_Hud(comand) {
     //controls the Hud and main visuals (essentially a scene changer)
     document.getElementById("ss").style.display = "none";
@@ -126,6 +166,9 @@ function Engine_Hud(comand) {
     document.getElementById("stars3").style.display = "none";
 
     document.getElementById("tracker").style.display = "none";
+    document.getElementById("water_container").style.display = "none";
+
+
 
     if(comand == 0) {
         //load splash screen
@@ -137,6 +180,7 @@ function Engine_Hud(comand) {
         //document.getElementById("ss").style.display = "block";
         //document.body.classList.remove('body_class_main_menu');
         document.body.classList.add('body_class_main_menu');
+        trackLogin();
     }
 
     if(comand == 1) {
@@ -228,6 +272,7 @@ function Engine_Hud(comand) {
         //plugged drain en4
         document.getElementById("tracker").style.display = "";
         document.getElementById("en4").style.display = "";
+        document.getElementById("water_container").style.display = "";
         Core_Encounter_PLG_DR(0);
     }
 
@@ -917,57 +962,65 @@ function en_wam_wack(comand) {
 }
 
 var en_plg_dr_plug_health = 0;
-var en_plg_dr_water_lvl = 0;
-function Core_Encounter_PLG_DR(comand) {
-    var en_plg_dr_interval = 12;
-    if(comand == 0) {
+    var en_plg_dr_water_lvl = 0;
+    var en_plg_dr_interval = null;
+    var encounter_outcome = 0;
+
+    function Core_Encounter_PLG_DR(comand) {
+      if(comand == 0) {
+        clearInterval(en_plg_dr_interval);
         en_plg_dr_plug_health = Math.floor(Math.random() * 50) + 1;
         en_plg_dr_water_lvl = 12;
+        
         document.getElementById("c_en_plg_dr_oc").innerHTML = "Water starts filling the room. Unclog the drain quickly!";
-        en_plg_dr_interval = setInterval(Core_Encounter_DRN_Prog, 600);
         document.getElementById("en_plgdr_end").style.display = "none";
         document.getElementById("en_plgdr_board").style.display = "block";
-    }
+        
+        en_plg_dr_interval = setInterval(Core_Encounter_DRN_Prog, 600);
+        Update_Water_UI();
+      }
 
-    if(comand == 1) {
+      if(comand == 1) {
         document.getElementById("c_en_plg_dr_oc").innerHTML = "The water has filled the room. Your body floats around like a fish...";
         document.getElementById("en_plgdr_end").style.display = "block";
         document.getElementById("en_plgdr_board").style.display = "none";
         clearInterval(en_plg_dr_interval);
         encounter_outcome = 0;
-    }
+      }
 
-    if(comand == 2) {
-        document.getElementById("c_en_plg_dr_oc").innerHTML = "You unclogged the drain and succesfully drained out the water of the room!";
+      if(comand == 2) {
+        document.getElementById("c_en_plg_dr_oc").innerHTML = "You unclogged the drain and successfully drained out the water!";
         document.getElementById("en_plgdr_end").style.display = "block";
         document.getElementById("en_plgdr_board").style.display = "none";
         clearInterval(en_plg_dr_interval);
         encounter_outcome = 2;
-    }
+        
+        en_plg_dr_water_lvl = 0;
+        Update_Water_UI();
+      }
 
-    if(comand == 3) {
-        //unclogg the drain!
+      if(comand == 3) {
         en_plg_dr_plug_health -= 1;
-
         if(en_plg_dr_plug_health <= 0) {
-            Core_Encounter_PLG_DR(2);
+          Core_Encounter_PLG_DR(2);
         }
+      }
     }
-}
 
-function Core_Encounter_DRN_Prog() {
-    en_plg_dr_water_lvl += 1;
+    function Core_Encounter_DRN_Prog() {
+      en_plg_dr_water_lvl += 1;
 
-    if(en_plg_dr_water_lvl >= 100) {
+      if(en_plg_dr_water_lvl >= 100) {
         Core_Encounter_PLG_DR(1);
+      }
+
+      Update_Water_UI();
     }
 
-    if(en_plg_dr_water_lvl <= 0) {
-        Core_Encounter_PLG_DR(2);
+    function Update_Water_UI() {
+      document.getElementById("pg_en_plgdr").value = en_plg_dr_water_lvl;
+      document.getElementById("water_container").style.height = en_plg_dr_water_lvl + "%";
     }
-
-    document.getElementById("pg_en_plgdr").value = en_plg_dr_water_lvl;
-}
 
 function Core_Encounter_MERCHANT(comand) {}
 
@@ -1147,4 +1200,8 @@ function Core_Inventory() {
     document.getElementById("spd_pot_total").innerHTML = player.inv.pot_speed;
     document.getElementById("food_total").innerHTML = player.inv.food;
     document.getElementById("water_total").innerHTML = player.inv.water;
+}
+
+function toggleAppPopup() {
+    document.getElementById('appPopup').classList.toggle('active');
 }
