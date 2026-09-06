@@ -111,6 +111,7 @@ function Engine_Hud(comand) {
     document.getElementById("enout").style.display = "none";
     document.getElementById("ad").style.display = "none";
     document.getElementById("eg").style.display = "none";
+    document.getElementById("fclr").style.display = "none";
     document.getElementById("sc_story_line").style.display = "none";
 
     document.getElementById("sc_dr_inv").style.display = "none";
@@ -124,13 +125,15 @@ function Engine_Hud(comand) {
     document.getElementById("stars2").style.display = "none";
     document.getElementById("stars3").style.display = "none";
 
+    document.getElementById("tracker").style.display = "none";
+
     if(comand == 0) {
         //load splash screen
         //setTimeout(toggleFade, 2000);
-        setTimeout(function(){ document.getElementById("ss").style.display = "block" }, 1500);
+        setTimeout(function(){ document.getElementById("ss").style.display = "" }, 1500);
         setTimeout(function(){ document.getElementById("ss").style.display = "none" }, 3500);
         
-        setTimeout(function(){ document.getElementById("mm").style.display = "block" }, 4500);
+        setTimeout(function(){ document.getElementById("mm").style.display = "" }, 4500);
         //document.getElementById("ss").style.display = "block";
         //document.body.classList.remove('body_class_main_menu');
         document.body.classList.add('body_class_main_menu');
@@ -139,7 +142,7 @@ function Engine_Hud(comand) {
     if(comand == 1) {
         //load class select
         room_number = 0;
-        document.getElementById("cs").style.display = "block";
+        document.getElementById("cs").style.display = "";
         document.getElementById("stars").style.display = "";
         document.getElementById("stars2").style.display = "";
         document.getElementById("stars3").style.display = "";
@@ -156,10 +159,10 @@ function Engine_Hud(comand) {
             document.getElementById("cl_h_tit").innerHTML = "Loading...";
             document.getElementById("cl_p_diag").innerHTML = "Creating your adventure";
             document.getElementById("cl_st_bttn").style.display = "none";
-            document.getElementById("cl").style.display = "block";
+            document.getElementById("cl").style.display = "";
             setTimeout(function(){ document.getElementById("cl_h_tit").innerHTML = "Ready To Embark" }, 4500);
             setTimeout(function(){ document.getElementById("cl_p_diag").innerHTML = "Your adventure awaits!" }, 4500);
-            setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "block" }, 4500);
+            setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "" }, 4500);
             setTimeout(function(){ triggerNextCard() }, 500);
         } else {
             Engine_Hud(1);
@@ -168,79 +171,94 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 3) {
-        document.getElementById("dr").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("dr").style.display = "";
         Core_Door_Randomizer(0);
     }
 
     if(comand == 4) {
         //Flip a Coin en2
-        document.getElementById("en2").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en2").style.display = "";
         Core_Encounter_FAC(0);
     }
 
     if(comand == 5) {
         //rock paper scissors en1
-        document.getElementById("en1").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en1").style.display = "";
         Core_Encounter_RPS(0);
     }
 
     if(comand == 6) {
         //whack a mole ish en3
-        document.getElementById("en3").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en3").style.display = "";
         Core_Encounter_WAM(0);
     }
 
     if(comand == 7) {
         //plugged drain en4
-        document.getElementById("en4").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en4").style.display = "";
         Core_Encounter_PLG_DR(0);
     }
 
     if(comand == 8) {
         //plugged MERCHANT
-        document.getElementById("en5").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en5").style.display = "";
     }
 
     if(comand == 9) {
         //plugged HEALING POOL
-        document.getElementById("en6").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en6").style.display = "";
         Core_Encounter_HP(0);
     }
 
     if(comand == 10) {
         //plugged TRAPPED ROOM
-        document.getElementById("en7").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("en7").style.display = "";
     }
 
     if(comand == 11) {
-        document.getElementById("bs").style.display = "block";
+        document.getElementById("tracker").style.display = "";
+        document.getElementById("bs").style.display = "";
         Core_Engine_Combat(0);
     }
 
     if(comand == 12) {
-        document.getElementById("enout").style.display = "block";
+        document.getElementById("enout").style.display = "";
         Core_Loot_Randomizer();
     }
 
     if(comand == 13) {
-        document.getElementById("eg").style.display = "block";
+        document.getElementById("eg").style.display = "";
         Core_Engine_Game_Over(0);
     }
 
     if(comand == 14) {
-        document.getElementById("sc_dr_inv").style.display = "block";
+        document.getElementById("sc_dr_inv").style.display = "";
     }
 
     if(comand == 15) {
-        document.getElementById("sc_dr_sts").style.display = "block";
+        document.getElementById("sc_dr_sts").style.display = "";
     }
 
     if(comand == 16) {
-        document.getElementById("sc_dr_stry").style.display = "block";
+        document.getElementById("sc_dr_stry").style.display = "";
         render();
+    }
+
+    if(comand == 17) {
+        document.getElementById("fclr").style.display = "";
     }
 }
 var room_number = 0;
+var floor_number = 1;
+var floor_tally = 0;
 var rooms_en = ["Merchant","BS","RPS","FAC","WAM","BS","PLGDR","HP","TR","BS"];
 
 function Core_Door_Randomizer(fun) {
@@ -248,14 +266,23 @@ function Core_Door_Randomizer(fun) {
     document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
 
     if(fun == 0) {
-        room_number += 1;
-        door_hp = Math.floor(Math.random() * 25) + 1;
-        document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
-        document.getElementById("dr_actual_door").innerHTML = ":";
-        document.getElementById("room_id").innerHTML = "Door " + room_number;
-        document.getElementById("dr_actual_door").disabled = false;
-        var door_scc = Math.floor(Math.random() * dr_sc_opt.length);
-        document.getElementById("dr_sc").innerHTML = dr_sc_opt[door_scc];
+        if(floor_tally <= 5) {
+            room_number += 1;
+            floor_tally += 1;
+            document.getElementById("room_floor_tracker").innerHTML = "Floor " + floor_number + "-" + room_number;
+            door_hp = Math.floor(Math.random() * 25) + 1;
+            document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
+            document.getElementById("dr_actual_door").innerHTML = ":";
+            document.getElementById("room_id").innerHTML = "Door " + room_number;
+            document.getElementById("dr_actual_door").disabled = false;
+            var door_scc = Math.floor(Math.random() * dr_sc_opt.length);
+            document.getElementById("dr_sc").innerHTML = dr_sc_opt[door_scc];
+        } else if (floor_tally == 6) {
+            floor_tally = 0;
+            room_number = 0;
+            floor_number += 1;
+            Engine_Hud(17);
+        }
     }
 
     if(fun == 1) {

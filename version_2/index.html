@@ -101,6 +101,22 @@
             </center>
             <hr>
         </div>
+
+        <div class="rb_dung_hud_tracker" id="tracker">
+            <div class="rb_dung_hud_node" id="room_1_id">⚔️</div>
+            <div class="rb_dung_hud_connector"></div>
+            <div class="rb_dung_hud_node" id="room_2_id">❓</div>
+            <div class="rb_dung_hud_connector"></div>
+            <div class="rb_dung_hud_node" id="room_3_id">⚔️</div>
+
+            <div class="rb_dung_hud_banner" id="room_floor_tracker">Floor 1-3</div>
+
+            <div class="rb_dung_hud_node" id="room_4_id">❓</div>
+            <div class="rb_dung_hud_connector"></div>
+            <div class="rb_dung_hud_node" id="room_5_id">💀</div>
+            <div class="rb_dung_hud_connector"></div>
+            <div class="rb_dung_hud_node" id="room_6_id">👑</div>
+        </div>
  
         <div id="dr" class="window_scenes_base">
             <hr>
@@ -401,6 +417,16 @@
             <br>
             <p id="eg_plyr_scr" style="text-align: center;">shows the players score</p>
             <button class="en_uix_button" onclick="Engine_Hud(1)">continue</button>
+            <hr>
+        </div>
+
+        <div id="fclr" class="window_scenes_base">
+            <hr>
+            <h3 id="fcle_title" style="text-align: center;">Floor Cleared</h3>
+            <p id="fcle_sc" style="text-align: center;">You have cleared this floor, it only gets harder from here...</p>
+            <br>
+            <p id="fclr_plyr_scr" style="text-align: center;">shows the players score</p>
+            <button class="en_uix_button" onclick="Engine_Hud(3)">Continue</button>
             <hr>
         </div>
 
