@@ -140,6 +140,33 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 1) {
+
+        if(player.class != 0) {
+
+            //player has died and is reloading...
+            rb_core_score = 0;
+            player.hp = class_health[player.class];
+            player.dmg = class_damage[player.class];
+            player.thp = class_armor[player.class];
+            player.arm = class_armor[player.class];
+            player.spd_mlt = 1.0; 
+            player.lvl = 1;
+
+            floor_number = 1;
+            room_number = 0;
+            floor_tally = 0;
+
+            player.inv.gold = 0;
+		    player.inv.pot_lvl = 0;
+		    player.inv.pot_health = 0;
+		    player.inv.pot_poison = 0;
+		    player.inv.pot_armor = 0;
+		    player.inv.pot_damage = 0;
+            player.inv.pot_speed = 0;
+            player.inv.food = 3;
+            player.inv.water = 3;
+	
+        }
         //load class select
         room_number = 0;
         document.getElementById("cs").style.display = "";
@@ -1108,4 +1135,16 @@ function Core_Engine_Game_Over(comand) {
         document.getElementById("eg").style.display = "block";
         document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
     }
+}
+
+function Core_Inventory() {
+    document.getElementById("gold_total").innerHTML = player.inv.gold;
+    document.getElementById("hth_pot_total").innerHTML = player.inv.pot_health;
+    document.getElementById("pos_pot_total").innerHTML = player.inv.pot_poison;
+    document.getElementById("arm_pot_total").innerHTML = player.inv.pot_armor;
+
+    document.getElementById("dmg_pot_total").innerHTML = player.inv.pot_damage;
+    document.getElementById("spd_pot_total").innerHTML = player.inv.pot_speed;
+    document.getElementById("food_total").innerHTML = player.inv.food;
+    document.getElementById("water_total").innerHTML = player.inv.water;
 }
