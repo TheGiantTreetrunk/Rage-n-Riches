@@ -11,12 +11,46 @@
         <meta name="HandheldFriendly" content="true"/>
 
         <link href='css/game_style.css?=v1.0' rel='stylesheet'>
-        <script defer type="text/javascript" src="js/core.js?=v1.0"></script>
-        <script defer type="text/javascript" src="js/quest_core.js?=v1.0"></script>
-        <script defer type="text/javascript" src="js/text_adventure_core.js?=v1.0"></script>
+        <script defer type="text/javascript" src="js/core.js"></script>
+        <script defer type="text/javascript" src="js/quest_core.js"></script>
+        <script defer type="text/javascript" src="js/text_adventure_core.js"></script>
     </head>
 
     <body onload="Start()">
+        <div id="firefly1" class="firefly"></div>
+        <div id="firefly2" class="firefly"></div>
+        <div id="firefly3" class="firefly"></div>
+        <div id="firefly4" class="firefly"></div>
+        <div id="firefly5" class="firefly"></div>
+        <div id="firefly6" class="firefly"></div>
+        <div id="firefly7" class="firefly"></div>
+        <div id="firefly8" class="firefly"></div>
+        <div id="firefly9" class="firefly"></div>
+        <div id="firefly10" class="firefly"></div>
+        <div id="firefly11" class="firefly"></div>
+        <div id="firefly12" class="firefly"></div>
+        <div id="firefly13" class="firefly"></div>
+        <div id="firefly14" class="firefly"></div>
+        <div id="firefly15" class="firefly"></div>
+
+        <div class="rb_dung_torch_fire-container">
+            <!-- Fire Base Glow -->
+            <div class="rb_dung_torch_fire-glow"></div>
+            
+            <!-- Particles/Sparks (With Inline Variables for Timing and Positioning) -->
+            <div class="rb_dung_torch_particles">
+            <span style="--rb_dung_torch_p: 1; --rb_dung_torch_delay: 0s; --rb_dung_torch_left: 20%; --rb_dung_torch_size: 8px;"></span>
+            <span style="--rb_dung_torch_p: 2; --rb_dung_torch_delay: 0.4s; --rb_dung_torch_left: 45%; --rb_dung_torch_size: 12px;"></span>
+            <span style="--rb_dung_torch_p: 3; --rb_dung_torch_delay: 0.8s; --rb_dung_torch_left: 70%; --rb_dung_torch_size: 6px;"></span>
+            <span style="--rb_dung_torch_p: 4; --rb_dung_torch_delay: 1.2s; --rb_dung_torch_left: 30%; --rb_dung_torch_size: 14px;"></span>
+            <span style="--rb_dung_torch_p: 5; --rb_dung_torch_delay: 1.6s; --rb_dung_torch_left: 60%; --rb_dung_torch_size: 10px;"></span>
+            <span style="--rb_dung_torch_p: 6; --rb_dung_torch_delay: 2.0s; --rb_dung_torch_left: 15%; --rb_dung_torch_size: 7px;"></span>
+            <span style="--rb_dung_torch_p: 7; --rb_dung_torch_delay: 2.4s; --rb_dung_torch_left: 80%; --rb_dung_torch_size: 11px;"></span>
+            <span style="--rb_dung_torch_p: 8; --rb_dung_torch_delay: 2.8s; --rb_dung_torch_left: 50%; --rb_dung_torch_size: 9px;"></span>
+            </div>
+        </div>
+
+
         <div id="ss" class="window_scenes_base">
             <hr>
             <p style="text-align: center" class="text_shadow">Made with</p>
@@ -24,7 +58,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.275 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.300 alpha test</p>
             <hr>
         </div>
 
@@ -35,7 +69,7 @@
             <br>
             <center>
                 <br>
-                <p>@</p>
+                <p class="icns">@</p>
                 <br>
                 <button class="uix_button" onclick="Engine_Hud(1)" style="text-align: center">Play Now</button>
                 <br><br><br>
@@ -143,7 +177,7 @@
                         <td><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></td>
                         <td><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></td>
                         <td><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></td>
-                        <td><button onclick="Engine_Hud(7)" class="icns nav_uix text_shadow story">t</button></td>
+                        <td><button onclick="Engine_Hud(17)" class="icns nav_uix text_shadow story">t</button></td>
                     </tr>
                 </table>
             </center>
@@ -579,22 +613,6 @@
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
-
-        <div id="firefly1" class="firefly"></div>
-        <div id="firefly2" class="firefly"></div>
-        <div id="firefly3" class="firefly"></div>
-        <div id="firefly4" class="firefly"></div>
-        <div id="firefly5" class="firefly"></div>
-        <div id="firefly6" class="firefly"></div>
-        <div id="firefly7" class="firefly"></div>
-        <div id="firefly8" class="firefly"></div>
-        <div id="firefly9" class="firefly"></div>
-        <div id="firefly10" class="firefly"></div>
-        <div id="firefly11" class="firefly"></div>
-        <div id="firefly12" class="firefly"></div>
-        <div id="firefly13" class="firefly"></div>
-        <div id="firefly14" class="firefly"></div>
-        <div id="firefly15" class="firefly"></div>
 
         <div class="minimal-popup" id="appPopup">
             <div class="minimal-popup-content">

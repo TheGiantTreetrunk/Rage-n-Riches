@@ -168,6 +168,21 @@ function Engine_Hud(comand) {
     document.getElementById("tracker").style.display = "none";
     document.getElementById("water_container").style.display = "none";
 
+    document.getElementById("firefly1").style.display = "none";
+    document.getElementById("firefly2").style.display = "none";
+    document.getElementById("firefly3").style.display = "none";
+    document.getElementById("firefly4").style.display = "none";
+    document.getElementById("firefly5").style.display = "none";
+    document.getElementById("firefly6").style.display = "none";
+    document.getElementById("firefly7").style.display = "none";
+    document.getElementById("firefly8").style.display = "none";
+    document.getElementById("firefly9").style.display = "none";
+    document.getElementById("firefly10").style.display = "none";
+    document.getElementById("firefly11").style.display = "none";
+    document.getElementById("firefly12").style.display = "none";
+    document.getElementById("firefly13").style.display = "none";
+    document.getElementById("firefly14").style.display = "none";
+    document.getElementById("firefly15").style.display = "none";
 
 
     if(comand == 0) {
@@ -326,6 +341,21 @@ function Engine_Hud(comand) {
 
     if(comand == 17) {
         document.getElementById("fclr").style.display = "";
+        document.getElementById("firefly1").style.display = "";
+        document.getElementById("firefly2").style.display = "";
+        document.getElementById("firefly3").style.display = "";
+        document.getElementById("firefly4").style.display = "";
+        document.getElementById("firefly5").style.display = "";
+        document.getElementById("firefly6").style.display = "";
+        document.getElementById("firefly7").style.display = "";
+        document.getElementById("firefly8").style.display = "";
+        document.getElementById("firefly9").style.display = "";
+        document.getElementById("firefly10").style.display = "";
+        document.getElementById("firefly11").style.display = "";
+        document.getElementById("firefly12").style.display = "";
+        document.getElementById("firefly13").style.display = "";
+        document.getElementById("firefly14").style.display = "";
+        document.getElementById("firefly15").style.display = "";
     }
 }
 var room_number = 0;
