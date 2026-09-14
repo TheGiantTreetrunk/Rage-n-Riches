@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Rocky Texture</title>
+  <style>
+    :root {
+      /* Scale factor for the pixel blocks */
+      --pixel-scale: 8px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #111;
+    }
+
+    .pixel-rock-bg {
+      width: 100%;
+      height: 100%;
+      background-repeat: repeat;
+      
+      /* Scale the 32x32 pixel tile up to make blocky pixels */
+      background-size: calc(32 * var(--pixel-scale)) calc(32 * var(--pixel-scale));
+
+      /* Prevent browser smoothing */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="rockBg" class="pixel-rock-bg"></div>
+
+  <script>
+    function generate8BitRock() {
+      const size = 32; // 32x32 pixel canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Limited 4-color stone palette (Shadow to Highlight)
+      const PALETTE = [
+        '#1a1d20', // Darkest shadow / crack
+        '#383d42', // Dark slate
+        '#5c6268', // Base stone grey
+        '#828a90'  // Edge highlight
+      ];
+
+      function pseudoRandom(x, y) {
+        const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      // Step 1: Base coat with main mid-tone slate
+      ctx.fillStyle = PALETTE[2];
+      ctx.fillRect(0, 0, size, size);
+
+      // Step 2: Generate blocky crags, crevices, and stone noise
+      for (let y = 0; y < size; y += 2) {
+        for (let x = 0; x < size; x += 2) {
+          const rand = pseudoRandom(x, y);
+
+          if (rand < 0.25) {
+            ctx.fillStyle = PALETTE[0]; // Deep crack
+          } else if (rand < 0.50) {
+            ctx.fillStyle = PALETTE[1]; // Shadowed stone
+          } else if (rand > 0.82) {
+            ctx.fillStyle = PALETTE[3]; // Highlight edge
+          } else {
+            continue; // Keep base tone
+          }
+
+          // Draw 2x2 pixel blocks for a chunkier retro look
+          ctx.fillRect(x, y, 2, 2);
+        }
+      }
+
+      // Step 3: Add directional "lighting" (highlights top-left, shadows bottom-right of blocks)
+      for (let y = 0; y < size; y += 4) {
+        for (let x = 0; x < size; x += 4) {
+          if (pseudoRandom(x * 3, y * 3) > 0.6) {
+            // Top-left highlight
+            ctx.fillStyle = PALETTE[3];
+            ctx.fillRect(x, y, 2, 1);
+            
+            // Bottom-right shadow edge
+            ctx.fillStyle = PALETTE[0];
+            ctx.fillRect(x + 2, y + 3, 2, 1);
+          }
+        }
+      }
+
+      // Apply as tiled background
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('rockBg').style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generate8BitRock();
+  </script>
+</body>
+</html>

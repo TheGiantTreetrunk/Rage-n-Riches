@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Stone Brick Wall Texture</title>
+  <style>
+    :root {
+      /* Controls the scale of the pixel blocks */
+      --pixel-scale: 8px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #121315;
+    }
+
+    .pixel-brick-bg {
+      width: 100%;
+      height: 100%;
+      background-repeat: repeat;
+      
+      /* Scales the 32x32 pixel tile up into chunky retro blocks */
+      background-size: calc(32 * var(--pixel-scale)) calc(32 * var(--pixel-scale));
+
+      /* Force crisp, un-blurred pixel edges across all browsers */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="brickBg" class="pixel-brick-bg"></div>
+
+  <script>
+    function generate8BitBricks() {
+      const size = 32; // 32x32 pixel canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // 4-color retro stone brick palette
+      const PALETTE = [
+        '#1a1b1e', // Dark mortar / shadow gap
+        '#3a3d42', // Dark stone shadow / bottom brick edge
+        '#5a5e66', // Mid-tone stone brick face
+        '#828894'  // Top-left brick edge highlight
+      ];
+
+      function pseudoRandom(x, y) {
+        const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      // Step 1: Base coat with mortar color (#1a1b1e)
+      ctx.fillStyle = PALETTE[0];
+      ctx.fillRect(0, 0, size, size);
+
+      // Helper function to draw a single 8-bit stone brick
+      function drawBrick(bx, by, bw, bh) {
+        // Brick fill (Mid-tone base)
+        ctx.fillStyle = PALETTE[2];
+        ctx.fillRect(bx, by, bw, bh);
+
+        // Brick surface noise (imperfections)
+        for (let py = 0; py < bh; py += 2) {
+          for (let px = 0; px < bw; px += 2) {
+            const rand = pseudoRandom(bx + px, by + py);
+            if (rand < 0.25) {
+              ctx.fillStyle = PALETTE[1]; // Darker spot
+              ctx.fillRect(bx + px, by + py, 2, 2);
+            } else if (rand > 0.80) {
+              ctx.fillStyle = PALETTE[3]; // Lighter spec
+              ctx.fillRect(bx + px, by + py, 2, 2);
+            }
+          }
+        }
+
+        // Top edge highlight (sunlit edge)
+        ctx.fillStyle = PALETTE[3];
+        ctx.fillRect(bx, by, bw, 2);
+
+        // Left edge highlight
+        ctx.fillRect(bx, by, 2, bh);
+
+        // Bottom shadow line
+        ctx.fillStyle = PALETTE[1];
+        ctx.fillRect(bx, by + bh - 2, bw, 2);
+
+        // Right shadow line
+        ctx.fillRect(bx + bw - 2, by, 2, bh);
+      }
+
+      // Step 2: Draw staggered brick grid
+      // Row 1 (Full width bricks: 16x8 pixels each)
+      drawBrick(1, 1, 14, 6);
+      drawBrick(17, 1, 14, 6);
+
+      // Row 2 (Staggered offset by 8 pixels)
+      drawBrick(0, 9, 6, 6);   // Half brick left
+      drawBrick(9, 9, 14, 6);  // Full brick middle
+      drawBrick(25, 9, 6, 6);  // Half brick right
+
+      // Row 3 (Full width bricks)
+      drawBrick(1, 17, 14, 6);
+      drawBrick(17, 17, 14, 6);
+
+      // Row 4 (Staggered offset by 8 pixels)
+      drawBrick(0, 25, 6, 6);
+      drawBrick(9, 25, 14, 6);
+      drawBrick(25, 25, 6, 6);
+
+      // Set canvas data as repeating background
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('brickBg').style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generate8BitBricks();
+  </script>
+</body>
+</html>

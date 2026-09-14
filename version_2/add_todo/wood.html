@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Blocky Wood Grain</title>
+  <style>
+    :root {
+      /* Controls the scale/size of the pixel blocks */
+      --pixel-scale: 8px; 
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #111;
+    }
+
+    .pixel-bark-bg {
+      width: 100%;
+      height: 100%;
+      
+      /* Repeat the generated pattern across the whole background */
+      background-repeat: repeat;
+
+      /* Scale the tiny texture tile up to make the pixels huge and blocky */
+      background-size: calc(32 * var(--pixel-scale)) calc(64 * var(--pixel-scale));
+
+      /* Force hard pixel edges without smooth blurring */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen background container -->
+  <div id="barkBg" class="pixel-bark-bg"></div>
+
+  <script>
+    function generate8BitBark() {
+      // Small logical resolution (32x64 pixels)
+      const width = 32;
+      const height = 64;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      // Strict 4-color NES-style wood palette (Darkest to Lightest)
+      const PALETTE = [
+        '#221208', // Deep shadow / bark groove
+        '#442412', // Dark wood tone
+        '#66381a', // Mid-tone bark
+        '#8c5024'  // Highlight highlight
+      ];
+
+      // Simple deterministic pseudo-random generator for consistent tiling
+      function pseudoRandom(x, y) {
+        const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      // Step 1: Fill with base mid-tone
+      ctx.fillStyle = PALETTE[2];
+      ctx.fillRect(0, 0, width, height);
+
+      // Step 2: Draw vertical blocky channels & grooves
+      for (let x = 0; x < width; x++) {
+        // Determine channel depth using noise
+        const noiseVal = pseudoRandom(x * 0.2, 0);
+        let colorIdx = 2;
+
+        if (noiseVal < 0.25) colorIdx = 0;      // Dark groove
+        else if (noiseVal < 0.55) colorIdx = 1; // Secondary shade
+        else if (noiseVal > 0.85) colorIdx = 3; // Highlight ridge
+
+        ctx.fillStyle = PALETTE[colorIdx];
+        ctx.fillRect(x, 0, 1, height);
+      }
+
+      // Step 3: Add horizontal staggered pixel breaks (bark notches/platelets)
+      for (let y = 0; y < height; y += 4) { // 4px vertical blocks
+        for (let x = 0; x < width; x += 2) { // 2px horizontal blocks
+          const rand = pseudoRandom(x, y);
+
+          if (rand > 0.65) {
+            // Shift color by one step up or down for blocky variance
+            const currentColorIdx = (Math.floor(rand * 10) % 3);
+            ctx.fillStyle = PALETTE[currentColorIdx];
+            
+            // Draw a distinct blocky rectangle (2x4 pixels)
+            ctx.fillRect(x, y, 2, 4);
+          }
+        }
+      }
+
+      // Step 4: Convert canvas to a data URL string and apply as background
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('barkBg').style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generate8BitBark();
+  </script>
+</body>
+</html>

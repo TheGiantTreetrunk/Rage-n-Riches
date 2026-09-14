@@ -167,6 +167,7 @@ function Engine_Hud(comand) {
 
     document.getElementById("tracker").style.display = "none";
     document.getElementById("water_container").style.display = "none";
+    document.getElementById("rb_firepit").style.display = "none";
 
     document.getElementById("firefly1").style.display = "none";
     document.getElementById("firefly2").style.display = "none";
@@ -186,6 +187,7 @@ function Engine_Hud(comand) {
 
 
     if(comand == 0) {
+        Core_Env_Updater('brick', false);
         //load splash screen
         //setTimeout(toggleFade, 2000);
         setTimeout(function(){ document.getElementById("ss").style.display = "" }, 1500);
@@ -250,6 +252,35 @@ function Engine_Hud(comand) {
             setTimeout(function(){ document.getElementById("cl_p_diag").innerHTML = "Your adventure awaits!" }, 4500);
             setTimeout(function(){ document.getElementById("cl_st_bttn").style.display = "" }, 4500);
             setTimeout(function(){ triggerNextCard() }, 500);
+
+            var themes = ["rock","forest","snow","desert","mushroom","lava"];
+
+            var tm_sel = Math.floor(Math.random() * themes.length);
+
+            if(tm_sel == 0) {
+                Core_Env_Updater('rock', false);
+            }
+
+            if(tm_sel == 1) {
+                Core_Env_Updater('forest', false);
+            }
+
+            if(tm_sel == 2) {
+                Core_Env_Updater('snow', false);
+            }
+
+            if(tm_sel == 3) {
+                Core_Env_Updater('desert', false);
+            }
+
+            if(tm_sel == 4) {
+                Core_Env_Updater('mushroom', false);
+            }
+
+            if(tm_sel == 5) {
+                Core_Env_Updater('lava', false);
+            }
+
         } else {
             Engine_Hud(1);
             triggerNextCard();
@@ -397,6 +428,36 @@ function Core_Door_Randomizer(fun) {
             room_number = 0;
             floor_number += 1;
             Engine_Hud(17);
+
+            //pick a new theme...
+
+            var themes = ["rock","forest","snow","desert","mushroom","lava"];
+
+            var tm_sel = Math.floor(Math.random() * themes.length);
+
+            if(tm_sel == 0) {
+                Core_Env_Updater('rock', false);
+            }
+
+            if(tm_sel == 1) {
+                Core_Env_Updater('forest', false);
+            }
+
+            if(tm_sel == 2) {
+                Core_Env_Updater('snow', false);
+            }
+
+            if(tm_sel == 3) {
+                Core_Env_Updater('desert', false);
+            }
+
+            if(tm_sel == 4) {
+                Core_Env_Updater('mushroom', false);
+            }
+
+            if(tm_sel == 5) {
+                Core_Env_Updater('lava', false);
+            }
         }
     }
 

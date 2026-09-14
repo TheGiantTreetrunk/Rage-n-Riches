@@ -17,6 +17,17 @@
     </head>
 
     <body onload="Start()">
+        <div class="rb_wp_th_viewport" id="rb_wp_th_main_viewport">
+    
+        <!-- Background Canvas Container -->
+        <div id="rb_wp_th_bg_layer" class="rb_wp_th_bg_canvas"></div>
+
+        <!-- Top Layer Fog Effect Container -->
+        <div id="rb_wp_th_fog_wrapper" class="rb_wp_th_fog_container">
+        <div id="rb_wp_th_fog1" class="rb_wp_th_pixel_fog_layer rb_wp_th_fog_layer_1"></div>
+        <div id="rb_wp_th_fog2" class="rb_wp_th_pixel_fog_layer rb_wp_th_fog_layer_2"></div>
+        </div>
+
         <div id="firefly1" class="firefly"></div>
         <div id="firefly2" class="firefly"></div>
         <div id="firefly3" class="firefly"></div>
@@ -33,7 +44,7 @@
         <div id="firefly14" class="firefly"></div>
         <div id="firefly15" class="firefly"></div>
 
-        <div class="rb_dung_torch_fire-container">
+        <div class="rb_dung_torch_fire-container" id="rb_firepit">
             <!-- Fire Base Glow -->
             <div class="rb_dung_torch_fire-glow"></div>
             
@@ -58,7 +69,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.300 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.400 alpha test</p>
             <hr>
         </div>
 
@@ -607,6 +618,222 @@
                 nextCard();
             }
             }
+
+
+
+            function pseudoRandom(x, y, seed = 0) {
+            const n = Math.sin((x + seed) * 12.9898 + (y + seed) * 78.233) * 43758.5453;
+            return n - Math.floor(n);
+            }
+
+            const TextureGenerators = {
+            rock: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#1a1d20', '#383d42', '#5c6268', '#828a90'];
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.25) ctx.fillStyle = PALETTE[0];
+                    else if (rand < 0.50) ctx.fillStyle = PALETTE[1];
+                    else if (rand > 0.82) ctx.fillStyle = PALETTE[3];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            wood: () => {
+                const width = 32, height = 64, canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#221208', '#442412', '#66381a', '#8c5024'];
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(0, 0, width, height);
+                for (let x = 0; x < width; x++) {
+                const noiseVal = pseudoRandom(x * 0.2, 0);
+                let colorIdx = 2;
+                if (noiseVal < 0.25) colorIdx = 0;
+                else if (noiseVal < 0.55) colorIdx = 1;
+                else if (noiseVal > 0.85) colorIdx = 3;
+                ctx.fillStyle = PALETTE[colorIdx]; ctx.fillRect(x, 0, 1, height);
+                }
+                for (let y = 0; y < height; y += 4) {
+                for (let x = 0; x < width; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand > 0.65) {
+                    ctx.fillStyle = PALETTE[Math.floor(rand * 10) % 3];
+                    ctx.fillRect(x, y, 2, 4);
+                    }
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            snow: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#68788c', '#8898ac', '#c4d4e0', '#ffffff'];
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.15) ctx.fillStyle = PALETTE[0];
+                    else if (rand < 0.38) ctx.fillStyle = PALETTE[1];
+                    else if (rand > 0.62) ctx.fillStyle = PALETTE[3];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            desert: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#612314', '#9e4722', '#d47c3b', '#f2b166'];
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.18) ctx.fillStyle = PALETTE[0];
+                    else if (rand < 0.42) ctx.fillStyle = PALETTE[1];
+                    else if (rand > 0.68) ctx.fillStyle = PALETTE[3];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            mushroom: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#181524', '#3a384c', '#7b2cbf', '#ff4d6d', '#38b000'];
+                ctx.fillStyle = PALETTE[1]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.28) ctx.fillStyle = PALETTE[0];
+                    else if (rand > 0.65 && rand <= 0.85) ctx.fillStyle = PALETTE[2];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            lava: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#120808', '#381414', '#8c1c13', '#e05312', '#fce138'];
+                ctx.fillStyle = PALETTE[1]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.30) ctx.fillStyle = PALETTE[0];
+                    else if (rand > 0.70) ctx.fillStyle = PALETTE[2];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            brick: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#1a1b1e', '#3a3d42', '#5a5e66', '#828894'];
+                ctx.fillStyle = PALETTE[0]; ctx.fillRect(0, 0, size, size);
+                
+                function drawBrick(bx, by, bw, bh) {
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(bx, by, bw, bh);
+                ctx.fillStyle = PALETTE[3]; ctx.fillRect(bx, by, bw, 2); ctx.fillRect(bx, by, 2, bh);
+                ctx.fillStyle = PALETTE[1]; ctx.fillRect(bx, by + bh - 2, bw, 2); ctx.fillRect(bx + bw - 2, by, 2, bh);
+                }
+                drawBrick(1, 1, 14, 6); drawBrick(17, 1, 14, 6);
+                drawBrick(0, 9, 6, 6);  drawBrick(9, 9, 14, 6);  drawBrick(25, 9, 6, 6);
+                drawBrick(1, 17, 14, 6); drawBrick(17, 17, 14, 6);
+                drawBrick(0, 25, 6, 6); drawBrick(9, 25, 14, 6); drawBrick(25, 25, 6, 6);
+                return canvas.toDataURL('image/png');
+            },
+
+            forest: () => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['#0d1f0d', '#1f3a13', '#3b5f1a', '#6d8e2b'];
+                ctx.fillStyle = PALETTE[2]; ctx.fillRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y);
+                    if (rand < 0.22) ctx.fillStyle = PALETTE[0];
+                    else if (rand < 0.52) ctx.fillStyle = PALETTE[1];
+                    else if (rand > 0.80) ctx.fillStyle = PALETTE[3];
+                    else continue;
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                }
+                return canvas.toDataURL('image/png');
+            },
+
+            fog: (seedOffset) => {
+                const size = 32, canvas = document.createElement('canvas');
+                canvas.width = canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const PALETTE = ['rgba(0,0,0,0)', 'rgba(200,225,245,0.08)', 'rgba(220,235,250,0.18)', 'rgba(240,248,255,0.30)'];
+                ctx.clearRect(0, 0, size, size);
+                for (let y = 0; y < size; y += 2) {
+                for (let x = 0; x < size; x += 2) {
+                    const rand = pseudoRandom(x, y, seedOffset);
+                    if (rand > 0.88) { ctx.fillStyle = PALETTE[3]; ctx.fillRect(x, y, 4, 2); }
+                    else if (rand > 0.74) { ctx.fillStyle = PALETTE[2]; ctx.fillRect(x, y, 2, 2); }
+                    else if (rand > 0.58) { ctx.fillStyle = PALETTE[1]; ctx.fillRect(x, y, 2, 2); }
+                }
+                }
+                return canvas.toDataURL('image/png');
+            }
+            };
+
+            /* ==========================================================================
+            2. MODULAR CORE ENVIRONMENT UPDATER
+            ========================================================================== */
+            function Core_Env_Updater(themeName = null, toggleFog = false) {
+            const body = document.body;
+            const bgLayer = document.getElementById('rb_wp_th_bg_layer');
+
+            // Fog Toggle Logic
+            if (toggleFog) {
+                body.classList.toggle('rb_wp_th_fog_active');
+            }
+
+            // Theme Swapping Logic via classList add/remove
+            if (themeName && TextureGenerators[themeName]) {
+                // Clear old theme classes
+                const classesToRemove = Array.from(body.classList).filter(c => c.startsWith('rb_wp_th_') && c !== 'rb_wp_th_fog_active');
+                classesToRemove.forEach(cls => body.classList.remove(cls));
+
+                // Add new theme class
+                body.classList.add(`rb_wp_th_${themeName}`);
+
+                // Update the procedural background image tile
+                const dataUrl = TextureGenerators[themeName]();
+                bgLayer.style.backgroundImage = `url(${dataUrl})`;
+            }
+            }
+
+            // Initialize Fog Textures Once
+            document.getElementById('rb_wp_th_fog1').style.backgroundImage = `url(${TextureGenerators.fog(2.1)})`;
+            document.getElementById('rb_wp_th_fog2').style.backgroundImage = `url(${TextureGenerators.fog(6.8)})`;
+
+            //Core_Env_Updater('rock', false);
         </script>
 
 

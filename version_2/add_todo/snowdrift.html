@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Snow Texture</title>
+  <style>
+    :root {
+      /* Controls the scale of the pixel blocks */
+      --pixel-scale: 8px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #121824;
+    }
+
+    .pixel-snow-bg {
+      width: 100%;
+      height: 100%;
+      background-repeat: repeat;
+      
+      /* Scales the 32x32 pixel tile up into chunky retro blocks */
+      background-size: calc(32 * var(--pixel-scale)) calc(32 * var(--pixel-scale));
+
+      /* Force crisp, un-blurred pixel edges across all browsers */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="snowBg" class="pixel-snow-bg"></div>
+
+  <script>
+    function generate8BitSnow() {
+      const size = 32; // 32x32 pixel canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Limited 4-color NES winter palette (Deep Ice Shadow to Bright Snow)
+      const PALETTE = [
+        '#68788c', // Deep icy shadow / crevice
+        '#8898ac', // Soft blue-grey shadow
+        '#c4d4e0', // Base snow mid-tone
+        '#ffffff'  // Pure white snow highlight
+      ];
+
+      function pseudoRandom(x, y) {
+        const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      // Step 1: Base coat with snow mid-tone (#c4d4e0)
+      ctx.fillStyle = PALETTE[2];
+      ctx.fillRect(0, 0, size, size);
+
+      // Step 2: Draw horizontal drift bands & frost sparkles
+      for (let y = 0; y < size; y += 2) {
+        for (let x = 0; x < size; x += 2) {
+          const rand = pseudoRandom(x, y);
+
+          if (rand < 0.15) {
+            ctx.fillStyle = PALETTE[0]; // Deep ice crack
+          } else if (rand < 0.38) {
+            ctx.fillStyle = PALETTE[1]; // Drift shadow
+          } else if (rand > 0.62) {
+            ctx.fillStyle = PALETTE[3]; // Pure snow highlight
+          } else {
+            continue; // Keep base snow color
+          }
+
+          ctx.fillRect(x, y, 2, 2);
+        }
+      }
+
+      // Step 3: Layer wide snow-drift caps (staggered 4x2 pixel blocks)
+      for (let y = 0; y < size; y += 4) {
+        for (let x = 0; x < size; x += 4) {
+          const driftRand = pseudoRandom(x * 1.8, y * 1.8);
+
+          if (driftRand > 0.55) {
+            // Bright white snow bank tops
+            ctx.fillStyle = PALETTE[3];
+            ctx.fillRect(x, y, 4, 2);
+            ctx.fillRect(x + 2, y + 2, 2, 2);
+          } else if (driftRand < 0.20) {
+            // Shadow underneath drift ridges
+            ctx.fillStyle = PALETTE[1];
+            ctx.fillRect(x, y + 2, 4, 2);
+          }
+        }
+      }
+
+      // Set canvas data as repeating background
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('snowBg').style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generate8BitSnow();
+  </script>
+</body>
+</html>

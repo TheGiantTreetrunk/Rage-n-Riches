@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Lava Cavern Texture</title>
+  <style>
+    :root {
+      /* Controls the scale of the pixel blocks */
+      --pixel-scale: 8px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #0d0404;
+    }
+
+    .pixel-hell-bg {
+      width: 100%;
+      height: 100%;
+      background-repeat: repeat;
+      
+      /* Scales the 32x32 pixel tile up into chunky retro blocks */
+      background-size: calc(32 * var(--pixel-scale)) calc(32 * var(--pixel-scale));
+
+      /* Force crisp, un-blurred pixel edges across all browsers */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="hellBg" class="pixel-hell-bg"></div>
+
+  <script>
+    function generate8BitLava() {
+      const size = 32; // 32x32 pixel canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // 5-color infernal palette (Obsidian Shadow to Molten Yellow Core)
+      const PALETTE = [
+        '#120808', // Black obsidian / deep shadow
+        '#381414', // Dark crimson burnt rock
+        '#8c1c13', // Deep molten red
+        '#e05312', // Blazing orange magma
+        '#fce138'  // White-hot yellow core
+      ];
+
+      function pseudoRandom(x, y) {
+        const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      // Step 1: Base coat with dark crimson rock (#381414)
+      ctx.fillStyle = PALETTE[1];
+      ctx.fillRect(0, 0, size, size);
+
+      // Step 2: Lay down obsidian crevices and dark rock crust
+      for (let y = 0; y < size; y += 2) {
+        for (let x = 0; x < size; x += 2) {
+          const rand = pseudoRandom(x, y);
+
+          if (rand < 0.30) {
+            ctx.fillStyle = PALETTE[0]; // Pure obsidian shadow
+          } else if (rand > 0.70) {
+            ctx.fillStyle = PALETTE[2]; // Deep red heat glow
+          } else {
+            continue; // Keep base burnt rock tone
+          }
+
+          ctx.fillRect(x, y, 2, 2);
+        }
+      }
+
+      // Step 3: Draw jagged glowing lava streams (Orange with White-Hot Yellow cores)
+      for (let y = 0; y < size; y += 4) {
+        for (let x = 0; x < size; x += 4) {
+          const lavaRand = pseudoRandom(x * 1.9, y * 1.9);
+
+          if (lavaRand > 0.68) {
+            // Main molten orange stream
+            ctx.fillStyle = PALETTE[3];
+            ctx.fillRect(x, y, 4, 2);
+            ctx.fillRect(x + 2, y + 2, 4, 2);
+
+            // Searing yellow core inside the stream
+            ctx.fillStyle = PALETTE[4];
+            ctx.fillRect(x + 2, y, 2, 2);
+          } else if (lavaRand < 0.15) {
+            // Small magma pocket / ember
+            ctx.fillStyle = PALETTE[3];
+            ctx.fillRect(x, y, 2, 2);
+          }
+        }
+      }
+
+      // Set canvas data as repeating background
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('hellBg').style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generate8BitLava();
+  </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Transparent Subtle Fog Overlay</title>
+  <style>
+    :root {
+      /* Scale of the pixel fog blocks */
+      --pixel-scale: 8px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #0d1117;
+      font-family: monospace;
+    }
+
+    /* Container setup with z-index stacking */
+    .viewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Underlying Game / UI Content Layer */
+    .content {
+      position: absolute;
+      inset: 0;
+      z-index: 1; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #38b000;
+      text-shadow: 2px 2px 0px #000;
+      text-align: center;
+    }
+
+    /* Shared Fog Layer Rules */
+    .pixel-fog-layer {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: calc(100% + 200px);
+      height: calc(100% + 200px);
+      pointer-events: none; /* Let clicks/hovers pass through */
+      background-repeat: repeat;
+      background-size: calc(32 * var(--pixel-scale)) calc(32 * var(--pixel-scale));
+      
+      /* Force sharp retro pixels without blur */
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+
+    /* Foreground Fog: Subdued for low eye strain */
+    .fog-layer-1 {
+      z-index: 100;
+      opacity: 0.20; /* Reduced opacity */
+      animation: pixelDriftOne 24s linear infinite; /* Slower, smoother drift */
+    }
+
+    /* Secondary Fog Layer: Ultra-faint background depth */
+    .fog-layer-2 {
+      z-index: 101;
+      opacity: 0.12; /* Very subtle depth */
+      animation: pixelDriftTwo 36s linear infinite;
+    }
+
+    @keyframes pixelDriftOne {
+      0% {
+        transform: translate(0px, 0px);
+      }
+      50% {
+        transform: translate(calc(var(--pixel-scale) * 12), calc(var(--pixel-scale) * -6));
+      }
+      100% {
+        transform: translate(0px, 0px);
+      }
+    }
+
+    @keyframes pixelDriftTwo {
+      0% {
+        transform: translate(0px, 0px);
+      }
+      50% {
+        transform: translate(calc(var(--pixel-scale) * -16), calc(var(--pixel-scale) * 8));
+      }
+      100% {
+        transform: translate(0px, 0px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    
+    <!-- Content Layer -->
+    <div class="content">
+      <h1>[ DUNGEON LEVEL 1 ]</h1>
+      <p>Low-Strain Transparent Fog Active</p>
+    </div>
+
+    <!-- Transparent Fog Overlay Layers -->
+    <div id="fog1" class="pixel-fog-layer fog-layer-1"></div>
+    <div id="fog2" class="pixel-fog-layer fog-layer-2"></div>
+
+  </div>
+
+  <script>
+    function generateSubtlePixelFog(elementId, seedOffset) {
+      const size = 32; // 32x32 pixel canvas tile
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Low-density, eye-friendly RGBA palette
+      const PALETTE = [
+        'rgba(0, 0, 0, 0)',          // Fully transparent gap
+        'rgba(200, 225, 245, 0.08)', // Barely visible mist
+        'rgba(220, 235, 250, 0.18)', // Soft mid-fog block
+        'rgba(240, 248, 255, 0.30)'  // Subtle highlight core
+      ];
+
+      function pseudoRandom(x, y) {
+        const n = Math.sin((x + seedOffset) * 12.9898 + (y + seedOffset) * 78.233) * 43758.5453;
+        return n - Math.floor(n);
+      }
+
+      ctx.clearRect(0, 0, size, size);
+
+      // Draw wider, spread-out mist patches rather than dense clusters
+      for (let y = 0; y < size; y += 2) {
+        for (let x = 0; x < size; x += 2) {
+          const rand = pseudoRandom(x, y);
+
+          if (rand > 0.88) {
+            ctx.fillStyle = PALETTE[3];
+            ctx.fillRect(x, y, 4, 2);
+          } else if (rand > 0.74) {
+            ctx.fillStyle = PALETTE[2];
+            ctx.fillRect(x, y, 2, 2);
+          } else if (rand > 0.58) {
+            ctx.fillStyle = PALETTE[1];
+            ctx.fillRect(x, y, 2, 2);
+          }
+        }
+      }
+
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById(elementId).style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    generateSubtlePixelFog('fog1', 2.1);
+    generateSubtlePixelFog('fog2', 6.8);
+  </script>
+</body>
+</html>

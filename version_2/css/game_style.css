@@ -9,6 +9,7 @@
     --rb_dung_hud_dim_border: #55555c;
     --rb_dung_hud_accent: #007acc;
     --rb_dung_hud_card_bg: #313131;
+    --rb_wp_th_pixel_scale: 8px;
 }
 
 html {
@@ -191,6 +192,8 @@ button {
     padding: 15px;
     box-sizing: border-box;
     z-index: 100;
+
+    background-color: rgba(33, 38, 38, 0.85);
 }
 
 .body_class_main_menu {
@@ -654,7 +657,7 @@ td.tavern, th.tavern {
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid var(--rb_dung_hud_border);
     box-shadow: 5px 8px #000000;
-    
+    background-color: #212626;
     width: fit-content;
     margin: 0 auto;
 }
@@ -1118,3 +1121,135 @@ td.tavern, th.tavern {
     margin-left: 15px;
   }
 }
+
+/* Main Fullscreen Viewport Layer */
+    .rb_wp_th_viewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Dynamic procedural background canvas/tile container */
+    .rb_wp_th_bg_canvas {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-repeat: repeat;
+      background-size: calc(32 * var(--rb_wp_th_pixel_scale)) calc(32 * var(--rb_wp_th_pixel_scale));
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+
+    /* Special height scale rule for Wood texture (32x64 aspect) */
+    body.rb_wp_th_wood .rb_wp_th_bg_canvas {
+      background-size: calc(32 * var(--rb_wp_th_pixel_scale)) calc(64 * var(--rb_wp_th_pixel_scale));
+    }
+
+    /* 
+      Fog Overlay Setup: Managed via top-layer pointer-events container.
+      Off by default; activated via body class "rb_wp_th_fog_active".
+    */
+    .rb_wp_th_fog_container {
+      display: none;
+      pointer-events: none;
+    }
+
+    body.rb_wp_th_fog_active .rb_wp_th_fog_container {
+      display: block;
+    }
+
+    .rb_wp_th_pixel_fog_layer {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: calc(100% + 200px);
+      height: calc(100% + 200px);
+      pointer-events: none;
+      background-repeat: repeat;
+      background-size: calc(32 * var(--rb_wp_th_pixel_scale)) calc(32 * var(--rb_wp_th_pixel_scale));
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      image-rendering: -moz-crisp-edges;
+    }
+
+    .rb_wp_th_fog_layer_1 {
+      z-index: 100;
+      opacity: 0.20;
+      animation: rb_wp_th_drift_one 24s linear infinite;
+    }
+
+    .rb_wp_th_fog_layer_2 {
+      z-index: 101;
+      opacity: 0.12;
+      animation: rb_wp_th_drift_two 36s linear infinite;
+    }
+
+    @keyframes rb_wp_th_drift_one {
+      0% { transform: translate(0px, 0px); }
+      50% { transform: translate(calc(var(--rb_wp_th_pixel_scale) * 12), calc(var(--rb_wp_th_pixel_scale) * -6)); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    @keyframes rb_wp_th_drift_two {
+      0% { transform: translate(0px, 0px); }
+      50% { transform: translate(calc(var(--rb_wp_th_pixel_scale) * -16), calc(var(--rb_wp_th_pixel_scale) * 8)); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    /* Control Panel HUD UI */
+    .rb_wp_th_ui_overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #5a5e66;
+      padding: 16px;
+      border-radius: 8px;
+      color: #ffffff;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .rb_wp_th_ui_overlay h2 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      text-transform: uppercase;
+      color: #38b000;
+      letter-spacing: 1px;
+    }
+
+    .rb_wp_th_btn_grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .rb_wp_th_btn {
+      background: #212626;
+      color: #ffffff;
+      border: 1px solid #828894;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .rb_wp_th_btn:hover {
+      background: #38b000;
+      color: #000;
+    }
+
+    .rb_wp_th_btn_toggle {
+      grid-column: span 2;
+      background: #7b2cbf;
+      margin-top: 4px;
+    }
+
+    .rb_wp_th_btn_toggle:hover {
+      background: #ff4d6d;
+      color: #fff;
+    }
