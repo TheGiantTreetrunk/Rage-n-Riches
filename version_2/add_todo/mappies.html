@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7x7 Isometric Dungeon with Perimeter Wall Shell</title>
+    <style>
+        @font-face {
+            font-family: 'DungeonFont';
+            src: url('test.ttf') format('truetype');
+        }
+
+        :root {
+            --grid-size: 7;
+            --cell-size: 44px;
+            --grid-gap: 2px;
+            --font-size: 38px;
+
+            /* Floor & Wall Glyph Alignment */
+            --floor-offset-y: 6px;  
+            --floor-offset-x: 0px;  
+            
+            /* Billboard Vertical Nudges */
+            --player-offset-y: -10px; 
+            --item-offset-y: -8px;
+            --door-offset-y: -6px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #66fcf1;
+            font-family: 'DungeonFont', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #instructions {
+            margin-bottom: 20px;
+            font-family: system-ui, sans-serif;
+            font-size: 0.95rem;
+            color: #c5c6c7;
+            text-align: center;
+        }
+
+        #viewport {
+            position: relative;
+            width: 100vw;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* Isometric 3D Projection Container */
+        #game-board {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+            grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+            gap: var(--grid-gap);
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(-45deg);
+            background-color: transparent;
+        }
+
+        /* Grid Tile Outer Container */
+        .tile {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Inner Tile Glyph (Floor & Static Walls) */
+        .tile-glyph {
+            display: inline-block;
+            font-size: var(--font-size);
+            color: #45a29e;
+            user-select: none;
+            line-height: 1;
+            text-shadow: 0 0 6px rgba(69, 162, 158, 0.4);
+            transform: translate(var(--floor-offset-x), var(--floor-offset-y));
+        }
+
+        /* Darker styling for boundary walls */
+        .tile-wall {
+            color: #1f2833;
+            text-shadow: none;
+        }
+
+        /* Billboard Elements (Entities & Doors) */
+        .item-node, .door-node {
+            position: absolute;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        .item-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            font-size: var(--font-size);
+            line-height: 1;
+            user-select: none;
+            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--item-offset-y));
+        }
+
+        /* Door Billboard Styling */
+        .door-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            font-size: calc(var(--font-size) * 0.9);
+            color: #e0a96d;
+            text-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
+            line-height: 1;
+            user-select: none;
+            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--door-offset-y));
+        }
+		
+		/* North door skew */
+.door-north {
+    transform: rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
+}
+
+/* South door skew */
+.door-south {
+    transform: rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
+}
+
+/* West door skew */
+.door-west {
+    transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
+}
+
+/* East door skew */
+.door-east {
+    transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
+}
+
+        /* Item Colors */
+        .item-chest { color: #d4a373; text-shadow: 0 0 8px rgba(212, 163, 115, 0.6); }
+        .item-vase  { color: #e76f51; text-shadow: 0 0 8px rgba(231, 111, 81, 0.6); }
+        .item-torch { color: #f4a261; text-shadow: 0 0 10px rgba(244, 162, 97, 0.9); }
+        .item-rock  { color: #8d99ae; text-shadow: 0 0 6px rgba(141, 153, 174, 0.5); }
+
+        /* Player Sprite */
+        #player {
+            position: absolute;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transition: transform 0.12s ease-out;
+            transform-style: preserve-3d;
+            z-index: 10;
+        }
+
+        .player-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            font-size: calc(var(--font-size) * 1.1);
+            color: #ffe600;
+            text-shadow: 0 0 10px rgba(255, 230, 0, 0.8);
+            line-height: 1;
+            user-select: none;
+            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--player-offset-y));
+        }
+    </style>
+</head>
+<body>
+
+    <div id="instructions">
+        Move: <b>W, A, S, D / Arrows</b> | Interact / Open Chest: <b>Space / E</b>
+    </div>
+    <div id="viewport">
+        <div id="game-board"></div>
+    </div>
+
+    <script>
+        const GRID_SIZE = 7;
+        const CELL_SIZE = 44;
+        const GRID_GAP = 2; 
+        const STEP = CELL_SIZE + GRID_GAP; 
+
+        const board = document.getElementById('game-board');
+
+        // Player starts inside the 5x5 playable room (grid coordinate 3, 5)
+        let playerPos = { x: 3, y: 5 };
+        let playerElement = null;
+
+        const TORCH_CHAR = 'T';
+        const DOOR_CHAR = ':';
+
+        /* 
+           7x7 Map Grid:
+           - Outer Ring (0 and 6) = Solid Walls ('W') or Doors (':')
+           - Inner Ring (1 to 5)  = Playable Floor ('#') with Items/Obstacles
+        */
+        const layoutMap = [
+            ['W', 'W', 'W', ':', 'W', 'W', 'W'], // Y=0 (North Wall with Door at x=3)
+            ['W', TORCH_CHAR, ' ', ' ', ' ', ' ', 'W'], // Y=1
+            ['W', ' ', '*', '(', '<', ' ', 'W'], // Y=2
+            [':', ' ', ' ', ' ', ' ', ' ', ':'], // Y=3 (West Door at x=0, East Door at x=6)
+            ['W', ' ', '<', ' ', '*', ' ', 'W'], // Y=4
+            ['W', ' ', ' ', ' ', ' ', ' ', 'W'], // Y=5
+            ['W', 'W', 'W', ':', 'W', 'W', 'W']  // Y=6 (South Wall with Door at x=3)
+        ];
+
+        const itemElements = {};
+
+        function generateBoard() {
+            board.innerHTML = '';
+
+            // 1. Render Base Floor and Wall Shell Grid
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const tile = document.createElement('div');
+                    tile.classList.add('tile');
+                    
+                    const glyph = document.createElement('span');
+                    glyph.classList.add('tile-glyph');
+
+                    const isWallBoundary = (r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1);
+
+                    if (isWallBoundary) {
+                        glyph.innerText = ' '; // Blank floor under wall/door billboards
+                        glyph.classList.add('tile-wall');
+                    } else {
+                        glyph.innerText = '#'; // Floor tile
+                    }
+                    
+                    tile.appendChild(glyph);
+                    board.appendChild(tile);
+                }
+            }
+
+            // 2. Spawn Entities, Items, and Doors
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const char = layoutMap[r][c];
+
+                    if (char === DOOR_CHAR) {
+                        spawnDoor(c, r);
+                    } else if (char !== ' ' && char !== 'W') {
+                        spawnItem(c, r, char);
+                    }
+                }
+            }
+
+            // 3. Spawn Player
+            spawnPlayer();
+        }
+
+        function spawnItem(x, y, char) {
+            const itemNode = document.createElement('div');
+            itemNode.classList.add('item-node');
+            
+            const posX = x * STEP;
+            const posY = y * STEP;
+            itemNode.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
+
+            const itemText = document.createElement('div');
+            itemText.classList.add('item-text');
+            itemText.innerText = char;
+
+            if (char === '(' || char === ')') itemText.classList.add('item-chest');
+            else if (char === '<') itemText.classList.add('item-vase');
+            else if (char === TORCH_CHAR) itemText.classList.add('item-torch');
+            else if (char === '*') itemText.classList.add('item-rock');
+
+            itemNode.appendChild(itemText);
+            board.appendChild(itemNode);
+
+            itemElements[`${x},${y}`] = itemText;
+        }
+
+        function spawnDoor(x, y) {
+    const doorNode = document.createElement('div');
+    doorNode.classList.add('door-node');
+
+    const posX = x * STEP;
+    const posY = y * STEP;
+    doorNode.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
+
+    const doorText = document.createElement('div');
+    doorText.classList.add('door-text');
+    
+    // Tag specific wall orientation for CSS skew
+    if (y === 0) doorText.classList.add('door-north');
+    else if (y === GRID_SIZE - 1) doorText.classList.add('door-south');
+    else if (x === 0) doorText.classList.add('door-west');
+    else if (x === GRID_SIZE - 1) doorText.classList.add('door-east');
+
+    doorText.innerText = DOOR_CHAR;
+
+    doorNode.appendChild(doorText);
+    board.appendChild(doorNode);
+}
+
+        function spawnPlayer() {
+            playerElement = document.createElement('div');
+            playerElement.id = 'player';
+
+            const sprite = document.createElement('div');
+            sprite.classList.add('player-text');
+            sprite.innerText = '@';
+
+            playerElement.appendChild(sprite);
+            board.appendChild(playerElement);
+            updatePlayerRender();
+        }
+
+        function updatePlayerRender() {
+            const posX = playerPos.x * STEP;
+            const posY = playerPos.y * STEP;
+
+            playerElement.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
+        }
+
+        function isWalkable(x, y) {
+            // Strict board perimeter check
+            if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return false;
+
+            const char = layoutMap[y][x];
+
+            // Outer Walls are solid
+            if (char === 'W') return false;
+
+            // Doors: Walkable (triggers room transition logic if desired)
+            if (char === DOOR_CHAR) return true;
+
+            // Obstacles inside the room
+            if (char === '(') return false; // Closed chest blocks movement
+            if (char === '<') return false; // Vase blocks movement
+            if (char === TORCH_CHAR) return false; // Torch blocks movement
+            if (char === '*') return false; // Rock blocks movement
+
+            return true;
+        }
+
+        function movePlayer(dx, dy) {
+            const targetX = playerPos.x + dx;
+            const targetY = playerPos.y + dy;
+
+            if (isWalkable(targetX, targetY)) {
+                playerPos.x = targetX;
+                playerPos.y = targetY;
+                updatePlayerRender();
+
+                // Check if stepping on door tile
+                if (layoutMap[targetY][targetX] === DOOR_CHAR) {
+                    console.log(`Player entered door at (${targetX}, ${targetY})!`);
+                }
+            }
+        }
+
+        function interact() {
+            const neighbors = [
+                { x: playerPos.x, y: playerPos.y - 1 },
+                { x: playerPos.x, y: playerPos.y + 1 },
+                { x: playerPos.x - 1, y: playerPos.y },
+                { x: playerPos.x + 1, y: playerPos.y }
+            ];
+
+            for (const pos of neighbors) {
+                if (pos.x >= 0 && pos.x < GRID_SIZE && pos.y >= 0 && pos.y < GRID_SIZE) {
+                    if (layoutMap[pos.y][pos.x] === '(') {
+                        layoutMap[pos.y][pos.x] = ')'; // Open chest
+                        
+                        const sprite = itemElements[`${pos.x},${pos.y}`];
+                        if (sprite) sprite.innerText = ')';
+                        break;
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':    case 'w': case 'W': movePlayer(0, -1); break;
+                case 'ArrowDown':  case 's': case 'S': movePlayer(0, 1);  break;
+                case 'ArrowLeft':  case 'a': case 'A': movePlayer(-1, 0); break;
+                case 'ArrowRight': case 'd': case 'D': movePlayer(1, 0);  break;
+                case ' ':          case 'e': case 'E': interact();        break;
+            }
+        });
+
+        generateBoard();
+    </script>
+</body>
+</html>
