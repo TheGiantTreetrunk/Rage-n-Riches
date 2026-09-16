@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7x7 Isometric Dungeon with Perimeter Wall Shell</title>
+    <title>7x7 Isometric Dungeon - Room Progression</title>
     <style>
         @font-face {
             font-family: 'DungeonFont';
@@ -16,19 +16,15 @@
             --grid-gap: 2px;
             --font-size: 38px;
 
-            /* Floor & Wall Glyph Alignment */
             --floor-offset-y: 6px;  
             --floor-offset-x: 0px;  
             
-            /* Billboard Vertical Nudges */
             --player-offset-y: -10px; 
             --item-offset-y: -8px;
             --door-offset-y: -6px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             background-color: #0b0c10;
@@ -43,10 +39,19 @@
             overflow: hidden;
         }
 
-        #instructions {
-            margin-bottom: 20px;
+        #hud {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 10px;
             font-family: system-ui, sans-serif;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
+            color: #45a29e;
+        }
+
+        #instructions {
+            margin-bottom: 15px;
+            font-family: system-ui, sans-serif;
+            font-size: 0.9rem;
             color: #c5c6c7;
             text-align: center;
         }
@@ -54,14 +59,13 @@
         #viewport {
             position: relative;
             width: 100vw;
-            height: 70vh;
+            height: 65vh;
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 1000px;
         }
 
-        /* Isometric 3D Projection Container */
         #game-board {
             position: relative;
             display: grid;
@@ -73,7 +77,6 @@
             background-color: transparent;
         }
 
-        /* Grid Tile Outer Container */
         .tile {
             width: var(--cell-size);
             height: var(--cell-size);
@@ -84,7 +87,6 @@
             position: relative;
         }
 
-        /* Inner Tile Glyph (Floor & Static Walls) */
         .tile-glyph {
             display: inline-block;
             font-size: var(--font-size);
@@ -95,13 +97,11 @@
             transform: translate(var(--floor-offset-x), var(--floor-offset-y));
         }
 
-        /* Darker styling for boundary walls */
         .tile-wall {
             color: #1f2833;
             text-shadow: none;
         }
 
-        /* Billboard Elements (Entities & Doors) */
         .item-node, .door-node {
             position: absolute;
             width: var(--cell-size);
@@ -125,7 +125,6 @@
             transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--item-offset-y));
         }
 
-        /* Door Billboard Styling */
         .door-text {
             display: flex;
             justify-content: center;
@@ -137,36 +136,28 @@
             text-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
             line-height: 1;
             user-select: none;
-            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--door-offset-y));
         }
-		
-		/* North door skew */
-.door-north {
-    transform: rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
-}
 
-/* South door skew */
-.door-south {
-    transform: rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
-}
+        .door-locked {
+            color: #e63946;
+            text-shadow: 0 0 10px rgba(230, 57, 70, 0.9);
+        }
 
-/* West door skew */
-.door-west {
-    transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
-}
+        .door-north, .door-south {
+            transform: rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
+        }
 
-/* East door skew */
-.door-east {
-    transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
-}
+        .door-west, .door-east {
+            transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
+        }
 
-        /* Item Colors */
         .item-chest { color: #d4a373; text-shadow: 0 0 8px rgba(212, 163, 115, 0.6); }
         .item-vase  { color: #e76f51; text-shadow: 0 0 8px rgba(231, 111, 81, 0.6); }
         .item-torch { color: #f4a261; text-shadow: 0 0 10px rgba(244, 162, 97, 0.9); }
         .item-rock  { color: #8d99ae; text-shadow: 0 0 6px rgba(141, 153, 174, 0.5); }
+        .item-demon { color: #d62828; text-shadow: 0 0 12px rgba(214, 40, 40, 0.9); }
+        .item-ghost { color: #a8dede; text-shadow: 0 0 12px rgba(168, 222, 222, 0.9); }
 
-        /* Player Sprite */
         #player {
             position: absolute;
             width: var(--cell-size);
@@ -197,8 +188,12 @@
 </head>
 <body>
 
+    <div id="hud">
+        <div>Room: <span id="ui-room">1 / 6</span></div>
+        <div>Score: <span id="ui-score">0</span></div>
+    </div>
     <div id="instructions">
-        Move: <b>W, A, S, D / Arrows</b> | Interact / Open Chest: <b>Space / E</b>
+        Move: <b>W, A, S, D / Arrows</b> | Interact / Loot / Unlock Door: <b>Space / E</b>
     </div>
     <div id="viewport">
         <div id="game-board"></div>
@@ -209,37 +204,245 @@
         const CELL_SIZE = 44;
         const GRID_GAP = 2; 
         const STEP = CELL_SIZE + GRID_GAP; 
+        const TOTAL_ROOMS = 6;
 
         const board = document.getElementById('game-board');
-
-        // Player starts inside the 5x5 playable room (grid coordinate 3, 5)
-        let playerPos = { x: 3, y: 5 };
-        let playerElement = null;
+        const uiRoom = document.getElementById('ui-room');
+        const uiScore = document.getElementById('ui-score');
 
         const TORCH_CHAR = 'T';
         const DOOR_CHAR = ':';
 
-        /* 
-           7x7 Map Grid:
-           - Outer Ring (0 and 6) = Solid Walls ('W') or Doors (':')
-           - Inner Ring (1 to 5)  = Playable Floor ('#') with Items/Obstacles
-        */
-        const layoutMap = [
-            ['W', 'W', 'W', ':', 'W', 'W', 'W'], // Y=0 (North Wall with Door at x=3)
-            ['W', TORCH_CHAR, ' ', ' ', ' ', ' ', 'W'], // Y=1
-            ['W', ' ', '*', '(', '<', ' ', 'W'], // Y=2
-            [':', ' ', ' ', ' ', ' ', ' ', ':'], // Y=3 (West Door at x=0, East Door at x=6)
-            ['W', ' ', '<', ' ', '*', ' ', 'W'], // Y=4
-            ['W', ' ', ' ', ' ', ' ', ' ', 'W'], // Y=5
-            ['W', 'W', 'W', ':', 'W', 'W', 'W']  // Y=6 (South Wall with Door at x=3)
-        ];
+        let currentRoomIndex = 0;
+        let playerScore = 0;
+        let playerPos = { x: 3, y: 3 };
+        let playerElement = null;
 
-        const itemElements = {};
+        let currentFloorRooms = [];
+        let activeLayout = [];
+        let itemElements = {};
+        let doorData = {};
 
-        function generateBoard() {
+        const WALL_DIRS = ['NORTH', 'EAST', 'SOUTH', 'WEST'];
+        const OPPOSITE_WALL = {
+            'NORTH': 'SOUTH',
+            'SOUTH': 'NORTH',
+            'EAST':  'WEST',
+            'WEST':  'EAST'
+        };
+
+        const DOOR_COORDS = {
+            'NORTH': { x: 3, y: 0 },
+            'SOUTH': { x: 3, y: 6 },
+            'WEST':  { x: 0, y: 3 },
+            'EAST':  { x: 6, y: 3 }
+        };
+
+        const ENTRY_SPAWNS = {
+            'NORTH': { x: 3, y: 1 },
+            'SOUTH': { x: 3, y: 5 },
+            'WEST':  { x: 1, y: 3 },
+            'EAST':  { x: 5, y: 3 }
+        };
+
+        // --- EXTERNAL HOOK FUNCTIONS ---
+        function pickLockDoor(doorObj, onComplete) {
+            console.log("Picking lock...");
+            alert("Attempting to pick the lock!");
+            doorObj.isLocked = false;
+            if (onComplete) onComplete(true);
+        }
+
+        function breakDownDoor(doorObj, onComplete) {
+            console.log("Smashing door...");
+            alert("Breaking down the door!");
+            doorObj.isLocked = false;
+            if (onComplete) onComplete(true);
+        }
+
+        function triggerChallenge(entityType) {
+            if (entityType === 'D') {
+                alert("A Demon approaches! Triggering Combat Challenge.");
+            } else if (entityType === 'G') {
+                alert("A Ghost appears! Triggering Puzzle Challenge.");
+            }
+        }
+
+        // --- PROCEDURAL GENERATION ---
+        function generateFloorData() {
+            currentFloorRooms = [];
+
+            // Room 1: Starting Room (Empty, 1 Exit Door)
+            const firstExit = WALL_DIRS[Math.floor(Math.random() * WALL_DIRS.length)];
+            currentFloorRooms.push({
+                index: 0,
+                entryWall: null,
+                forwardWall: firstExit,
+                doors: {
+                    [firstExit]: { type: 'FORWARD', isLocked: false, targetRoom: 1 }
+                },
+                items: {}
+            });
+
+            // Rooms 2 to 6
+            for (let i = 1; i < TOTAL_ROOMS; i++) {
+                const prevRoom = currentFloorRooms[i - 1];
+                const entryWall = OPPOSITE_WALL[prevRoom.forwardWall];
+                
+                const availableWalls = WALL_DIRS.filter(w => w !== entryWall);
+                const forwardWall = availableWalls[Math.floor(Math.random() * availableWalls.length)];
+
+                const isLocked = Math.random() < 0.35; // 35% chance to be locked
+
+                const roomObj = {
+                    index: i,
+                    entryWall: entryWall,
+                    forwardWall: forwardWall,
+                    doors: {
+                        [entryWall]: { type: 'BACKWARD', isLocked: false, targetRoom: i - 1 },
+                        [forwardWall]: { type: 'FORWARD', isLocked: isLocked, targetRoom: i + 1 }
+                    },
+                    items: {}
+                };
+
+                roomObj.items = generateRoomItems(roomObj);
+                currentFloorRooms.push(roomObj);
+            }
+        }
+
+        function generateRoomItems(roomObj) {
+            let items = {};
+            let isValidLayout = false;
+            let attempts = 0;
+
+            // Reserved clearance zones adjacent to all possible door entries
+            const doorClearanceTiles = new Set([
+                '3,1', '2,1', '4,1', // North buffer
+                '3,5', '2,5', '4,5', // South buffer
+                '1,3', '1,2', '1,4', // West buffer
+                '5,3', '5,2', '5,4'  // East buffer
+            ]);
+
+            while (!isValidLayout && attempts < 50) {
+                attempts++;
+                items = {};
+
+                const possibleItems = ['(', '<', '*', TORCH_CHAR];
+                const itemCount = Math.floor(Math.random() * 4) + 3;
+
+                // 1. Spawn random breakables & decor outside clearance zones
+                for (let i = 0; i < itemCount; i++) {
+                    const rx = Math.floor(Math.random() * 5) + 1;
+                    const ry = Math.floor(Math.random() * 5) + 1;
+                    const key = `${rx},${ry}`;
+
+                    if (doorClearanceTiles.has(key) || items[key]) continue;
+
+                    const char = possibleItems[Math.floor(Math.random() * possibleItems.length)];
+                    items[key] = { char: char, state: 'INTACT' };
+                }
+
+                // 2. Spawn optional Demon or Ghost outside clearance zones
+                if (Math.random() < 0.5) {
+                    const cx = Math.floor(Math.random() * 3) + 2;
+                    const cy = Math.floor(Math.random() * 3) + 2;
+                    const key = `${cx},${cy}`;
+
+                    if (!doorClearanceTiles.has(key) && !items[key]) {
+                        const entityChar = Math.random() < 0.5 ? 'D' : 'G';
+                        items[key] = { char: entityChar, state: 'ACTIVE' };
+                    }
+                }
+
+                // 3. Validate path between all doors using BFS flood-fill
+                isValidLayout = validateRoomPathways(items, roomObj);
+            }
+
+            return items;
+        }
+
+        function validateRoomPathways(items, roomObj) {
+            if (!roomObj || !roomObj.doors) return true;
+
+            const activeSpawnPoints = [];
+            for (const wall of Object.keys(roomObj.doors)) {
+                activeSpawnPoints.push(ENTRY_SPAWNS[wall]);
+            }
+
+            if (activeSpawnPoints.length < 2) return true;
+
+            const start = activeSpawnPoints[0];
+            const queue = [start];
+            const visited = new Set([`${start.x},${start.y}`]);
+
+            while (queue.length > 0) {
+                const curr = queue.shift();
+
+                const neighbors = [
+                    { x: curr.x, y: curr.y - 1 },
+                    { x: curr.x, y: curr.y + 1 },
+                    { x: curr.x - 1, y: curr.y },
+                    { x: curr.x + 1, y: curr.y }
+                ];
+
+                for (const n of neighbors) {
+                    if (n.x < 1 || n.x > 5 || n.y < 1 || n.y > 5) continue;
+                    
+                    const key = `${n.x},${n.y}`;
+                    if (visited.has(key)) continue;
+                    if (items[key]) continue; // Solid objects block the BFS search
+
+                    visited.add(key);
+                    queue.push(n);
+                }
+            }
+
+            return activeSpawnPoints.every(pt => visited.has(`${pt.x},${pt.y}`));
+        }
+
+        function loadRoom(roomIdx, entryDirection = null) {
+            currentRoomIndex = roomIdx;
+            uiRoom.innerText = `${currentRoomIndex + 1} / ${TOTAL_ROOMS}`;
+
+            const roomData = currentFloorRooms[roomIdx];
+            doorData = roomData.doors;
+
+            activeLayout = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(' '));
+
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    if (r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1) {
+                        activeLayout[r][c] = 'W';
+                    }
+                }
+            }
+
+            for (const [wall, dInfo] of Object.entries(doorData)) {
+                const coord = DOOR_COORDS[wall];
+                activeLayout[coord.y][coord.x] = DOOR_CHAR;
+            }
+
+            for (const [posKey, item] of Object.entries(roomData.items)) {
+                const [ix, iy] = posKey.split(',').map(Number);
+                if (item.state !== 'DESTROYED') {
+                    activeLayout[iy][ix] = item.char;
+                }
+            }
+
+            if (entryDirection && ENTRY_SPAWNS[entryDirection]) {
+                playerPos = { ...ENTRY_SPAWNS[entryDirection] };
+            } else {
+                playerPos = { x: 3, y: 3 };
+            }
+
+            renderBoard();
+        }
+
+        // --- RENDER ENGINE ---
+        function renderBoard() {
             board.innerHTML = '';
+            itemElements = {};
 
-            // 1. Render Base Floor and Wall Shell Grid
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
                     const tile = document.createElement('div');
@@ -251,10 +454,10 @@
                     const isWallBoundary = (r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1);
 
                     if (isWallBoundary) {
-                        glyph.innerText = ' '; // Blank floor under wall/door billboards
+                        glyph.innerText = ' ';
                         glyph.classList.add('tile-wall');
                     } else {
-                        glyph.innerText = '#'; // Floor tile
+                        glyph.innerText = '#';
                     }
                     
                     tile.appendChild(glyph);
@@ -262,10 +465,9 @@
                 }
             }
 
-            // 2. Spawn Entities, Items, and Doors
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
-                    const char = layoutMap[r][c];
+                    const char = activeLayout[r][c];
 
                     if (char === DOOR_CHAR) {
                         spawnDoor(c, r);
@@ -275,17 +477,37 @@
                 }
             }
 
-            // 3. Spawn Player
             spawnPlayer();
+        }
+
+        function spawnDoor(x, y) {
+            const doorNode = document.createElement('div');
+            doorNode.classList.add('door-node');
+            doorNode.style.transform = `translate3d(${x * STEP}px, ${y * STEP}px, 0px)`;
+
+            const doorText = document.createElement('div');
+            doorText.classList.add('door-text');
+
+            let wallKey = null;
+            if (y === 0) { doorText.classList.add('door-north'); wallKey = 'NORTH'; }
+            else if (y === GRID_SIZE - 1) { doorText.classList.add('door-south'); wallKey = 'SOUTH'; }
+            else if (x === 0) { doorText.classList.add('door-west'); wallKey = 'WEST'; }
+            else if (x === GRID_SIZE - 1) { doorText.classList.add('door-east'); wallKey = 'EAST'; }
+
+            const dObj = doorData[wallKey];
+            if (dObj && dObj.isLocked) {
+                doorText.classList.add('door-locked');
+            }
+
+            doorText.innerText = DOOR_CHAR;
+            doorNode.appendChild(doorText);
+            board.appendChild(doorNode);
         }
 
         function spawnItem(x, y, char) {
             const itemNode = document.createElement('div');
             itemNode.classList.add('item-node');
-            
-            const posX = x * STEP;
-            const posY = y * STEP;
-            itemNode.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
+            itemNode.style.transform = `translate3d(${x * STEP}px, ${y * STEP}px, 0px)`;
 
             const itemText = document.createElement('div');
             itemText.classList.add('item-text');
@@ -295,35 +517,14 @@
             else if (char === '<') itemText.classList.add('item-vase');
             else if (char === TORCH_CHAR) itemText.classList.add('item-torch');
             else if (char === '*') itemText.classList.add('item-rock');
+            else if (char === 'D') itemText.classList.add('item-demon');
+            else if (char === 'G') itemText.classList.add('item-ghost');
 
             itemNode.appendChild(itemText);
             board.appendChild(itemNode);
 
             itemElements[`${x},${y}`] = itemText;
         }
-
-        function spawnDoor(x, y) {
-    const doorNode = document.createElement('div');
-    doorNode.classList.add('door-node');
-
-    const posX = x * STEP;
-    const posY = y * STEP;
-    doorNode.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
-
-    const doorText = document.createElement('div');
-    doorText.classList.add('door-text');
-    
-    // Tag specific wall orientation for CSS skew
-    if (y === 0) doorText.classList.add('door-north');
-    else if (y === GRID_SIZE - 1) doorText.classList.add('door-south');
-    else if (x === 0) doorText.classList.add('door-west');
-    else if (x === GRID_SIZE - 1) doorText.classList.add('door-east');
-
-    doorText.innerText = DOOR_CHAR;
-
-    doorNode.appendChild(doorText);
-    board.appendChild(doorNode);
-}
 
         function spawnPlayer() {
             playerElement = document.createElement('div');
@@ -339,29 +540,16 @@
         }
 
         function updatePlayerRender() {
-            const posX = playerPos.x * STEP;
-            const posY = playerPos.y * STEP;
-
-            playerElement.style.transform = `translate3d(${posX}px, ${posY}px, 0px)`;
+            playerElement.style.transform = `translate3d(${playerPos.x * STEP}px, ${playerPos.y * STEP}px, 0px)`;
         }
 
+        // --- GAMEPLAY MECHANICS ---
         function isWalkable(x, y) {
-            // Strict board perimeter check
             if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return false;
 
-            const char = layoutMap[y][x];
-
-            // Outer Walls are solid
+            const char = activeLayout[y][x];
             if (char === 'W') return false;
-
-            // Doors: Walkable (triggers room transition logic if desired)
-            if (char === DOOR_CHAR) return true;
-
-            // Obstacles inside the room
-            if (char === '(') return false; // Closed chest blocks movement
-            if (char === '<') return false; // Vase blocks movement
-            if (char === TORCH_CHAR) return false; // Torch blocks movement
-            if (char === '*') return false; // Rock blocks movement
+            if (['(', '<', '*', TORCH_CHAR, 'D', 'G'].includes(char)) return false;
 
             return true;
         }
@@ -375,30 +563,83 @@
                 playerPos.y = targetY;
                 updatePlayerRender();
 
-                // Check if stepping on door tile
-                if (layoutMap[targetY][targetX] === DOOR_CHAR) {
-                    console.log(`Player entered door at (${targetX}, ${targetY})!`);
+                if (activeLayout[targetY][targetX] === DOOR_CHAR) {
+                    handleDoorStep(targetX, targetY);
                 }
             }
         }
 
+        function handleDoorStep(x, y) {
+            let wallKey = null;
+            if (y === 0) wallKey = 'NORTH';
+            else if (y === GRID_SIZE - 1) wallKey = 'SOUTH';
+            else if (x === 0) wallKey = 'WEST';
+            else if (x === GRID_SIZE - 1) wallKey = 'EAST';
+
+            const doorObj = doorData[wallKey];
+            if (!doorObj) return;
+
+            if (doorObj.isLocked) {
+                playerPos.x -= (x === 0 ? -1 : x === 6 ? 1 : 0);
+                playerPos.y -= (y === 0 ? -1 : y === 6 ? 1 : 0);
+                updatePlayerRender();
+                alert("The door is locked! Stand adjacent and press Space/E to pick or break it.");
+                return;
+            }
+
+            const entryDirection = OPPOSITE_WALL[wallKey];
+            loadRoom(doorObj.targetRoom, entryDirection);
+        }
+
         function interact() {
             const neighbors = [
-                { x: playerPos.x, y: playerPos.y - 1 },
-                { x: playerPos.x, y: playerPos.y + 1 },
-                { x: playerPos.x - 1, y: playerPos.y },
-                { x: playerPos.x + 1, y: playerPos.y }
+                { x: playerPos.x, y: playerPos.y - 1, wall: 'NORTH' },
+                { x: playerPos.x, y: playerPos.y + 1, wall: 'SOUTH' },
+                { x: playerPos.x - 1, y: playerPos.y, wall: 'WEST' },
+                { x: playerPos.x + 1, y: playerPos.y, wall: 'EAST' }
             ];
 
             for (const pos of neighbors) {
-                if (pos.x >= 0 && pos.x < GRID_SIZE && pos.y >= 0 && pos.y < GRID_SIZE) {
-                    if (layoutMap[pos.y][pos.x] === '(') {
-                        layoutMap[pos.y][pos.x] = ')'; // Open chest
-                        
-                        const sprite = itemElements[`${pos.x},${pos.y}`];
-                        if (sprite) sprite.innerText = ')';
-                        break;
+                if (pos.x < 0 || pos.x >= GRID_SIZE || pos.y < 0 || pos.y >= GRID_SIZE) continue;
+
+                const char = activeLayout[pos.y][pos.x];
+
+                if (char === DOOR_CHAR) {
+                    const doorObj = doorData[pos.wall];
+                    if (doorObj && doorObj.isLocked) {
+                        const choice = confirm("Press OK to Pick Lock, or Cancel to Break Down Door.");
+                        const onUnlocked = (success) => {
+                            if (success) renderBoard();
+                        };
+
+                        if (choice) {
+                            pickLockDoor(doorObj, onUnlocked);
+                        } else {
+                            breakDownDoor(doorObj, onUnlocked);
+                        }
+                        return;
                     }
+                }
+
+                if (['(', '<', '*', 'D', 'G'].includes(char)) {
+                    const roomItems = currentFloorRooms[currentRoomIndex].items;
+                    const itemData = roomItems[`${pos.x},${pos.y}`];
+
+                    if (char === '(') {
+                        activeLayout[pos.y][pos.x] = ')';
+                        if (itemData) itemData.char = ')';
+                        playerScore += 50;
+                    } else if (char === '<' || char === '*') {
+                        activeLayout[pos.y][pos.x] = ' ';
+                        if (itemData) itemData.state = 'DESTROYED';
+                        playerScore += 20;
+                    } else if (char === 'D' || char === 'G') {
+                        triggerChallenge(char);
+                    }
+
+                    uiScore.innerText = playerScore;
+                    renderBoard();
+                    break;
                 }
             }
         }
@@ -413,7 +654,9 @@
             }
         });
 
-        generateBoard();
+        // Initialize Game
+        generateFloorData();
+        loadRoom(0);
     </script>
 </body>
 </html>
