@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Voice Web Audio Synth Engine</title>
+<style>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: #1a1a1a;
+color: #e0e0e0;
+padding: 20px;
+max-width: 600px;
+margin: 0 auto;
+}
+h1 {
+color: #00ffcc;
+text-align: center;
+}
+.card {
+background-color: #2a2a2a;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+margin-bottom: 20px;
+}
+.control-group {
+margin-bottom: 15px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+label {
+font-weight: bold;
+}
+select, input {
+padding: 8px;
+background-color: #333;
+color: #fff;
+border: 1px solid #444;
+border-radius: 4px;
+}
+button {
+width: 100%;
+padding: 12px;
+font-size: 18px;
+font-weight: bold;
+color: #1a1a1a;
+background-color: #00ffcc;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+transition: background 0.2s;
+}
+button:hover {
+background-color: #00cca3;
+}
+button:disabled {
+background-color: #555;
+cursor: not-allowed;
+}
+.voice-section {
+border-left: 4px solid #00ffcc;
+padding-left: 10px;
+margin-bottom: 15px;
+}
+.voice-section:nth-child(2) { border-color: #ff007f; }
+.voice-section:nth-child(3) { border-color: #ffcc00; }
+</style>
+</head>
+<body>
+<h1>3-Voice Audio Engine</h1>
+<div class="card">
+<div class="control-group">
+<label for="tempo">Tempo (BPM):</label>
+<input type="number" id="tempo" value="140" min="60" max="240">
+</div>
+<div class="voice-section">
+<h3>Voice 1 (Lead)</h3>
+<div class="control-group">
+<label for="v1Wave">Waveform:</label>
+<select id="v1Wave">
+<option value="square" selected>Square (Retro)</option>
+<option value="sawtooth">Sawtooth</option>
+<option value="triangle">Triangle</option>
+<option value="sine">Sine</option>
+</select>
+</div>
+</div>
+<div class="voice-section">
+<h3>Voice 2 (Effect / Harmony)</h3>
+<div class="control-group">
+<label for="v2Wave">Waveform:</label>
+<select id="v2Wave">
+<option value="sine" selected>Sine (Smooth)</option>
+<option value="square">Square</option>
+<option value="sawtooth">Sawtooth</option>
+<option value="triangle">Triangle</option>
+</select>
+</div>
+</div>
+<div class="voice-section">
+<h3>Voice 3 (Bass)</h3>
+<div class="control-group">
+<label for="v3Wave">Waveform:</label>
+<select id="v3Wave">
+<option value="sawtooth" selected>Sawtooth (Buzz)</option>
+<option value="square">Square</option>
+<option value="triangle">Triangle</option>
+<option value="sine">Sine</option>
+</select>
+</div>
+</div>
+<button id="playBtn">Play Tune</button>
+</div>
+<script>
+// Note Frequency Lookup Table
+const NOTES = {
+C2: 65.41,  G2: 98.00,  A2: 110.00,
+C3: 130.81, E3: 164.81, G3: 196.00, A3: 220.00,
+C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, B4: 493.88,
+C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99
+};
+// Song Sequences (0 represents a rest)
+const songs = {
+song1: {
+voice1: ['C4', 'E4', 'G4', 'C5', 'B4', 'G4', 'E4', 'C4', 'D4', 'F4', 'A4', 'D5', 'C5', 'A4', 'F4', 'D4'],
+voice2: ['E4', 'G4', 'B4', 'E5', 'D5', 'B4', 'G4', 'E4', 'F4', 'A4', 'C5', 'F5', 'E5', 'C5', 'A4', 'F4'],
+voice3: ['C3', 0,    'G3', 0,    'C3', 0,    'G3', 0,    'D3', 0,    'A3', 0,    'D3', 0,    'A3', 0]
+}
+};
+let audioCtx = null;
+document.getElementById('playBtn').addEventListener('click', () => {
+// Initialize AudioContext on user interaction
+if (!audioCtx) {
+audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+const bpm = parseInt(document.getElementById('tempo').value, 10);
+const beatDuration = 60 / bpm; // Duration of each note in seconds
+const startTime = audioCtx.currentTime + 0.1; // Schedule start slightly in future
+const v1Wave = document.getElementById('v1Wave').value;
+const v2Wave = document.getElementById('v2Wave').value;
+const v3Wave = document.getElementById('v3Wave').value;
+const currentSong = songs.song1;
+const maxLength = Math.max(
+currentSong.voice1.length,
+currentSong.voice2.length,
+currentSong.voice3.length
+);
+// Loop through sequence and schedule notes on Web Audio timeline
+for (let step = 0; step < maxLength; step++) {
+const noteTime = startTime + (step * beatDuration);
+// Voice 1 (Lead - Main volume)
+if (currentSong.voice1[step]) {
+scheduleNote(currentSong.voice1[step], v1Wave, noteTime, beatDuration, 0.25);
+}
+// Voice 2 (Effect - Lower volume)
+if (currentSong.voice2[step]) {
+scheduleNote(currentSong.voice2[step], v2Wave, noteTime, beatDuration, 0.12);
+}
+// Voice 3 (Bass Line)
+if (currentSong.voice3[step]) {
+scheduleNote(currentSong.voice3[step], v3Wave, noteTime, beatDuration, 0.20);
+}
+}
+});
+function scheduleNote(noteName, waveType, startTime, duration, volume) {
+if (!NOTES[noteName]) return; // Skip rests or invalid notes
+const osc = audioCtx.createOscillator();
+const gain = audioCtx.createGain();
+osc.type = waveType;
+osc.frequency.setValueAtTime(NOTES[noteName], startTime);
+// Envelope to avoid pop/click artifacts on note transitions
+gain.gain.setValueAtTime(volume, startTime);
+gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.03);
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+osc.start(startTime);
+osc.stop(startTime + duration);
+}
+</script>
+</body>
+</html>
