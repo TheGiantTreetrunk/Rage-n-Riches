@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7x7 Isometric Dungeon - Room Progression</title>
+    <title>7x7 Isometric Dungeon - Single Door Boss Room</title>
     <style>
         @font-face {
             font-family: 'DungeonFont';
-            src: url('test.ttf') format('truetype');
+            src: url('../font/test.ttf') format('truetype');
         }
 
         :root {
@@ -151,12 +151,22 @@
             transform: rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
         }
 
-        .item-chest { color: #d4a373; text-shadow: 0 0 8px rgba(212, 163, 115, 0.6); }
-        .item-vase  { color: #e76f51; text-shadow: 0 0 8px rgba(231, 111, 81, 0.6); }
-        .item-torch { color: #f4a261; text-shadow: 0 0 10px rgba(244, 162, 97, 0.9); }
-        .item-rock  { color: #8d99ae; text-shadow: 0 0 6px rgba(141, 153, 174, 0.5); }
-        .item-demon { color: #d62828; text-shadow: 0 0 12px rgba(214, 40, 40, 0.9); }
-        .item-ghost { color: #a8dede; text-shadow: 0 0 12px rgba(168, 222, 222, 0.9); }
+        /* Item & Feature Styles */
+        .item-chest          { color: #d4a373; text-shadow: 0 0 8px rgba(212, 163, 115, 0.6); }
+        .item-vase           { color: #e76f51; text-shadow: 0 0 8px rgba(231, 111, 81, 0.6); }
+        .item-torch          { color: #f4a261; text-shadow: 0 0 10px rgba(244, 162, 97, 0.9); }
+        .item-rock           { color: #8d99ae; text-shadow: 0 0 6px rgba(141, 153, 174, 0.5); }
+        .item-demon          { color: #d62828; text-shadow: 0 0 12px rgba(214, 40, 40, 0.9); }
+        .item-ghost          { color: #a8dede; text-shadow: 0 0 12px rgba(168, 222, 222, 0.9); }
+        .item-boss           { color: #9d4edd; text-shadow: 0 0 16px rgba(157, 78, 221, 1.0); font-weight: bold; }
+        
+        .item-fountain       { color: #00b4d8; text-shadow: 0 0 12px rgba(0, 180, 216, 0.9); }
+        .item-fountain-used  { color: #4a5568; text-shadow: none; opacity: 0.6; }
+        .item-water          { color: #0077b6; text-shadow: 0 0 8px rgba(0, 119, 182, 0.7); }
+        .item-water-used     { color: #3a506b; text-shadow: none; opacity: 0.5; }
+        
+        .item-grass          { color: #52b788; text-shadow: 0 0 6px rgba(82, 183, 136, 0.6); }
+        .item-trap           { color: #ff4d6d; text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); }
 
         #player {
             position: absolute;
@@ -171,29 +181,44 @@
             z-index: 10;
         }
 
-        .player-text {
+        .player-wrapper {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            width: var(--cell-size);
-            height: var(--cell-size);
+            justify-content: center;
+            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--player-offset-y));
+        }
+
+        .player-text {
             font-size: calc(var(--font-size) * 1.1);
             color: #ffe600;
             text-shadow: 0 0 10px rgba(255, 230, 0, 0.8);
             line-height: 1;
             user-select: none;
-            transform: rotateZ(45deg) rotateX(-60deg) translateY(var(--player-offset-y));
+        }
+
+        .facing-indicator {
+            display: none;
+            font-size: 14px;
+            color: #66fcf1;
+            text-shadow: 0 0 6px rgba(102, 252, 241, 0.9);
+            font-family: system-ui, sans-serif;
+            font-weight: bold;
+            margin-top: -6px;
+            user-select: none;
         }
     </style>
 </head>
 <body>
 
     <div id="hud">
+        <div>Floor: <span id="ui-floor">1</span></div>
         <div>Room: <span id="ui-room">1 / 6</span></div>
         <div>Score: <span id="ui-score">0</span></div>
+        <div>Facing: <span id="ui-facing">SOUTH</span></div>
     </div>
     <div id="instructions">
-        Move: <b>W, A, S, D / Arrows</b> | Interact / Loot / Unlock Door: <b>Space / E</b>
+        Move: <b>W, A, S, D / Arrows</b> | Interact / Drink / Challenge: <b>Space / E</b>
     </div>
     <div id="viewport">
         <div id="game-board"></div>
@@ -207,16 +232,26 @@
         const TOTAL_ROOMS = 6;
 
         const board = document.getElementById('game-board');
+        const uiFloor = document.getElementById('ui-floor');
         const uiRoom = document.getElementById('ui-room');
         const uiScore = document.getElementById('ui-score');
+        const uiFacing = document.getElementById('ui-facing');
 
-        const TORCH_CHAR = 'T';
+        const TORCH_CHAR = 'Z';
         const DOOR_CHAR = ':';
+        const FOUNTAIN_CHAR = 'F';
+        const WATER_CHAR = '~';
+        const GRASS_CHAR = '"';
+        const TRAP_CHAR = '^';
+        const BOSS_CHAR = 'U';
 
+        let currentFloorNum = 1;
         let currentRoomIndex = 0;
         let playerScore = 0;
         let playerPos = { x: 3, y: 3 };
+        let playerFacing = 'SOUTH';
         let playerElement = null;
+        let facingIndicatorElement = null;
 
         let currentFloorRooms = [];
         let activeLayout = [];
@@ -229,6 +264,20 @@
             'SOUTH': 'NORTH',
             'EAST':  'WEST',
             'WEST':  'EAST'
+        };
+
+        const DIR_OFFSETS = {
+            'NORTH': { x: 0, y: -1 },
+            'SOUTH': { x: 0, y: 1 },
+            'WEST':  { x: -1, y: 0 },
+            'EAST':  { x: 1, y: 0 }
+        };
+
+        const FACING_ARROWS = {
+            'NORTH': '▲',
+            'SOUTH': '▼',
+            'WEST':  '◄',
+            'EAST':  '►'
         };
 
         const DOOR_COORDS = {
@@ -245,34 +294,83 @@
             'EAST':  { x: 5, y: 3 }
         };
 
-        // --- EXTERNAL HOOK FUNCTIONS ---
+        function findAssociatedFountain(x, y) {
+            const roomItems = currentFloorRooms[currentRoomIndex].items;
+            const item = roomItems[`${x},${y}`];
+            if (item && item.fountainKey && roomItems[item.fountainKey]) {
+                return { key: item.fountainKey, data: roomItems[item.fountainKey] };
+            }
+            return null;
+        }
+
         function pickLockDoor(doorObj, onComplete) {
-            console.log("Picking lock...");
             alert("Attempting to pick the lock!");
             doorObj.isLocked = false;
             if (onComplete) onComplete(true);
         }
 
         function breakDownDoor(doorObj, onComplete) {
-            console.log("Smashing door...");
             alert("Breaking down the door!");
             doorObj.isLocked = false;
             if (onComplete) onComplete(true);
         }
 
-        function triggerChallenge(entityType) {
+        function triggerChallenge(entityType, itemData, onComplete) {
             if (entityType === 'D') {
                 alert("A Demon approaches! Triggering Combat Challenge.");
+                if (onComplete) onComplete(true);
             } else if (entityType === 'G') {
                 alert("A Ghost appears! Triggering Puzzle Challenge.");
+                if (onComplete) onComplete(true);
+            } else if (entityType === 'F') {
+                if (itemData && itemData.isUsed) {
+                    alert("The fountain water is still and depleted.");
+                    return;
+                }
+
+                const acceptChallenge = confirm("You approach the pool of glowing water in front of the Fountain.\n\nAccept the Sacred Challenge for a blessing?");
+                if (acceptChallenge) {
+                    alert("Challenge Passed! You drink from the glowing waters and gain +100 points.");
+                    playerScore += 100;
+                    uiScore.innerText = playerScore;
+
+                    if (itemData) {
+                        itemData.isUsed = true;
+                    }
+                    if (onComplete) onComplete(true);
+                }
+            } else if (entityType === 'U') {
+                alert("BOSS BATTLE INITIATED!\n\nYou challenge the Grave Lord in mortal combat!");
+                alert("VICTORY! You defeated the Boss and earned +500 points!");
+                
+                playerScore += 500;
+                uiScore.innerText = playerScore;
+
+                if (itemData) itemData.state = 'DESTROYED';
+                currentFloorRooms[5].bossDefeated = true;
+
+                alert("The dungeon shifts and reshapes around you... Descending to Floor " + (currentFloorNum + 1) + "!");
+                
+                currentFloorNum++;
+                uiFloor.innerText = currentFloorNum;
+                generateFloorData();
+                loadRoom(0);
             }
         }
 
-        // --- PROCEDURAL GENERATION ---
+        function triggerDoorChallenge() {
+            const isFight = Math.random() < 0.5;
+            if (isFight) {
+                alert("Ambush! Enemies attack as you open the door!");
+            } else {
+                alert("Trap triggered! The room is flooding with water!");
+            }
+        }
+
         function generateFloorData() {
             currentFloorRooms = [];
 
-            // Room 1: Starting Room (Empty, 1 Exit Door)
+            // Room 1: Starting Room
             const firstExit = WALL_DIRS[Math.floor(Math.random() * WALL_DIRS.length)];
             currentFloorRooms.push({
                 index: 0,
@@ -284,15 +382,15 @@
                 items: {}
             });
 
-            // Rooms 2 to 6
-            for (let i = 1; i < TOTAL_ROOMS; i++) {
+            // Rooms 2 to 5 (Standard Procedural Rooms)
+            for (let i = 1; i < TOTAL_ROOMS - 1; i++) {
                 const prevRoom = currentFloorRooms[i - 1];
                 const entryWall = OPPOSITE_WALL[prevRoom.forwardWall];
                 
                 const availableWalls = WALL_DIRS.filter(w => w !== entryWall);
                 const forwardWall = availableWalls[Math.floor(Math.random() * availableWalls.length)];
 
-                const isLocked = Math.random() < 0.35; // 35% chance to be locked
+                const isLocked = Math.random() < 0.35;
 
                 const roomObj = {
                     index: i,
@@ -308,6 +406,28 @@
                 roomObj.items = generateRoomItems(roomObj);
                 currentFloorRooms.push(roomObj);
             }
+
+            // Room 6: Boss Arena (Single Entrance Door Only)
+            const prevRoom = currentFloorRooms[4];
+            const entryWall = OPPOSITE_WALL[prevRoom.forwardWall];
+
+            const bossRoomObj = {
+                index: 5,
+                entryWall: entryWall,
+                forwardWall: null,
+                bossDefeated: false,
+                doors: {
+                    [entryWall]: { type: 'BACKWARD', isLocked: false, targetRoom: 4 }
+                },
+                items: {
+                    '1,1': { char: TORCH_CHAR, state: 'INTACT' },
+                    '5,1': { char: TORCH_CHAR, state: 'INTACT' },
+                    '1,5': { char: TORCH_CHAR, state: 'INTACT' },
+                    '5,5': { char: TORCH_CHAR, state: 'INTACT' },
+                    '3,3': { char: BOSS_CHAR, state: 'ACTIVE' }
+                }
+            };
+            currentFloorRooms.push(bossRoomObj);
         }
 
         function generateRoomItems(roomObj) {
@@ -315,22 +435,74 @@
             let isValidLayout = false;
             let attempts = 0;
 
-            // Reserved clearance zones adjacent to all possible door entries
             const doorClearanceTiles = new Set([
-                '3,1', '2,1', '4,1', // North buffer
-                '3,5', '2,5', '4,5', // South buffer
-                '1,3', '1,2', '1,4', // West buffer
-                '5,3', '5,2', '5,4'  // East buffer
+                '3,1', '2,1', '4,1',
+                '3,5', '2,5', '4,5',
+                '1,3', '1,2', '1,4',
+                '5,3', '5,2', '5,4'
             ]);
 
             while (!isValidLayout && attempts < 50) {
                 attempts++;
                 items = {};
 
-                const possibleItems = ['(', '<', '*', TORCH_CHAR];
-                const itemCount = Math.floor(Math.random() * 4) + 3;
+                if (Math.random() < 0.6) {
+                    const corners = [
+                        { fx: 1, fy: 1, w: [{x:2, y:1}, {x:1, y:2}] },
+                        { fx: 5, fy: 1, w: [{x:4, y:1}, {x:5, y:2}] },
+                        { fx: 1, fy: 5, w: [{x:1, y:4}, {x:2, y:5}] },
+                        { fx: 5, fy: 5, w: [{x:5, y:4}, {x:4, y:5}] }
+                    ];
+                    const chosenCorner = corners[Math.floor(Math.random() * corners.length)];
+                    const fKey = `${chosenCorner.fx},${chosenCorner.fy}`;
 
-                // 1. Spawn random breakables & decor outside clearance zones
+                    items[fKey] = { char: FOUNTAIN_CHAR, state: 'SOLID', isUsed: false };
+
+                    for (const wt of chosenCorner.w) {
+                        const wKey = `${wt.x},${wt.y}`;
+                        items[wKey] = { char: WATER_CHAR, state: 'SOLID', fountainKey: fKey };
+                    }
+                }
+
+                if (Math.random() < 0.5) {
+                    const isHorizontal = Math.random() < 0.5;
+                    if (isHorizontal) {
+                        const trapY = Math.random() < 0.5 ? 2 : 4;
+                        for (let tx = 1; tx <= 5; tx++) {
+                            const key = `${tx},${trapY}`;
+                            if (!items[key]) {
+                                items[key] = { char: TRAP_CHAR, state: 'TRAP' };
+                            }
+                        }
+                    } else {
+                        const trapX = Math.random() < 0.5 ? 2 : 4;
+                        for (let ty = 1; ty <= 5; ty++) {
+                            const key = `${trapX},${ty}`;
+                            if (!items[key]) {
+                                items[key] = { char: TRAP_CHAR, state: 'TRAP' };
+                            }
+                        }
+                    }
+                }
+
+                if (Math.random() < 0.5) {
+                    const grassCount = Math.floor(Math.random() * 2) + 5;
+                    let gx = Math.floor(Math.random() * 5) + 1;
+                    let gy = Math.floor(Math.random() * 5) + 1;
+
+                    for (let g = 0; g < grassCount; g++) {
+                        const key = `${gx},${gy}`;
+                        if (!doorClearanceTiles.has(key) && !items[key]) {
+                            items[key] = { char: GRASS_CHAR, state: 'WALKABLE' };
+                        }
+                        gx = Math.min(5, Math.max(1, gx + (Math.floor(Math.random() * 3) - 1)));
+                        gy = Math.min(5, Math.max(1, gy + (Math.floor(Math.random() * 3) - 1)));
+                    }
+                }
+
+                const possibleItems = ['(', '<', '*', TORCH_CHAR];
+                const itemCount = Math.floor(Math.random() * 3) + 2;
+
                 for (let i = 0; i < itemCount; i++) {
                     const rx = Math.floor(Math.random() * 5) + 1;
                     const ry = Math.floor(Math.random() * 5) + 1;
@@ -342,19 +514,17 @@
                     items[key] = { char: char, state: 'INTACT' };
                 }
 
-                // 2. Spawn optional Demon or Ghost outside clearance zones
                 if (Math.random() < 0.5) {
                     const cx = Math.floor(Math.random() * 3) + 2;
                     const cy = Math.floor(Math.random() * 3) + 2;
                     const key = `${cx},${cy}`;
 
                     if (!doorClearanceTiles.has(key) && !items[key]) {
-                        const entityChar = Math.random() < 0.5 ? 'D' : 'G';
+                        const entityChar = Math.random() < 0.5 ? '?' : '&';
                         items[key] = { char: entityChar, state: 'ACTIVE' };
                     }
                 }
 
-                // 3. Validate path between all doors using BFS flood-fill
                 isValidLayout = validateRoomPathways(items, roomObj);
             }
 
@@ -390,7 +560,9 @@
                     
                     const key = `${n.x},${n.y}`;
                     if (visited.has(key)) continue;
-                    if (items[key]) continue; // Solid objects block the BFS search
+
+                    const item = items[key];
+                    if (item && (item.state === 'SOLID' || item.state === 'INTACT' || item.state === 'ACTIVE' || item.char === FOUNTAIN_CHAR)) continue;
 
                     visited.add(key);
                     queue.push(n);
@@ -431,14 +603,15 @@
 
             if (entryDirection && ENTRY_SPAWNS[entryDirection]) {
                 playerPos = { ...ENTRY_SPAWNS[entryDirection] };
+                playerFacing = OPPOSITE_WALL[entryDirection];
             } else {
                 playerPos = { x: 3, y: 3 };
+                playerFacing = 'SOUTH';
             }
 
             renderBoard();
         }
 
-        // --- RENDER ENGINE ---
         function renderBoard() {
             board.innerHTML = '';
             itemElements = {};
@@ -513,12 +686,33 @@
             itemText.classList.add('item-text');
             itemText.innerText = char;
 
+            const roomItems = currentFloorRooms[currentRoomIndex].items;
+            const itemData = roomItems[`${x},${y}`];
+
             if (char === '(' || char === ')') itemText.classList.add('item-chest');
             else if (char === '<') itemText.classList.add('item-vase');
             else if (char === TORCH_CHAR) itemText.classList.add('item-torch');
             else if (char === '*') itemText.classList.add('item-rock');
-            else if (char === 'D') itemText.classList.add('item-demon');
-            else if (char === 'G') itemText.classList.add('item-ghost');
+            else if (char === '?') itemText.classList.add('item-demon');
+            else if (char === '&') itemText.classList.add('item-ghost');
+            else if (char === BOSS_CHAR) itemText.classList.add('item-boss');
+            else if (char === FOUNTAIN_CHAR) {
+                if (itemData && itemData.isUsed) {
+                    itemText.classList.add('item-fountain-used');
+                } else {
+                    itemText.classList.add('item-fountain');
+                }
+            }
+            else if (char === WATER_CHAR) {
+                const parentFountain = findAssociatedFountain(x, y);
+                if (parentFountain && parentFountain.data.isUsed) {
+                    itemText.classList.add('item-water-used');
+                } else {
+                    itemText.classList.add('item-water');
+                }
+            }
+            else if (char === GRASS_CHAR) itemText.classList.add('item-grass');
+            else if (char === TRAP_CHAR) itemText.classList.add('item-trap');
 
             itemNode.appendChild(itemText);
             board.appendChild(itemNode);
@@ -530,43 +724,56 @@
             playerElement = document.createElement('div');
             playerElement.id = 'player';
 
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('player-wrapper');
+
             const sprite = document.createElement('div');
             sprite.classList.add('player-text');
             sprite.innerText = '@';
 
-            playerElement.appendChild(sprite);
+            facingIndicatorElement = document.createElement('div');
+            facingIndicatorElement.classList.add('facing-indicator');
+
+            wrapper.appendChild(sprite);
+            wrapper.appendChild(facingIndicatorElement);
+            playerElement.appendChild(wrapper);
             board.appendChild(playerElement);
+
             updatePlayerRender();
         }
 
         function updatePlayerRender() {
             playerElement.style.transform = `translate3d(${playerPos.x * STEP}px, ${playerPos.y * STEP}px, 0px)`;
+            facingIndicatorElement.innerText = FACING_ARROWS[playerFacing];
+            uiFacing.innerText = playerFacing;
         }
 
-        // --- GAMEPLAY MECHANICS ---
         function isWalkable(x, y) {
             if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return false;
 
             const char = activeLayout[y][x];
             if (char === 'W') return false;
-            if (['(', '<', '*', TORCH_CHAR, 'D', 'G'].includes(char)) return false;
+            if (['(', '<', '*', TORCH_CHAR, '?', '&', BOSS_CHAR, FOUNTAIN_CHAR, WATER_CHAR, TRAP_CHAR].includes(char)) return false;
 
             return true;
         }
 
-        function movePlayer(dx, dy) {
+        function movePlayer(dx, dy, newFacing) {
+            playerFacing = newFacing;
+
             const targetX = playerPos.x + dx;
             const targetY = playerPos.y + dy;
 
             if (isWalkable(targetX, targetY)) {
                 playerPos.x = targetX;
                 playerPos.y = targetY;
-                updatePlayerRender();
 
                 if (activeLayout[targetY][targetX] === DOOR_CHAR) {
                     handleDoorStep(targetX, targetY);
                 }
             }
+
+            updatePlayerRender();
         }
 
         function handleDoorStep(x, y) {
@@ -583,8 +790,12 @@
                 playerPos.x -= (x === 0 ? -1 : x === 6 ? 1 : 0);
                 playerPos.y -= (y === 0 ? -1 : y === 6 ? 1 : 0);
                 updatePlayerRender();
-                alert("The door is locked! Stand adjacent and press Space/E to pick or break it.");
+                alert("The door is locked! Stand adjacent facing the door and press Space/E to pick or break it.");
                 return;
+            }
+
+            if (Math.random() < 0.25) {
+                triggerDoorChallenge();
             }
 
             const entryDirection = OPPOSITE_WALL[wallKey];
@@ -592,69 +803,81 @@
         }
 
         function interact() {
-            const neighbors = [
-                { x: playerPos.x, y: playerPos.y - 1, wall: 'NORTH' },
-                { x: playerPos.x, y: playerPos.y + 1, wall: 'SOUTH' },
-                { x: playerPos.x - 1, y: playerPos.y, wall: 'WEST' },
-                { x: playerPos.x + 1, y: playerPos.y, wall: 'EAST' }
-            ];
+            const offset = DIR_OFFSETS[playerFacing];
+            const targetX = playerPos.x + offset.x;
+            const targetY = playerPos.y + offset.y;
 
-            for (const pos of neighbors) {
-                if (pos.x < 0 || pos.x >= GRID_SIZE || pos.y < 0 || pos.y >= GRID_SIZE) continue;
+            if (targetX < 0 || targetX >= GRID_SIZE || targetY < 0 || targetY >= GRID_SIZE) return;
 
-                const char = activeLayout[pos.y][pos.x];
+            const char = activeLayout[targetY][targetX];
 
-                if (char === DOOR_CHAR) {
-                    const doorObj = doorData[pos.wall];
-                    if (doorObj && doorObj.isLocked) {
-                        const choice = confirm("Press OK to Pick Lock, or Cancel to Break Down Door.");
-                        const onUnlocked = (success) => {
-                            if (success) renderBoard();
-                        };
+            if (char === DOOR_CHAR) {
+                const doorObj = doorData[playerFacing];
+                if (doorObj && doorObj.isLocked) {
+                    const choice = confirm("Press OK to Pick Lock, or Cancel to Break Down Door.");
+                    const onUnlocked = (success) => {
+                        if (success) renderBoard();
+                    };
 
-                        if (choice) {
-                            pickLockDoor(doorObj, onUnlocked);
-                        } else {
-                            breakDownDoor(doorObj, onUnlocked);
-                        }
-                        return;
+                    if (choice) {
+                        pickLockDoor(doorObj, onUnlocked);
+                    } else {
+                        breakDownDoor(doorObj, onUnlocked);
                     }
+                    return;
                 }
+            }
 
-                if (['(', '<', '*', 'D', 'G'].includes(char)) {
-                    const roomItems = currentFloorRooms[currentRoomIndex].items;
-                    const itemData = roomItems[`${pos.x},${pos.y}`];
+            if (['(', '<', '*', '?', '&', BOSS_CHAR, FOUNTAIN_CHAR, WATER_CHAR, TRAP_CHAR].includes(char)) {
+                const roomItems = currentFloorRooms[currentRoomIndex].items;
+                const itemData = roomItems[`${targetX},${targetY}`];
 
-                    if (char === '(') {
-                        activeLayout[pos.y][pos.x] = ')';
-                        if (itemData) itemData.char = ')';
-                        playerScore += 50;
-                    } else if (char === '<' || char === '*') {
-                        activeLayout[pos.y][pos.x] = ' ';
-                        if (itemData) itemData.state = 'DESTROYED';
-                        playerScore += 20;
-                    } else if (char === 'D' || char === 'G') {
-                        triggerChallenge(char);
-                    }
-
+                if (char === '(') {
+                    activeLayout[targetY][targetX] = ')';
+                    if (itemData) itemData.char = ')';
+                    playerScore += 50;
                     uiScore.innerText = playerScore;
                     renderBoard();
-                    break;
+                } else if (char === '<' || char === '*') {
+                    activeLayout[targetY][targetX] = ' ';
+                    if (itemData) itemData.state = 'DESTROYED';
+                    playerScore += 20;
+                    uiScore.innerText = playerScore;
+                    renderBoard();
+                } else if (char === TRAP_CHAR) {
+                    activeLayout[targetY][targetX] = ' ';
+                    if (itemData) itemData.state = 'DESTROYED';
+                    playerScore += 15;
+                    uiScore.innerText = playerScore;
+                    alert("Trap disarmed!");
+                    renderBoard();
+                } else if (char === '?') {
+                    triggerChallenge('D', itemData, () => renderBoard());
+                } else if (char === '&') {
+                    triggerChallenge('G', itemData, () => renderBoard());
+                } else if (char === BOSS_CHAR) {
+                    triggerChallenge('U', itemData, () => renderBoard());
+                } else if (char === FOUNTAIN_CHAR) {
+                    triggerChallenge('F', itemData, () => renderBoard());
+                } else if (char === WATER_CHAR) {
+                    const parent = findAssociatedFountain(targetX, targetY);
+                    if (parent) {
+                        triggerChallenge('F', parent.data, () => renderBoard());
+                    }
                 }
             }
         }
 
         window.addEventListener('keydown', (e) => {
             switch (e.key) {
-                case 'ArrowUp':    case 'w': case 'W': movePlayer(0, -1); break;
-                case 'ArrowDown':  case 's': case 'S': movePlayer(0, 1);  break;
-                case 'ArrowLeft':  case 'a': case 'A': movePlayer(-1, 0); break;
-                case 'ArrowRight': case 'd': case 'D': movePlayer(1, 0);  break;
-                case ' ':          case 'e': case 'E': interact();        break;
+                case 'ArrowUp':    case 'w': case 'W': movePlayer(0, -1, 'NORTH'); break;
+                case 'ArrowDown':  case 's': case 'S': movePlayer(0, 1, 'SOUTH');  break;
+                case 'ArrowLeft':  case 'a': case 'A': movePlayer(-1, 0, 'WEST');  break;
+                case 'ArrowRight': case 'd': case 'D': movePlayer(1, 0, 'EAST');  break;
+                case ' ':          case 'e': case 'E': interact();                break;
             }
         });
 
-        // Initialize Game
         generateFloorData();
         loadRoom(0);
     </script>
