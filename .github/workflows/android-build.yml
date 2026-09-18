@@ -1,0 +1,49 @@
+name: Build Android App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Cordova & Dependencies
+        run: |
+          npm install -g cordova
+          npm ci || npm install
+
+      - name: Add Android Platform & Install AdMob Plugin
+        env:
+          ADMOB_APP_ID_ANDROID: ${{ secrets.ADMOB_APP_ID_ANDROID }}
+          ADMOB_APP_ID_IOS: ${{ secrets.ADMOB_APP_ID_IOS }}
+        run: |
+          cordova platform add android
+          cordova plugin add admob-plus-cordova --save \
+            --variable APP_ID_ANDROID="$ADMOB_APP_ID_ANDROID" \
+            --variable APP_ID_IOS="$ADMOB_APP_ID_IOS"
+
+      - name: Build Android Debug APK
+        run: cordova build android --debug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk

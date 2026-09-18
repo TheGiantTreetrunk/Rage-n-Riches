@@ -1,0 +1,44 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Cordova & Dependencies
+        run: |
+          npm install -g cordova
+          npm ci || npm install
+
+      - name: Add iOS Platform & Install AdMob Plugin
+        env:
+          ADMOB_APP_ID_ANDROID: ${{ secrets.ADMOB_APP_ID_ANDROID }}
+          ADMOB_APP_ID_IOS: ${{ secrets.ADMOB_APP_ID_IOS }}
+        run: |
+          cordova platform add ios
+          cordova plugin add admob-plus-cordova --save \
+            --variable APP_ID_ANDROID="$ADMOB_APP_ID_ANDROID" \
+            --variable APP_ID_IOS="$ADMOB_APP_ID_IOS"
+          cordova prepare ios
+
+      - name: Build Unsigned iOS Workspace
+        run: cordova build ios --device --emulator
+
+      - name: Upload Xcode Project Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-xcode-project
+          path: platforms/ios/

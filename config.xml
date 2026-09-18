@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.yourdomain.yourapp" version="1.0.0" xmlns="http://www.w3.org/2005/xml/ns/1.0">
+    <name>YourAppName</name>
+    <description>Your App Description</description>
+    <content src="index.html" />
+    <access origin="*" />
+
+    <!-- AdMob Plugin Configuration -->
+    <plugin name="admob-plus-cordova" spec="^1.0.0">
+        <variable name="APP_ID_ANDROID" value="$ADMOB_APP_ID_ANDROID" />
+        <variable name="APP_ID_IOS" value="$ADMOB_APP_ID_IOS" />
+    </plugin>
+</widget>
