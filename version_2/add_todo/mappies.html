@@ -180,7 +180,7 @@
         .item-trap           { color: #ff4d6d; text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); }
 
         /* Extended Furniture & Elements */
-        .item-bookshelf      { color: #8b5a2b; text-shadow: 0 0 6px rgba(139, 90, 43, 0.6); }
+        .item-bookshelf      { color: #b5651d; text-shadow: 0 0 8px rgba(181, 101, 29, 0.8); }
         .item-wardrobe       { color: #6e473b; text-shadow: 0 0 6px rgba(110, 71, 59, 0.6); }
         .item-knocked        { color: #5c4033; opacity: 0.8; }
         .item-bellpost       { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
@@ -295,7 +295,6 @@
         let playerElement = null;
         let facingIndicatorElement = null;
 
-        // Merchant Cooldown Tracker (Floors remaining before merchant can spawn again)
         let merchantCooldown = 0;
 
         let currentFloorRooms = [];
@@ -395,7 +394,7 @@
 
             if (choice === "1") {
                 if (playerScore >= 20) {
-                    playerScore = playerScore - 20 + 50; // Spend 20, gain 50 worth
+                    playerScore = playerScore - 20 + 50;
                     uiScore.innerText = playerScore;
                     alert("You bought a Health Potion!");
                 } else {
@@ -413,11 +412,33 @@
                 alert("The merchant nods and prepares to pack up.");
             }
 
-            // Remove Merchant from room state and clear cell
             alert("The merchant packs up their wares and vanishes into the dark!");
             const roomItems = currentFloorRooms[currentRoomIndex].items;
             delete roomItems[`${x},${y}`];
             activeLayout[y][x] = ' ';
+            renderBoard();
+        }
+
+        function interactWithBookshelf(x, y) {
+            const roomItems = currentFloorRooms[currentRoomIndex].items;
+            const itemData = roomItems[`${x},${y}`];
+
+            const roll = Math.random();
+            if (roll < 0.50) {
+                const gold = Math.floor(Math.random() * 30) + 20;
+                playerScore += gold;
+                uiScore.innerText = playerScore;
+                alert(`You search through the ancient tome bindings and find hidden coin pouch! (+${gold} Score)`);
+            } else if (roll < 0.80) {
+                alert("You pulled a suspicious lever masked as a book spine! A secret compartment opens (+45 Score)!");
+                playerScore += 45;
+                uiScore.innerText = playerScore;
+            } else {
+                alert("You inspect the shelf, but it contains only dusty, unreadable manuscripts.");
+            }
+
+            activeLayout[y][x] = BOOKSHELF_KNOCKED_CHAR;
+            if (itemData) itemData.char = BOOKSHELF_KNOCKED_CHAR;
             renderBoard();
         }
 
@@ -512,19 +533,21 @@
         function generateFloorData() {
             currentFloorRooms = [];
 
-            // Update Merchant Cooldown logic
             let spawnMerchantThisFloor = false;
             if (merchantCooldown > 0) {
                 merchantCooldown--;
             } else {
-                // 60% chance to spawn merchant when off cooldown
                 if (Math.random() < 0.60) {
                     spawnMerchantThisFloor = true;
                 }
             }
 
-            // Random room selected for merchant (Rooms 2 through 5)
             const merchantRoomIndex = spawnMerchantThisFloor ? Math.floor(Math.random() * 4) + 1 : -1;
+            
+            // Randomly pick unique indices for special rooms among Rooms 2 through 5 (indices 1 to 4)
+            const availableSpecialIndices = [1, 2, 3, 4];
+            const libraryRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
+            const pondRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
 
             // Room 1: Starting Room
             const firstExit = WALL_DIRS[Math.floor(Math.random() * WALL_DIRS.length)];
@@ -564,7 +587,17 @@
                 };
 
                 const hasMerchant = (i === merchantRoomIndex);
-                roomObj.items = generateRoomItems(roomObj, hasMerchant);
+                const isLibrary = (i === libraryRoomIndex);
+                const isPond = (i === pondRoomIndex);
+
+                if (isPond) {
+                    roomObj.items = generatePondItems(roomObj, hasMerchant);
+                } else if (isLibrary) {
+                    roomObj.items = generateLibraryItems(roomObj, hasMerchant);
+                } else {
+                    roomObj.items = generateRoomItems(roomObj, hasMerchant);
+                }
+
                 roomObj.pathTiles = generatePathsForRoom(roomObj.doors);
                 currentFloorRooms.push(roomObj);
             }
@@ -594,9 +627,82 @@
             currentFloorRooms.push(bossRoomObj);
 
             if (spawnMerchantThisFloor) {
-                // Set cooldown: 1 or 2 floor delay before spawn eligible again
                 merchantCooldown = Math.random() < 0.5 ? 1 : 2;
             }
+        }
+
+        function generatePondItems(roomObj, hasMerchant = false) {
+            const items = {};
+
+            // 3x3 Impassable Pond in center
+            for (let x = 2; x <= 4; x++) {
+                for (let y = 2; y <= 4; y++) {
+                    items[`${x},${y}`] = { char: WATER_CHAR, state: 'SOLID' };
+                }
+            }
+
+            // Outer ring corridors surrounding 3x3 pond:
+            // High-risk trap corridor on one side vs Low-risk tall grass path on the other
+            const trapsOnLeft = Math.random() < 0.5;
+
+            for (let y = 1; y <= 5; y++) {
+                // Left corridor column (x=1)
+                const leftKey = `1,${y}`;
+                if (!['1,3', '3,1', '3,5'].includes(leftKey)) {
+                    if (trapsOnLeft) {
+                        items[leftKey] = { char: TRAP_CHAR, state: 'TRAP' };
+                    } else {
+                        items[leftKey] = { char: GRASS_CHAR, state: 'WALKABLE' };
+                    }
+                }
+
+                // Right corridor column (x=5)
+                const rightKey = `5,${y}`;
+                if (!['5,3', '3,1', '3,5'].includes(rightKey)) {
+                    if (!trapsOnLeft) {
+                        items[rightKey] = { char: TRAP_CHAR, state: 'TRAP' };
+                    } else {
+                        items[rightKey] = { char: GRASS_CHAR, state: 'WALKABLE' };
+                    }
+                }
+            }
+
+            if (hasMerchant) {
+                const mPos = trapsOnLeft ? '5,1' : '1,1';
+                items[mPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+            }
+
+            return items;
+        }
+
+        function generateLibraryItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearanceTiles = new Set([
+                '3,1', '3,5', '1,3', '5,3'
+            ]);
+
+            // Place bookshelves along room corners/outer boundaries
+            const cornerCoords = [
+                '1,1', '2,1', '1,2',
+                '5,1', '4,1', '5,2',
+                '1,5', '1,4', '2,5',
+                '5,5', '5,4', '4,5'
+            ];
+
+            for (const coord of cornerCoords) {
+                if (!doorClearanceTiles.has(coord)) {
+                    items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
+                }
+            }
+
+            // Center Reading Table / Chest
+            items['3,3'] = Math.random() < 0.5 ? { char: '(', state: 'INTACT' } : { char: VASE_TABLE_CHAR, state: 'INTACT' };
+
+            if (hasMerchant) {
+                items['3,2'] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+            }
+
+            return items;
         }
 
         function generateWallDecorations(entryWall, forwardWall) {
@@ -669,7 +775,6 @@
                 attempts++;
                 items = {};
 
-                // Place Merchant if assigned to this room
                 if (hasMerchant) {
                     let mx = Math.floor(Math.random() * 3) + 2;
                     let my = Math.floor(Math.random() * 3) + 2;
@@ -679,7 +784,6 @@
                     }
                 }
 
-                // Fountain structure
                 if (Math.random() < 0.5) {
                     const corners = [
                         { fx: 1, fy: 1, w: [{x:2, y:1}, {x:1, y:2}] },
@@ -700,7 +804,6 @@
                     }
                 }
 
-                // Traps
                 if (Math.random() < 0.4) {
                     const isHorizontal = Math.random() < 0.5;
                     if (isHorizontal) {
@@ -722,7 +825,6 @@
                     }
                 }
 
-                // Grass Density
                 const grassTypeRoll = Math.random();
                 let grassCount = grassTypeRoll < 0.25 ? Math.floor(Math.random() * 6) + 12 : (grassTypeRoll < 0.75 ? Math.floor(Math.random() * 5) + 6 : Math.floor(Math.random() * 3) + 2);
 
@@ -738,10 +840,9 @@
                     gy = Math.min(5, Math.max(1, gy + (Math.floor(Math.random() * 3) - 1)));
                 }
 
-                // Extended Furniture & Deco Pool
                 const possibleItems = [
                     '(', '<', '*', TORCH_CHAR, 
-                    BOOKSHELF_CHAR, WARDROBE_CHAR, BELLPOST_CHAR, 
+                    WARDROBE_CHAR, BELLPOST_CHAR, 
                     FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR
                 ];
                 const itemCount = Math.floor(Math.random() * 4) + 2;
@@ -757,7 +858,6 @@
                     items[key] = { char: char, state: 'INTACT' };
                 }
 
-                // Entities (Demon / Ghost)
                 if (Math.random() < 0.5) {
                     const cx = Math.floor(Math.random() * 3) + 2;
                     const cy = Math.floor(Math.random() * 3) + 2;
@@ -806,7 +906,7 @@
                     if (visited.has(key)) continue;
 
                     const item = items[key];
-                    if (item && (item.state === 'SOLID' || item.state === 'INTACT' || item.state === 'ACTIVE' || item.char === FOUNTAIN_CHAR || item.char === MERCHANT_CHAR)) continue;
+                    if (item && (item.state === 'SOLID' || item.state === 'INTACT' || item.state === 'ACTIVE' || item.char === FOUNTAIN_CHAR || item.char === MERCHANT_CHAR || item.char === BOOKSHELF_CHAR)) continue;
 
                     visited.add(key);
                     queue.push(n);
@@ -1115,6 +1215,8 @@
 
                 if (char === MERCHANT_CHAR) {
                     interactWithMerchant(targetX, targetY);
+                } else if (char === BOOKSHELF_CHAR) {
+                    interactWithBookshelf(targetX, targetY);
                 } else if (char === '(') {
                     activeLayout[targetY][targetX] = ')';
                     if (itemData) itemData.char = ')';
@@ -1126,13 +1228,6 @@
                     if (itemData) itemData.state = 'DESTROYED';
                     playerScore += 20;
                     uiScore.innerText = playerScore;
-                    renderBoard();
-                } else if (char === BOOKSHELF_CHAR) {
-                    activeLayout[targetY][targetX] = BOOKSHELF_KNOCKED_CHAR;
-                    if (itemData) itemData.char = BOOKSHELF_KNOCKED_CHAR;
-                    playerScore += 10;
-                    uiScore.innerText = playerScore;
-                    alert("You knocked over the bookshelf! Books spill everywhere.");
                     renderBoard();
                 } else if (char === WARDROBE_CHAR) {
                     activeLayout[targetY][targetX] = WARDROBE_KNOCKED_CHAR;
