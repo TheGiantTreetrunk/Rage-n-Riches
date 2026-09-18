@@ -548,6 +548,7 @@
             const availableSpecialIndices = [1, 2, 3, 4];
             const libraryRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
             const pondRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
+            const chestRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
 
             // Room 1: Starting Room
             const firstExit = WALL_DIRS[Math.floor(Math.random() * WALL_DIRS.length)];
@@ -589,11 +590,14 @@
                 const hasMerchant = (i === merchantRoomIndex);
                 const isLibrary = (i === libraryRoomIndex);
                 const isPond = (i === pondRoomIndex);
+                const isChestRoom = (i === chestRoomIndex);
 
                 if (isPond) {
                     roomObj.items = generatePondItems(roomObj, hasMerchant);
                 } else if (isLibrary) {
                     roomObj.items = generateLibraryItems(roomObj, hasMerchant);
+                } else if (isChestRoom) {
+                    roomObj.items = generateChestRoomItems(roomObj, hasMerchant);
                 } else {
                     roomObj.items = generateRoomItems(roomObj, hasMerchant);
                 }
@@ -629,6 +633,48 @@
             if (spawnMerchantThisFloor) {
                 merchantCooldown = Math.random() < 0.5 ? 1 : 2;
             }
+        }
+
+        function generateChestRoomItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearanceTiles = new Set([
+                '3,1', '3,5', '1,3', '5,3'
+            ]);
+
+            // Torches at four inner corners for atmosphere
+            const cornerTorches = ['1,1', '5,1', '1,5', '5,5'];
+            for (const coord of cornerTorches) {
+                if (!doorClearanceTiles.has(coord)) {
+                    items[coord] = { char: TORCH_CHAR, state: 'INTACT' };
+                }
+            }
+
+            // Outer ring chest placements
+            const chestCoords = [
+                '2,1', '4,1',
+                '1,2', '5,2',
+                '1,4', '5,4',
+                '2,5', '4,5'
+            ];
+
+            for (const coord of chestCoords) {
+                if (!doorClearanceTiles.has(coord) && Math.random() < 0.75) {
+                    items[coord] = { char: '(', state: 'INTACT' };
+                }
+            }
+
+            // Central showcase chest or feature table
+            if (Math.random() < 0.6) {
+                items['3,3'] = { char: '(', state: 'INTACT' };
+            } else {
+                items['3,3'] = { char: VASE_TABLE_CHAR, state: 'INTACT' };
+            }
+
+            if (hasMerchant) {
+                items['3,2'] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+            }
+
+            return items;
         }
 
         function generatePondItems(roomObj, hasMerchant = false) {
