@@ -130,11 +130,15 @@
                 <select id="trackSelect">
                     <option value="dungeonTheme">Dungeon Theme (Low Bass Drone)</option>
                     <option value="treasureRoom">Treasure Room (Sparkling Major)</option>
-					<option value="regularBattle">enemy encounter (Fast & Driving)</option>
+                                        <option value="regularBattle">enemy encounter (Fast & Driving)</option>
                     <option value="bossEncounter">Boss Encounter (Fast & Driving)</option>
-					<option value="dungeonExplorer">explore (Fast & Driving)</option>
-					<option value="wackyDungeon">merchant (Fast & Driving)</option>
-					<option value="dramaticDungeon">dramatic (Fast & Driving)</option>
+                                        <option value="dungeonExplorer">explore (Fast & Driving)</option>
+                                        <option value="wackyDungeon">merchant (Fast & Driving)</option>
+                                        <option value="dramaticDungeon">dramatic (Fast & Driving)</option>
+                                        <option value="redOctober">redoctober</option>
+                    <option value="ussrAnthem">USSR</option>
+                    <option value="sacredWar">Sacred War</option>
+                    <option value="auferstanden">Auferstanded</option>
                 </select>
                 <button id="loadPresetBtn" class="btn-action">Load into Editor</button>
             </div>
@@ -251,24 +255,24 @@
             voice2: { wave: "sawtooth", notes: ["C5", 0, "Eb5", 0, "F5", 0, "Fs5", "G5"] },
             voice3: { wave: "sawtooth", notes: ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"] }
         };
-		
-		sounds.dungeonExplorer = {
-			  tempo: 110,
-			  voice1: {
-				wave: "triangle",
-				notes: ["A3", 0, "C4", "D4", "E4", 0, "G4", "E4", "A4", 0, "G4", "E4", "D4", 0, "C4", 0]
-			  },
-			  voice2: {
-				wave: "sine",
-				notes: [0, "E5", 0, 0, 0, "G5", 0, 0, 0, "A5", 0, 0, "E5", 0, 0, 0]
-			  },
-			  voice3: {
-				wave: "triangle",
-				notes: ["A2", "A2", "C3", "A2", "D3", "A2", "E3", "D3", "A2", "A2", "G2", "A2", "D3", "D3", "C3", "G2"]
-			  }
-			};
-			
-			sounds.wackyDungeon = {
+
+                sounds.dungeonExplorer = {
+                          tempo: 110,
+                          voice1: {
+                                wave: "triangle",
+                                notes: ["A3", 0, "C4", "D4", "E4", 0, "G4", "E4", "A4", 0, "G4", "E4", "D4", 0, "C4", 0]
+                          },
+                          voice2: {
+                                wave: "sine",
+                                notes: [0, "E5", 0, 0, 0, "G5", 0, 0, 0, "A5", 0, 0, "E5", 0, 0, 0]
+                          },
+                          voice3: {
+                                wave: "triangle",
+                                notes: ["A2", "A2", "C3", "A2", "D3", "A2", "E3", "D3", "A2", "A2", "G2", "A2", "D3", "D3", "C3", "G2"]
+                          }
+                        };
+
+                        sounds.wackyDungeon = {
   tempo: 145,
   voice1: {
     wave: "square",
@@ -299,7 +303,7 @@ sounds.dramaticDungeon = {
     notes: ["C2", "C2", "C3", "C2", "C2", "C2", "Eb3", "D3", "C2", "C2", "C3", "C2", "Ab2", "G2", "Fs2", "F2"]
   }
   };
-  
+
   sounds.regularBattle = {
   tempo: 160,
   voice1: {
@@ -313,6 +317,71 @@ sounds.dramaticDungeon = {
   voice3: {
     wave: "sawtooth",
     notes: ["E2", "E2", "E3", "E2", "E2", "E2", "G2", "B2", "F2", "F2", "F3", "F2", "F2", "F2", "A2", "C3"]
+  }
+};
+
+sounds.redOctober = {
+  tempo: 80,
+  voice1: {
+    wave: "square",
+    notes: ["D4", "D4", "A4", "A4", "F4", "G4", "A4", 0, "D4", "D4", "Bb4", "A4", "G4", "E4", "F4", "D4"]
+  },
+  voice2: {
+    wave: "sawtooth",
+    notes: ["D3", "F3", "A3", "F3", "D3", "E3", "F3", 0, "D3", "F3", "G3", "F3", "E3", "C3", "D3", "A2"]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["D2", "D2", "D2", "D2", "D2", "C2", "F2", "A2", "Bb2", "Bb2", "G2", "D2", "A2", "A2", "D2", "D2"]
+  }
+};
+    
+
+sounds.ussrAnthem = {
+  tempo: 88,
+  voice1: {
+    wave: "square",
+    notes: ["G4", "C5", 0, "G5", "E5", 0, "A5", "G5", "F5", "G5", "C5", 0, "C5", "D5", "D5", "E5"]
+  },
+  voice2: {
+    wave: "triangle",
+    notes: ["E4", "E4", "G4", "C5", "C5", "C5", "F5", "E5", "D5", "E5", "G4", "G4", "A4", "B4", "B4", "C5"]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["C2", "C3", "C2", "E3", "A2", "A2", "F2", "C3", "D2", "E2", "E2", "C3", "F2", "F2", "G2", "G2"]
+  }
+};
+
+sounds.sacredWar = {
+  tempo: 105,
+  voice1: {
+    wave: "sawtooth",
+    notes: ["A4", "A4", "C5", "A4", "E4", "F4", "A4", "G4", "F4", "E4", 0, "A4", "D5", "D5", "F5", "D5"]
+  },
+  voice2: {
+    wave: "square",
+    notes: ["E4", "E4", "A4", "E4", "C4", "D4", "F4", "E4", "D4", "C4", 0, "E4", "F4", "F4", "A4", "F4"]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["A2", "A2", "A2", "A2", "A2", "D3", "D3", "E3", "E3", "A2", "A2", "A2", "D2", "D2", "D2", "D2"]
+  }
+};
+
+sounds.auferstanden = {
+  tempo: 92,
+  voice1: {
+    wave: "square",
+    notes: ["D4", "F4", "A4", "A4", "B4", "A4", "G4", "F4", "E4", "F4", "G4", "A4", "F4", "D4", "E4", 0]
+  },
+  voice2: {
+    wave: "sine",
+    notes: ["A3", "D4", "F4", "F4", "G4", "F4", "E4", "D4", "C4", "D4", "E4", "F4", "D4", "A3", "C4", 0]
+  },
+  voice3: {
+    wave: "triangle",
+    notes: ["D2", "D2", "D3", "F2", "G2", "D2", "A2", "D2", "A2", "A2", "A2", "D2", "D2", "F2", "A2", "D2"]
   }
 };
 
@@ -350,11 +419,11 @@ sounds.dramaticDungeon = {
                 const createStepBox = (voiceKey, voiceObj, container) => {
                     const box = document.createElement('div');
                     box.className = 'step-box';
-                    
+
                     const label = document.createElement('span');
                     label.className = 'step-label';
                     label.textContent = `#${i + 1}`;
-                    
+
                     const val = (voiceObj && voiceObj.notes && voiceObj.notes[i] !== undefined) ? voiceObj.notes[i] : 0;
                     const dropdown = buildDropdown(val);
                     dropdown.dataset.step = i;
@@ -531,7 +600,7 @@ sounds.dramaticDungeon = {
 
         document.getElementById('compileBtn').addEventListener('click', () => {
             const songData = getSongDataFromUI();
-            
+
             const formattedCode = `// Copy/Paste into your sounds object:\nvar sounds = sounds || {};\n\nsounds.${songData.name} = {\n  tempo: ${songData.tempo},\n  voice1: {\n    wave: "${songData.voice1.wave}",\n    notes: [${songData.voice1.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  },\n  voice2: {\n    wave: "${songData.voice2.wave}",\n    notes: [${songData.voice2.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  },\n  voice3: {\n    wave: "${songData.voice3.wave}",\n    notes: [${songData.voice3.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  }\n};`;
 
             document.getElementById('codeOutput').value = formattedCode;
@@ -540,4 +609,4 @@ sounds.dramaticDungeon = {
         loadPresetToEditor('dungeonTheme');
     </script>
 </body>
-</html>
+</html> 
