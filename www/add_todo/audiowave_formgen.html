@@ -1,183 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-Voice Web Audio Synth Engine</title>
-<style>
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background-color: #1a1a1a;
-color: #e0e0e0;
-padding: 20px;
-max-width: 600px;
-margin: 0 auto;
-}
-h1 {
-color: #00ffcc;
-text-align: center;
-}
-.card {
-background-color: #2a2a2a;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-margin-bottom: 20px;
-}
-.control-group {
-margin-bottom: 15px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
-label {
-font-weight: bold;
-}
-select, input {
-padding: 8px;
-background-color: #333;
-color: #fff;
-border: 1px solid #444;
-border-radius: 4px;
-}
-button {
-width: 100%;
-padding: 12px;
-font-size: 18px;
-font-weight: bold;
-color: #1a1a1a;
-background-color: #00ffcc;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-transition: background 0.2s;
-}
-button:hover {
-background-color: #00cca3;
-}
-button:disabled {
-background-color: #555;
-cursor: not-allowed;
-}
-.voice-section {
-border-left: 4px solid #00ffcc;
-padding-left: 10px;
-margin-bottom: 15px;
-}
-.voice-section:nth-child(2) { border-color: #ff007f; }
-.voice-section:nth-child(3) { border-color: #ffcc00; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Voice Chiptune Studio & Audio Engine</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --panel-bg: #1e1e24;
+            --accent-v1: #00ffcc;
+            --accent-v2: #ff007f;
+            --accent-v3: #ffcc00;
+            --text-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        h1 { text-align: center; color: var(--accent-v1); margin-bottom: 5px; }
+        p.subtitle { text-align: center; color: #888; margin-top: 0; margin-bottom: 20px; }
+
+        .card {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .controls-bar {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .control-item { display: flex; align-items: center; gap: 8px; }
+
+        select, input, button {
+            padding: 8px 12px;
+            background-color: #2a2a32;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"] { border: 1px solid var(--accent-v1); }
+
+        button { cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        button:hover { opacity: 0.85; }
+
+        .btn-primary { background-color: var(--accent-v1); color: #121214; border: none; }
+        .btn-danger { background-color: #ff0055; color: #fff; border: none; }
+        .btn-action { background-color: #3b3b48; color: #fff; border: 1px solid #555; }
+
+        .sequencer-container { overflow-x: auto; padding-bottom: 10px; }
+
+        .voice-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        .voice-header { width: 140px; flex-shrink: 0; font-weight: bold; }
+        .voice-header.v1 { color: var(--accent-v1); }
+        .voice-header.v2 { color: var(--accent-v2); }
+        .voice-header.v3 { color: var(--accent-v3); }
+        .voice-header select { width: 100%; margin-top: 4px; }
+
+        .steps-wrapper { display: flex; gap: 6px; }
+
+        .step-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #282832;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .step-label { font-size: 10px; color: #777; margin-bottom: 4px; }
+        .step-box select { padding: 4px; font-size: 12px; width: 60px; }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            background-color: #18181c;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .status-badge {
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #333;
+            color: #aaa;
+        }
+        .status-badge.active { background: #00ffcc; color: #121214; font-weight: bold; }
+    </style>
 </head>
 <body>
-<h1>3-Voice Audio Engine</h1>
-<div class="card">
-<div class="control-group">
-<label for="tempo">Tempo (BPM):</label>
-<input type="number" id="tempo" value="140" min="60" max="240">
-</div>
-<div class="voice-section">
-<h3>Voice 1 (Lead)</h3>
-<div class="control-group">
-<label for="v1Wave">Waveform:</label>
-<select id="v1Wave">
-<option value="square" selected>Square (Retro)</option>
-<option value="sawtooth">Sawtooth</option>
-<option value="triangle">Triangle</option>
-<option value="sine">Sine</option>
-</select>
-</div>
-</div>
-<div class="voice-section">
-<h3>Voice 2 (Effect / Harmony)</h3>
-<div class="control-group">
-<label for="v2Wave">Waveform:</label>
-<select id="v2Wave">
-<option value="sine" selected>Sine (Smooth)</option>
-<option value="square">Square</option>
-<option value="sawtooth">Sawtooth</option>
-<option value="triangle">Triangle</option>
-</select>
-</div>
-</div>
-<div class="voice-section">
-<h3>Voice 3 (Bass)</h3>
-<div class="control-group">
-<label for="v3Wave">Waveform:</label>
-<select id="v3Wave">
-<option value="sawtooth" selected>Sawtooth (Buzz)</option>
-<option value="square">Square</option>
-<option value="triangle">Triangle</option>
-<option value="sine">Sine</option>
-</select>
-</div>
-</div>
-<button id="playBtn">Play Tune</button>
-</div>
-<script>
-// Note Frequency Lookup Table
-const NOTES = {
-C2: 65.41,  G2: 98.00,  A2: 110.00,
-C3: 130.81, E3: 164.81, G3: 196.00, A3: 220.00,
-C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, B4: 493.88,
-C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99
+
+    <h1>3-Voice Chiptune Studio</h1>
+    <p class="subtitle">Compose custom tracks, load pre-built tunes, and export JavaScript objects</p>
+
+    <div class="card">
+        <h3>🎵 Sound Engine Jukebox</h3>
+        <div class="controls-bar">
+            <div class="control-item">
+                <label for="trackSelect">Preset Library:</label>
+                <select id="trackSelect">
+                    <option value="dungeonTheme">Dungeon Theme (Low Bass Drone)</option>
+                    <option value="treasureRoom">Treasure Room (Sparkling Major)</option>
+					<option value="regularBattle">enemy encounter (Fast & Driving)</option>
+                    <option value="bossEncounter">Boss Encounter (Fast & Driving)</option>
+					<option value="dungeonExplorer">explore (Fast & Driving)</option>
+					<option value="wackyDungeon">merchant (Fast & Driving)</option>
+					<option value="dramaticDungeon">dramatic (Fast & Driving)</option>
+                </select>
+                <button id="loadPresetBtn" class="btn-action">Load into Editor</button>
+            </div>
+            <div class="control-item">
+                <button id="playLoopBtn" class="btn-primary">🔁 Play Loop</button>
+                <button id="stopBtn" class="btn-danger">⏹ Stop</button>
+                <span id="playerStatus" class="status-badge">Idle</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="controls-bar">
+            <div class="control-item">
+                <label for="trackName">Variable Key:</label>
+                <input type="text" id="trackName" value="dungeonTheme" placeholder="e.g. bossTheme" style="width: 120px;">
+            </div>
+            <div class="control-item">
+                <label for="tempo">BPM:</label>
+                <input type="number" id="tempo" value="75" min="40" max="240" style="width: 55px;">
+            </div>
+            <div class="control-item">
+                <button id="addStepBtn" class="btn-action">+ Step</button>
+                <button id="removeStepBtn" class="btn-action">- Step</button>
+            </div>
+            <div class="control-item">
+                <button id="playOnceBtn" class="btn-primary">▶ Preview Once</button>
+                <button id="compileBtn" class="btn-action">💾 Export Code</button>
+            </div>
+        </div>
+
+        <div class="sequencer-container">
+            <div class="voice-row">
+                <div class="voice-header v1">
+                    Voice 1 (Lead)
+                    <select id="v1Wave">
+                        <option value="square" selected>Square</option>
+                        <option value="sawtooth">Sawtooth</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="sine">Sine</option>
+                    </select>
+                </div>
+                <div class="steps-wrapper" id="v1Steps"></div>
+            </div>
+
+            <div class="voice-row">
+                <div class="voice-header v2">
+                    Voice 2 (Effect)
+                    <select id="v2Wave">
+                        <option value="sine" selected>Sine</option>
+                        <option value="square">Square</option>
+                        <option value="sawtooth">Sawtooth</option>
+                        <option value="triangle">Triangle</option>
+                    </select>
+                </div>
+                <div class="steps-wrapper" id="v2Steps"></div>
+            </div>
+
+            <div class="voice-row">
+                <div class="voice-header v3">
+                    Voice 3 (Bass)
+                    <select id="v3Wave">
+                        <option value="sawtooth" selected>Sawtooth</option>
+                        <option value="square">Square</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="sine">Sine</option>
+                    </select>
+                </div>
+                <div class="steps-wrapper" id="v3Steps"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Compiled JavaScript Object Output</h3>
+        <textarea id="codeOutput" readonly placeholder="Click 'Export Code' to generate JavaScript object..."></textarea>
+    </div>
+
+    <script>
+        const NOTES = [
+            "-", 
+            "C2", "D2", "Eb2", "E2", "F2", "Fs2", "G2", "A2", "Bb2", "B2",
+            "C3", "Db3", "D3", "Eb3", "E3", "F3", "Fs3", "G3", "A3", "Bb3", "B3",
+            "C4", "Db4", "D4", "Eb4", "E4", "F4", "Fs4", "G4", "A4", "Bb4", "B4",
+            "C5", "Db5", "D5", "Eb5", "E5", "F5", "Fs5", "G5", "A5", "Bb5", "B5", "C6"
+        ];
+
+        const FREQS = {
+            C2: 65.41,  D2: 73.42,  Eb2: 77.78, E2: 82.41,  F2: 87.31,  Fs2: 92.50, G2: 98.00,  A2: 110.00, Bb2: 116.54, B2: 123.47,
+            C3: 130.81, Db3: 138.59, D3: 146.83, Eb3: 155.56, E3: 164.81, F3: 174.61, Fs3: 185.00, G3: 196.00, A3: 220.00, Bb3: 233.08, B3: 246.94,
+            C4: 261.63, Db4: 277.18, D4: 293.66, Eb4: 311.13, E4: 329.63, F4: 349.23, Fs4: 369.99, G4: 392.00, A4: 440.00, Bb4: 466.16, B4: 493.88,
+            C5: 523.25, Db5: 554.37, D5: 587.33, Eb5: 622.25, E5: 659.25, F5: 698.46, Fs5: 739.99, G5: 783.99, A5: 880.00, Bb5: 932.33, B5: 987.77, C6: 1046.50
+        };
+
+        var sounds = sounds || {};
+
+        sounds.dungeonTheme = {
+            tempo: 75,
+            voice1: { wave: "square", notes: ["C4", 0, "D4", 0, "Eb4", 0, "D4", 0, "C4", 0, "G3", 0, "C4", 0, 0, 0] },
+            voice2: { wave: "sine", notes: ["G4", 0, "Fs4", 0, "F4", 0, "E4", 0, "Eb4", 0, "D4", 0, "Db4", 0, "C4", 0] },
+            voice3: { wave: "sawtooth", notes: ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"] }
+        };
+
+        sounds.treasureRoom = {
+            tempo: 130,
+            voice1: { wave: "square", notes: ["C5", "E5", "G5", "B5", "C6", "B5", "G5", "E5"] },
+            voice2: { wave: "sine", notes: ["E4", "G4", "B4", "D5", "E5", "D5", "B4", "G4"] },
+            voice3: { wave: "triangle", notes: ["C3", 0, "G3", 0, "C3", 0, "G3", 0] }
+        };
+
+        sounds.bossEncounter = {
+            tempo: 160,
+            voice1: { wave: "square", notes: ["C4", "C4", "Eb4", "C4", "F4", "C4", "Fs4", "G4"] },
+            voice2: { wave: "sawtooth", notes: ["C5", 0, "Eb5", 0, "F5", 0, "Fs5", "G5"] },
+            voice3: { wave: "sawtooth", notes: ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"] }
+        };
+		
+		sounds.dungeonExplorer = {
+			  tempo: 110,
+			  voice1: {
+				wave: "triangle",
+				notes: ["A3", 0, "C4", "D4", "E4", 0, "G4", "E4", "A4", 0, "G4", "E4", "D4", 0, "C4", 0]
+			  },
+			  voice2: {
+				wave: "sine",
+				notes: [0, "E5", 0, 0, 0, "G5", 0, 0, 0, "A5", 0, 0, "E5", 0, 0, 0]
+			  },
+			  voice3: {
+				wave: "triangle",
+				notes: ["A2", "A2", "C3", "A2", "D3", "A2", "E3", "D3", "A2", "A2", "G2", "A2", "D3", "D3", "C3", "G2"]
+			  }
+			};
+			
+			sounds.wackyDungeon = {
+  tempo: 145,
+  voice1: {
+    wave: "square",
+    notes: ["C4", "Eb4", "Fs4", "G4", "C5", 0, "Fs4", "G4", "Eb4", "C4", "A4", "Ab4", "G4", "Fs4", "F4", "E4"]
+  },
+  voice2: {
+    wave: "sine",
+    notes: ["C6", 0, "Fs5", 0, "C6", "Eb6", 0, "Fs5", 0, "C6", 0, "Fs5", "C6", 0, "B5", 0]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["C3", 0, "C3", "C3", "Eb3", 0, "C3", 0, "Fs3", 0, "F3", 0, "E3", "E3", "Eb3", "D3"]
+  }
 };
-// Song Sequences (0 represents a rest)
-const songs = {
-song1: {
-voice1: ['C4', 'E4', 'G4', 'C5', 'B4', 'G4', 'E4', 'C4', 'D4', 'F4', 'A4', 'D5', 'C5', 'A4', 'F4', 'D4'],
-voice2: ['E4', 'G4', 'B4', 'E5', 'D5', 'B4', 'G4', 'E4', 'F4', 'A4', 'C5', 'F5', 'E5', 'C5', 'A4', 'F4'],
-voice3: ['C3', 0,    'G3', 0,    'C3', 0,    'G3', 0,    'D3', 0,    'A3', 0,    'D3', 0,    'A3', 0]
-}
+
+sounds.dramaticDungeon = {
+  tempo: 145,
+  voice1: {
+    wave: "sawtooth",
+    notes: ["C4", "C4", "Eb4", "C4", "Fs4", "G4", "C5", 0, "B4", "Ab4", "G4", "Fs4", "G4", "Eb4", "D4", "B3"]
+  },
+  voice2: {
+    wave: "square",
+    notes: ["C5", 0, "C5", 0, "Eb5", 0, "Fs5", "G5", "Ab5", 0, "G5", 0, "Fs5", 0, "D5", 0]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["C2", "C2", "C3", "C2", "C2", "C2", "Eb3", "D3", "C2", "C2", "C3", "C2", "Ab2", "G2", "Fs2", "F2"]
+  }
+  };
+  
+  sounds.regularBattle = {
+  tempo: 160,
+  voice1: {
+    wave: "square",
+    notes: ["E4", "G4", "B4", "E5", "D5", "B4", "G4", "E4", "F4", "A4", "C5", "F5", "E5", "C5", "A4", "F4"]
+  },
+  voice2: {
+    wave: "sawtooth",
+    notes: ["E5", 0, "E5", "G5", 0, "B5", 0, "G5", "F5", 0, "F5", "A5", 0, "C6", 0, "A5"]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["E2", "E2", "E3", "E2", "E2", "E2", "G2", "B2", "F2", "F2", "F3", "F2", "F2", "F2", "A2", "C3"]
+  }
 };
-let audioCtx = null;
-document.getElementById('playBtn').addEventListener('click', () => {
-// Initialize AudioContext on user interaction
-if (!audioCtx) {
-audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-}
-const bpm = parseInt(document.getElementById('tempo').value, 10);
-const beatDuration = 60 / bpm; // Duration of each note in seconds
-const startTime = audioCtx.currentTime + 0.1; // Schedule start slightly in future
-const v1Wave = document.getElementById('v1Wave').value;
-const v2Wave = document.getElementById('v2Wave').value;
-const v3Wave = document.getElementById('v3Wave').value;
-const currentSong = songs.song1;
-const maxLength = Math.max(
-currentSong.voice1.length,
-currentSong.voice2.length,
-currentSong.voice3.length
-);
-// Loop through sequence and schedule notes on Web Audio timeline
-for (let step = 0; step < maxLength; step++) {
-const noteTime = startTime + (step * beatDuration);
-// Voice 1 (Lead - Main volume)
-if (currentSong.voice1[step]) {
-scheduleNote(currentSong.voice1[step], v1Wave, noteTime, beatDuration, 0.25);
-}
-// Voice 2 (Effect - Lower volume)
-if (currentSong.voice2[step]) {
-scheduleNote(currentSong.voice2[step], v2Wave, noteTime, beatDuration, 0.12);
-}
-// Voice 3 (Bass Line)
-if (currentSong.voice3[step]) {
-scheduleNote(currentSong.voice3[step], v3Wave, noteTime, beatDuration, 0.20);
-}
-}
-});
-function scheduleNote(noteName, waveType, startTime, duration, volume) {
-if (!NOTES[noteName]) return; // Skip rests or invalid notes
-const osc = audioCtx.createOscillator();
-const gain = audioCtx.createGain();
-osc.type = waveType;
-osc.frequency.setValueAtTime(NOTES[noteName], startTime);
-// Envelope to avoid pop/click artifacts on note transitions
-gain.gain.setValueAtTime(volume, startTime);
-gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.03);
-osc.connect(gain);
-gain.connect(audioCtx.destination);
-osc.start(startTime);
-osc.stop(startTime + duration);
-}
-</script>
+
+        let stepCount = 16;
+        let audioCtx = null;
+        let currentLoopTimer = null;
+        let activeOscillators = [];
+
+        function buildDropdown(selectedValue) {
+            const select = document.createElement('select');
+            const targetVal = (selectedValue === 0 || selectedValue === "0" || selectedValue === "-") ? "0" : selectedValue;
+
+            NOTES.forEach(note => {
+                const opt = document.createElement('option');
+                opt.value = note === "-" ? "0" : note;
+                opt.textContent = note;
+                if (opt.value === targetVal) {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            });
+            return select;
+        }
+
+        function renderSequencer(trackData) {
+            const v1Container = document.getElementById('v1Steps');
+            const v2Container = document.getElementById('v2Steps');
+            const v3Container = document.getElementById('v3Steps');
+
+            v1Container.innerHTML = '';
+            v2Container.innerHTML = '';
+            v3Container.innerHTML = '';
+
+            for (let i = 0; i < stepCount; i++) {
+                const createStepBox = (voiceKey, voiceObj, container) => {
+                    const box = document.createElement('div');
+                    box.className = 'step-box';
+                    
+                    const label = document.createElement('span');
+                    label.className = 'step-label';
+                    label.textContent = `#${i + 1}`;
+                    
+                    const val = (voiceObj && voiceObj.notes && voiceObj.notes[i] !== undefined) ? voiceObj.notes[i] : 0;
+                    const dropdown = buildDropdown(val);
+                    dropdown.dataset.step = i;
+                    dropdown.dataset.voice = voiceKey;
+
+                    box.appendChild(label);
+                    box.appendChild(dropdown);
+                    container.appendChild(box);
+                };
+
+                createStepBox('v1', trackData ? trackData.voice1 : null, v1Container);
+                createStepBox('v2', trackData ? trackData.voice2 : null, v2Container);
+                createStepBox('v3', trackData ? trackData.voice3 : null, v3Container);
+            }
+        }
+
+        function loadPresetToEditor(presetKey) {
+            const track = sounds[presetKey];
+            if (!track) return;
+
+            document.getElementById('trackName').value = presetKey;
+            document.getElementById('tempo').value = track.tempo;
+            document.getElementById('v1Wave').value = track.voice1.wave;
+            document.getElementById('v2Wave').value = track.voice2.wave;
+            document.getElementById('v3Wave').value = track.voice3.wave;
+
+            stepCount = Math.max(track.voice1.notes.length, track.voice2.notes.length, track.voice3.notes.length);
+            renderSequencer(track);
+        }
+
+        function getSongDataFromUI() {
+            const extractVoiceData = (voiceKey) => {
+                const selects = document.querySelectorAll(`select[data-voice="${voiceKey}"]`);
+                return Array.from(selects).map(s => (s.value === "0" || s.value === "-") ? 0 : s.value);
+            };
+
+            let rawName = document.getElementById('trackName').value.trim();
+            let cleanName = rawName.replace(/[^a-zA-Z0-9_$]/g, '') || "customTrack";
+
+            return {
+                name: cleanName,
+                tempo: parseInt(document.getElementById('tempo').value, 10),
+                voice1: {
+                    wave: document.getElementById('v1Wave').value,
+                    notes: extractVoiceData('v1')
+                },
+                voice2: {
+                    wave: document.getElementById('v2Wave').value,
+                    notes: extractVoiceData('v2')
+                },
+                voice3: {
+                    wave: document.getElementById('v3Wave').value,
+                    notes: extractVoiceData('v3')
+                }
+            };
+        }
+
+        function playNoteStep(noteName, waveType, startTime, duration, volume) {
+            if (!noteName || noteName === "0" || noteName === 0 || !FREQS[noteName]) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = waveType;
+            osc.frequency.setValueAtTime(FREQS[noteName], startTime);
+
+            gain.gain.setValueAtTime(volume, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.02);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+
+            activeOscillators.push(osc);
+
+            osc.onended = () => {
+                const index = activeOscillators.indexOf(osc);
+                if (index !== -1) {
+                    activeOscillators.splice(index, 1);
+                }
+            };
+        }
+
+        function stopPlayback() {
+            if (currentLoopTimer) {
+                clearTimeout(currentLoopTimer);
+                currentLoopTimer = null;
+            }
+
+            activeOscillators.forEach(osc => {
+                try {
+                    osc.stop();
+                    osc.disconnect();
+                } catch (e) {}
+            });
+            activeOscillators = [];
+
+            const statusEl = document.getElementById('playerStatus');
+            statusEl.textContent = "Stopped";
+            statusEl.classList.remove('active');
+        }
+
+        function playSongData(songData, loop = false) {
+            stopPlayback();
+
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const beatDuration = 60 / songData.tempo;
+            const maxLength = Math.max(
+                songData.voice1.notes.length,
+                songData.voice2.notes.length,
+                songData.voice3.notes.length
+            );
+            const totalDuration = maxLength * beatDuration;
+
+            const statusEl = document.getElementById('playerStatus');
+            statusEl.textContent = loop ? "Looping..." : "Playing...";
+            statusEl.classList.add('active');
+
+            function scheduleIteration() {
+                const startTime = audioCtx.currentTime + 0.05;
+
+                for (let i = 0; i < maxLength; i++) {
+                    const noteTime = startTime + (i * beatDuration);
+                    playNoteStep(songData.voice1.notes[i], songData.voice1.wave, noteTime, beatDuration, 0.25);
+                    playNoteStep(songData.voice2.notes[i], songData.voice2.wave, noteTime, beatDuration, 0.12);
+                    playNoteStep(songData.voice3.notes[i], songData.voice3.wave, noteTime, beatDuration, 0.20);
+                }
+
+                if (loop) {
+                    currentLoopTimer = setTimeout(scheduleIteration, totalDuration * 1000);
+                } else {
+                    currentLoopTimer = setTimeout(stopPlayback, totalDuration * 1000);
+                }
+            }
+
+            scheduleIteration();
+        }
+
+        document.getElementById('loadPresetBtn').addEventListener('click', () => {
+            const preset = document.getElementById('trackSelect').value;
+            loadPresetToEditor(preset);
+        });
+
+        document.getElementById('addStepBtn').addEventListener('click', () => {
+            stepCount++;
+            renderSequencer(getSongDataFromUI());
+        });
+
+        document.getElementById('removeStepBtn').addEventListener('click', () => {
+            if (stepCount > 1) {
+                stepCount--;
+                renderSequencer(getSongDataFromUI());
+            }
+        });
+
+        document.getElementById('playOnceBtn').addEventListener('click', () => {
+            playSongData(getSongDataFromUI(), false);
+        });
+
+        document.getElementById('playLoopBtn').addEventListener('click', () => {
+            playSongData(getSongDataFromUI(), true);
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', stopPlayback);
+
+        document.getElementById('compileBtn').addEventListener('click', () => {
+            const songData = getSongDataFromUI();
+            
+            const formattedCode = `// Copy/Paste into your sounds object:\nvar sounds = sounds || {};\n\nsounds.${songData.name} = {\n  tempo: ${songData.tempo},\n  voice1: {\n    wave: "${songData.voice1.wave}",\n    notes: [${songData.voice1.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  },\n  voice2: {\n    wave: "${songData.voice2.wave}",\n    notes: [${songData.voice2.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  },\n  voice3: {\n    wave: "${songData.voice3.wave}",\n    notes: [${songData.voice3.notes.map(n => typeof n === 'string' ? `"${n}"` : n).join(', ')}]\n  }\n};`;
+
+            document.getElementById('codeOutput').value = formattedCode;
+        });
+
+        loadPresetToEditor('dungeonTheme');
+    </script>
 </body>
 </html>
