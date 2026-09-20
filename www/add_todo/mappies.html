@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7x7 Isometric Dungeon - Extended Palette</title>
+    <title>7x7 Isometric Dungeon - Extended Room Generation</title>
     <style>
         @font-face {
             font-family: 'DungeonFont';
@@ -104,17 +104,18 @@
             text-shadow: none;
         }
 
-        .tile-wall-item {
-            color: #a3c1ad;
-            text-shadow: 0 0 6px rgba(163, 193, 173, 0.5);
-        }
-
         .tile-cracked {
             color: #2d545e;
             text-shadow: 0 0 4px rgba(45, 84, 94, 0.5);
         }
 
-        .item-node, .door-node {
+        /* Floor Water Tile Style */
+        .tile-water {
+            color: #0077b6;
+            text-shadow: 0 0 8px rgba(0, 119, 182, 0.8);
+        }
+
+        .item-node, .door-node, .wall-dec-node {
             position: absolute;
             width: var(--cell-size);
             height: var(--cell-size);
@@ -137,7 +138,7 @@
             transform: translateZ(12px) rotateZ(45deg) rotateX(-60deg) translateY(var(--item-offset-y));
         }
 
-        .door-text {
+        .door-text, .wall-dec-text {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -155,12 +156,18 @@
             text-shadow: 0 0 10px rgba(230, 57, 70, 0.9);
         }
 
-        .door-north, .door-south {
+        .door-north, .door-south, .wall-dec-north, .wall-dec-south {
             transform: translateZ(8px) rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
         }
 
-        .door-west, .door-east {
+        .door-west, .door-east, .wall-dec-west, .wall-dec-east {
             transform: translateZ(8px) rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
+        }
+
+        .wall-dec-text {
+            color: #a3c1ad;
+            text-shadow: 0 0 6px rgba(163, 193, 173, 0.5);
+            font-size: calc(var(--font-size) * 0.85);
         }
 
         /* Item & Feature Palette Styles */
@@ -175,10 +182,9 @@
         
         .item-fountain       { color: #00b4d8; text-shadow: 0 0 12px rgba(0, 180, 216, 0.9); }
         .item-fountain-used  { color: #4a5568; text-shadow: none; opacity: 0.6; }
-        .item-water          { color: #0077b6; text-shadow: 0 0 8px rgba(0, 119, 182, 0.7); }
-        .item-water-used     { color: #3a506b; text-shadow: none; opacity: 0.5; }
         
         .item-grass          { color: #52b788; text-shadow: 0 0 6px rgba(82, 183, 136, 0.6); }
+        .item-tree           { color: #2d6a4f; text-shadow: 0 0 8px rgba(45, 106, 79, 0.8); }
         .item-trap           { color: #ff4d6d; text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); }
 
         /* Extended Furniture & Elements */
@@ -190,6 +196,27 @@
         .item-dresser        { color: #a0522d; text-shadow: 0 0 6px rgba(160, 82, 45, 0.6); }
         .item-table-vase     { color: #e9c46a; text-shadow: 0 0 8px rgba(233, 196, 106, 0.7); }
         .item-chair          { color: #cd853f; text-shadow: 0 0 6px rgba(205, 133, 63, 0.7); }
+
+        /* Library & Alchemical Elements */
+        .item-lamp           { color: #ffea00; text-shadow: 0 0 10px rgba(255, 234, 0, 0.9); }
+        .item-globe          { color: #4cc9f0; text-shadow: 0 0 8px rgba(76, 201, 240, 0.8); }
+        .item-table          { color: #8b5a2b; text-shadow: 0 0 6px rgba(139, 90, 43, 0.7); }
+        .item-alchemist-table { color: #a855f7; text-shadow: 0 0 12px rgba(168, 85, 247, 0.9); }
+
+        /* Storage & Alchemy Elements */
+        .item-crate          { color: #c28d53; text-shadow: 0 0 6px rgba(194, 141, 83, 0.7); font-weight: bold; }
+        .item-barrel         { color: #966f33; text-shadow: 0 0 6px rgba(150, 111, 51, 0.8); font-weight: bold; }
+        .item-cobweb         { color: #e0e0e0; text-shadow: 0 0 6px rgba(224, 224, 224, 0.6); opacity: 0.75; }
+
+        /* Throne Room Elements */
+        .item-throne         { color: #ffd700; text-shadow: 0 0 16px rgba(255, 215, 0, 0.95); font-weight: bold; }
+
+        /* Toilet Room Elements */
+        .item-toilet { 
+            color: #e0e0e0; 
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.9); 
+            font-weight: bold; 
+        }
 
         #player {
             position: absolute;
@@ -263,9 +290,13 @@
         // Character Mappings
         const TORCH_CHAR = 'Z';
         const DOOR_CHAR = ':';
-        const FOUNTAIN_CHAR = 'F';
-        const WATER_CHAR = '~';
-        const GRASS_CHAR = '"';
+        const FOUNTAIN_CHAR = 'g';
+        const WATER_CHAR = 'D';
+        const GRASS_CHAR = 'o';
+        const TREE_1_CHAR = 'p';
+        const TREE_2_CHAR = 'n';
+        const TREE_3_CHAR = 'l';
+        const ROCK_CHAR = '*';
         const TRAP_CHAR = '^';
         const BOSS_CHAR = 'U';
         const MERCHANT_CHAR = 'm';
@@ -284,7 +315,22 @@
         const OPENED_DRESSER_CHAR = 'W';
         const VASE_TABLE_CHAR = 'X';
         const VASE_TABLE_KNOCKED_CHAR = 'Y';
-        const CHAIR_CHAR = 'h';
+        const CHAIR_CHAR = 't';
+        const THRONE_CHAR = 'z';
+
+        // Library & Alchemical Mappings
+        const LAMP_CHAR = 's';
+        const GLOBE_CHAR = 'u';
+        const TABLE_CHAR = 'v';
+        const ALCHEMIST_TABLE_CHAR = 'y';
+
+        // Storage & Container Mappings
+        const CRATE_CHAR = 'r';
+        const BARREL_CHAR = 'x';
+        const COBWEB_CHAR = 'w';
+
+        // Toilet Room Mapping
+        const TOILET_CHAR = 'q';
 
         // Wall Items
         const SHIELD_WALL_CHAR = 'e';
@@ -372,6 +418,9 @@
             const item = roomItems[`${x},${y}`];
             if (item && item.fountainKey && roomItems[item.fountainKey]) {
                 return { key: item.fountainKey, data: roomItems[item.fountainKey] };
+            }
+            if (roomItems['3,3'] && roomItems['3,3'].char === FOUNTAIN_CHAR) {
+                return { key: '3,3', data: roomItems['3,3'] };
             }
             return null;
         }
@@ -499,17 +548,17 @@
         }
 
         function handleGrassStep(x, y) {
-            if (Math.random() < 0.15) {
+            if (Math.random() < 0.25) {
                 const eventRoll = Math.random();
 
                 if (eventRoll < 0.45) {
                     const entityType = Math.random() < 0.5 ? 'D' : 'G';
                     const name = entityType === 'D' ? 'Demon' : 'Ghost';
-                    alert(`AMBUSH! A ${name} leaps out from the tall grass!`);
+                    alert(`AMBUSH! A ${name} leaps out from the tall garden grass!`);
                     triggerChallenge(entityType, null, () => {
                         clearGrassTile(x, y);
                     });
-                } else if (eventRoll < 0.80) {
+                } else if (eventRoll < 0.70) {
                     alert("SNAP! You stepped on a hidden spike trap concealed in the grass! (-10 Score)");
                     playerScore = Math.max(0, playerScore - 10);
                     uiScore.innerText = playerScore;
@@ -519,10 +568,14 @@
                     activeLayout[y][x] = TRAP_CHAR;
                     renderBoard();
                 } else {
-                    alert("You rustle through the grass and uncover a hidden pouch of gold! (+25 Score)");
-                    playerScore += 25;
+                    alert("You rustle through the thick foliage and discover a hidden treasure chest! (+50 Score)");
+                    playerScore += 50;
                     uiScore.innerText = playerScore;
-                    clearGrassTile(x, y);
+                    
+                    const roomItems = currentFloorRooms[currentRoomIndex].items;
+                    roomItems[`${x},${y}`] = { char: ')', state: 'INTACT' };
+                    activeLayout[y][x] = ')';
+                    renderBoard();
                 }
             }
         }
@@ -548,11 +601,24 @@
 
             const merchantRoomIndex = spawnMerchantThisFloor ? Math.floor(Math.random() * 4) + 1 : -1;
             
-            // Randomly pick unique indices for special rooms among Rooms 2 through 5 (indices 1 to 4)
             const availableSpecialIndices = [1, 2, 3, 4];
-            const studyRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
-            const pondRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
-            const chestRoomIndex = availableSpecialIndices.splice(Math.floor(Math.random() * availableSpecialIndices.length), 1)[0];
+            
+            const shuffle = (array) => {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            };
+            shuffle(availableSpecialIndices);
+
+            const roomTypePool = ['throne', 'study', 'garden', 'alchemy', 'library', 'storage', 'pond', 'chest', 'toilet'];
+            shuffle(roomTypePool);
+
+            const assignedRoomTypes = {};
+            for (let i = 0; i < 4; i++) {
+                const roomIdx = availableSpecialIndices[i];
+                assignedRoomTypes[roomIdx] = roomTypePool[i];
+            }
 
             // Room 1: Starting Room
             const firstExit = WALL_DIRS[Math.floor(Math.random() * WALL_DIRS.length)];
@@ -592,15 +658,25 @@
                 };
 
                 const hasMerchant = (i === merchantRoomIndex);
-                const isStudy = (i === studyRoomIndex);
-                const isPond = (i === pondRoomIndex);
-                const isChestRoom = (i === chestRoomIndex);
+                const roomType = assignedRoomTypes[i] || 'standard';
 
-                if (isPond) {
+                if (roomType === 'throne') {
+                    roomObj.items = generateThroneRoomItems(roomObj, hasMerchant);
+                } else if (roomType === 'toilet') {
+                    roomObj.items = generateToiletRoomItems(roomObj, hasMerchant);
+                } else if (roomType === 'study') {
+                    roomObj.items = generatePersonalStudyItems(roomObj, hasMerchant);
+                } else if (roomType === 'garden') {
+                    roomObj.items = generateGardenItems(roomObj, hasMerchant);
+                } else if (roomType === 'alchemy') {
+                    roomObj.items = generateAlchemyStudyItems(roomObj, hasMerchant);
+                } else if (roomType === 'library') {
+                    roomObj.items = generateLibraryItems(roomObj, hasMerchant);
+                } else if (roomType === 'storage') {
+                    roomObj.items = generateStorageRoomItems(roomObj, hasMerchant);
+                } else if (roomType === 'pond') {
                     roomObj.items = generatePondItems(roomObj, hasMerchant);
-                } else if (isStudy) {
-                    roomObj.items = generateStudyItems(roomObj, hasMerchant);
-                } else if (isChestRoom) {
+                } else if (roomType === 'chest') {
                     roomObj.items = generateChestRoomItems(roomObj, hasMerchant);
                 } else {
                     roomObj.items = generateRoomItems(roomObj, hasMerchant);
@@ -639,13 +715,213 @@
             }
         }
 
-        function generateChestRoomItems(roomObj, hasMerchant = false) {
+        function generateGardenItems(roomObj, hasMerchant = false) {
             const items = {};
             const doorClearanceTiles = new Set([
-                '3,1', '3,5', '1,3', '5,3'
+                '3,1', '3,5', '1,3', '5,3',
+                '3,2', '3,4', '2,3', '4,3'
             ]);
 
-            // Torches at four inner corners for atmosphere
+            const treeTypes = [TREE_1_CHAR, TREE_2_CHAR, TREE_3_CHAR];
+            const treeSpots = ['1,1', '5,1', '1,5', '5,5', '2,1', '4,1', '1,2', '5,2'];
+            
+            treeSpots.forEach(coord => {
+                if (!doorClearanceTiles.has(coord) && Math.random() < 0.7) {
+                    const tree = treeTypes[Math.floor(Math.random() * treeTypes.length)];
+                    items[coord] = { char: tree, state: 'SOLID' };
+                }
+            });
+
+            const rockSpots = ['2,2', '4,2', '2,4', '4,4', '1,4', '5,4'];
+            rockSpots.forEach(coord => {
+                if (!doorClearanceTiles.has(coord) && !items[coord] && Math.random() < 0.5) {
+                    items[coord] = { char: ROCK_CHAR, state: 'INTACT' };
+                }
+            });
+
+            const grassSpots = [
+                '1,3', '2,3', '4,3', '5,3',
+                '3,2', '3,4', '2,2', '4,2',
+                '2,4', '4,4', '3,3'
+            ];
+
+            grassSpots.forEach(coord => {
+                if (!doorClearanceTiles.has(coord) && !items[coord] && Math.random() < 0.75) {
+                    items[coord] = { char: GRASS_CHAR, state: 'WALKABLE' };
+                }
+            });
+
+            const potentialChestSpots = Object.keys(items).filter(k => items[k].char === GRASS_CHAR || items[k].char === ROCK_CHAR);
+            if (potentialChestSpots.length > 0) {
+                const chestCoord = potentialChestSpots[Math.floor(Math.random() * potentialChestSpots.length)];
+                items[chestCoord] = { char: '(', state: 'INTACT' };
+            } else {
+                items['2,2'] = { char: '(', state: 'INTACT' };
+            }
+
+            if (hasMerchant) {
+                const merchantSpots = ['3,3', '2,3', '4,3'].filter(c => !items[c] && !doorClearanceTiles.has(c));
+                if (merchantSpots.length > 0) {
+                    items[merchantSpots[0]] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generateThroneRoomItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearanceTiles = new Set([
+                '3,1', '3,5', '1,3', '5,3',
+                '2,1', '4,1', '2,5', '4,5',
+                '1,2', '1,4', '5,2', '5,4'
+            ]);
+
+            if (roomObj.entryWall !== 'NORTH' && roomObj.forwardWall !== 'NORTH') {
+                items['3,1'] = { char: THRONE_CHAR, state: 'INTACT' };
+            } else {
+                items['3,2'] = { char: THRONE_CHAR, state: 'INTACT' };
+            }
+
+            const torchCoords = ['2,1', '4,1', '1,1', '5,1'];
+            for (const coord of torchCoords) {
+                if (!doorClearanceTiles.has(coord) && !items[coord]) {
+                    items[coord] = { char: TORCH_CHAR, state: 'INTACT' };
+                }
+            }
+
+            const sideDecorations = ['1,2', '5,2', '1,4', '5,4'];
+            for (const coord of sideDecorations) {
+                if (!doorClearanceTiles.has(coord) && !items[coord]) {
+                    items[coord] = { char: VASE_TABLE_CHAR, state: 'INTACT' };
+                }
+            }
+
+            const chestCoords = ['1,1', '5,1', '1,5', '5,5'];
+            for (const coord of chestCoords) {
+                if (!doorClearanceTiles.has(coord) && !items[coord]) {
+                    items[coord] = { char: '(', state: 'INTACT' };
+                }
+            }
+
+            if (!items['2,3']) items['2,3'] = { char: CHAIR_CHAR, state: 'INTACT' };
+            if (!items['4,3']) items['4,3'] = { char: CHAIR_CHAR, state: 'INTACT' };
+
+            if (Math.random() < 0.5 && !items['3,3']) {
+                items['3,3'] = { char: '?', state: 'ACTIVE' };
+            }
+
+            if (hasMerchant) {
+                const merchantCandidates = ['1,4', '5,4', '2,4', '4,4', '3,4'].filter(c => !items[c] && !doorClearanceTiles.has(c));
+                if (merchantCandidates.length > 0) {
+                    items[merchantCandidates[0]] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generateToiletRoomItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearance = new Set(['3,1', '3,5', '1,3', '5,3']);
+
+            const cornerTorches = ['1,1', '5,1', '1,5', '5,5'];
+            cornerTorches.forEach(coord => {
+                if (!doorClearance.has(coord)) {
+                    items[coord] = { char: TORCH_CHAR, state: 'INTACT' };
+                }
+            });
+
+            items['3,3'] = { char: TOILET_CHAR, state: 'SOLID' };
+
+            if (!items['1,2']) items['1,2'] = { char: COBWEB_CHAR, state: 'INTACT' };
+            if (!items['5,2']) items['5,2'] = { char: COBWEB_CHAR, state: 'INTACT' };
+
+            if (hasMerchant) {
+                const merchantPos = ['2,3', '4,3', '3,2', '3,4'].find(p => !items[p] && !doorClearance.has(p));
+                if (merchantPos) {
+                    items[merchantPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generatePersonalStudyItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearance = new Set(['3,1', '3,5', '1,3', '5,3']);
+
+            const validWalls = ['WEST', 'NORTH', 'EAST'].filter(
+                w => w !== roomObj.entryWall && w !== roomObj.forwardWall
+            );
+            const bookshelfWall = validWalls.length > 0 ? validWalls[0] : 'WEST';
+
+            let bookshelfCoords = [];
+            if (bookshelfWall === 'WEST') {
+                bookshelfCoords = ['1,1', '1,2', '1,3', '1,4', '1,5'];
+            } else if (bookshelfWall === 'NORTH') {
+                bookshelfCoords = ['1,1', '2,1', '3,1', '4,1', '5,1'];
+            } else if (bookshelfWall === 'EAST') {
+                bookshelfCoords = ['5,1', '5,2', '5,3', '5,4', '5,5'];
+            }
+
+            bookshelfCoords.forEach(coord => {
+                if (!doorClearance.has(coord)) {
+                    items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
+                }
+            });
+
+            const opposingWallMap = {
+                'WEST': 'EAST',
+                'EAST': 'WEST',
+                'NORTH': 'SOUTH',
+                'SOUTH': 'NORTH'
+            };
+            const fireplaceWall = opposingWallMap[bookshelfWall];
+
+            let fireplaceCoord = '5,3';
+            if (fireplaceWall === 'EAST') fireplaceCoord = '5,3';
+            else if (fireplaceWall === 'WEST') fireplaceCoord = '1,3';
+            else if (fireplaceWall === 'SOUTH') fireplaceCoord = '3,5';
+            else if (fireplaceWall === 'NORTH') fireplaceCoord = '3,1';
+
+            if (!doorClearance.has(fireplaceCoord) && !items[fireplaceCoord]) {
+                items[fireplaceCoord] = { char: FIREPLACE_CHAR, state: 'INTACT' };
+            } else {
+                const fallbackCoords = {
+                    'EAST': ['5,2', '5,4'],
+                    'WEST': ['1,2', '1,4'],
+                    'SOUTH': ['2,5', '4,5'],
+                    'NORTH': ['2,1', '4,1']
+                };
+                for (const coord of fallbackCoords[fireplaceWall]) {
+                    if (!doorClearance.has(coord) && !items[coord]) {
+                        items[coord] = { char: FIREPLACE_CHAR, state: 'INTACT' };
+                        break;
+                    }
+                }
+            }
+
+            items['3,3'] = { char: CHAIR_CHAR, state: 'INTACT' };
+            items['2,3'] = { char: LAMP_CHAR, state: 'INTACT' };
+            items['4,3'] = { char: GLOBE_CHAR, state: 'INTACT' };
+
+            if (hasMerchant) {
+                const openPos = ['3,2', '3,4', '2,2', '4,2', '2,4', '4,4'].find(
+                    p => !items[p] && !doorClearance.has(p)
+                );
+                if (openPos) {
+                    items[openPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generateChestRoomItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearanceTiles = new Set(['3,1', '3,5', '1,3', '5,3']);
+
             const cornerTorches = ['1,1', '5,1', '1,5', '5,5'];
             for (const coord of cornerTorches) {
                 if (!doorClearanceTiles.has(coord)) {
@@ -653,7 +929,6 @@
                 }
             }
 
-            // Outer ring chest placements
             const chestCoords = [
                 '2,1', '4,1',
                 '1,2', '5,2',
@@ -667,7 +942,6 @@
                 }
             }
 
-            // Central showcase chest or feature table
             if (Math.random() < 0.6) {
                 items['3,3'] = { char: '(', state: 'INTACT' };
             } else {
@@ -684,19 +958,18 @@
         function generatePondItems(roomObj, hasMerchant = false) {
             const items = {};
 
-            // 3x3 Impassable Pond in center
             for (let x = 2; x <= 4; x++) {
                 for (let y = 2; y <= 4; y++) {
-                    items[`${x},${y}`] = { char: WATER_CHAR, state: 'SOLID' };
+                    if (x === 3 && y === 3) continue; 
+                    items[`${x},${y}`] = { char: WATER_CHAR, state: 'WALKABLE', fountainKey: '3,3' };
                 }
             }
 
-            // Outer ring corridors surrounding 3x3 pond:
-            // High-risk trap corridor on one side vs Low-risk tall grass path on the other
+            items['3,3'] = { char: FOUNTAIN_CHAR, state: 'SOLID', isUsed: false };
+
             const trapsOnLeft = Math.random() < 0.5;
 
             for (let y = 1; y <= 5; y++) {
-                // Left corridor column (x=1)
                 const leftKey = `1,${y}`;
                 if (!['1,3', '3,1', '3,5'].includes(leftKey)) {
                     if (trapsOnLeft) {
@@ -706,7 +979,6 @@
                     }
                 }
 
-                // Right corridor column (x=5)
                 const rightKey = `5,${y}`;
                 if (!['5,3', '3,1', '3,5'].includes(rightKey)) {
                     if (!trapsOnLeft) {
@@ -725,67 +997,149 @@
             return items;
         }
 
-        function generateStudyItems(roomObj, hasMerchant = false) {
+        function generateAlchemyStudyItems(roomObj, hasMerchant = false) {
             const items = {};
+            const doorClearance = new Set(['3,1', '3,5', '1,3', '5,3']);
 
-            // Determine candidate walls for Bookshelves (avoiding door entry/exit walls)
-            const availableWalls = WALL_DIRS.filter(w => w !== roomObj.entryWall && w !== roomObj.forwardWall);
-            const bookshelfWall = availableWalls.length > 0 
-                ? availableWalls[Math.floor(Math.random() * availableWalls.length)]
-                : (roomObj.entryWall !== 'NORTH' && roomObj.forwardWall !== 'NORTH' ? 'NORTH' : 'WEST');
+            items['3,3'] = { char: ALCHEMIST_TABLE_CHAR, state: 'INTACT' };
 
-            // Bookshelf wall placement along entire wall (skipping door tile if present)
-            if (bookshelfWall === 'NORTH') {
-                ['1,1', '2,1', '3,1', '4,1', '5,1'].forEach(coord => {
-                    if (!['3,1'].includes(coord) || roomObj.entryWall !== 'NORTH' && roomObj.forwardWall !== 'NORTH') {
+            const barrelSpots = ['2,2', '4,2', '2,4', '4,4', '2,3', '4,3'];
+            barrelSpots.forEach(coord => {
+                if (!doorClearance.has(coord) && Math.random() < 0.75) {
+                    items[coord] = { char: BARREL_CHAR, state: 'INTACT' };
+                }
+            });
+
+            const wallSpots = ['1,1', '2,1', '4,1', '5,1', '1,5', '5,5'];
+            wallSpots.forEach(coord => {
+                if (!doorClearance.has(coord)) {
+                    const roll = Math.random();
+                    if (roll < 0.5) {
                         items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
+                    } else if (roll < 0.8) {
+                        items[coord] = { char: COBWEB_CHAR, state: 'INTACT' };
                     }
-                });
-            } else if (bookshelfWall === 'SOUTH') {
-                ['1,5', '2,5', '3,5', '4,5', '5,5'].forEach(coord => {
-                    if (!['3,5'].includes(coord) || roomObj.entryWall !== 'SOUTH' && roomObj.forwardWall !== 'SOUTH') {
-                        items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
-                    }
-                });
-            } else if (bookshelfWall === 'WEST') {
-                ['1,1', '1,2', '1,3', '1,4', '1,5'].forEach(coord => {
-                    if (!['1,3'].includes(coord) || roomObj.entryWall !== 'WEST' && roomObj.forwardWall !== 'WEST') {
-                        items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
-                    }
-                });
-            } else if (bookshelfWall === 'EAST') {
-                ['5,1', '5,2', '5,3', '5,4', '5,5'].forEach(coord => {
-                    if (!['5,3'].includes(coord) || roomObj.entryWall !== 'EAST' && roomObj.forwardWall !== 'EAST') {
-                        items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
-                    }
-                });
-            }
+                }
+            });
 
-            // Central Reading Area
-            items['3,3'] = { char: CHAIR_CHAR, state: 'INTACT' };
-
-            // Fireplace placement along an open wall corner or side
-            const fireplaceCandidates = ['1,1', '5,1', '1,5', '5,5', '2,1', '4,1', '1,2', '5,2'].filter(c => !items[c]);
-            if (fireplaceCandidates.length > 0) {
-                items[fireplaceCandidates[0]] = { char: FIREPLACE_CHAR, state: 'INTACT' };
-            }
-
-            // Table with Vase placement
-            const vaseCandidates = ['2,3', '4,3', '3,2', '3,4', '2,2', '4,2'].filter(c => !items[c]);
-            if (vaseCandidates.length > 0) {
-                items[vaseCandidates[0]] = { char: VASE_TABLE_CHAR, state: 'INTACT' };
-            }
-
-            // Atmospheric Torch
-            const torchCandidates = ['1,1', '5,1', '1,5', '5,5'].filter(c => !items[c]);
-            if (torchCandidates.length > 0) {
-                items[torchCandidates[0]] = { char: TORCH_CHAR, state: 'INTACT' };
+            items['1,2'] = { char: LAMP_CHAR, state: 'INTACT' };
+            items['5,2'] = { char: LAMP_CHAR, state: 'INTACT' };
+            if (!items['3,2'] && !doorClearance.has('3,2')) {
+                items['3,2'] = { char: '<', state: 'INTACT' };
             }
 
             if (hasMerchant) {
-                const merchantCandidates = ['2,4', '4,4', '2,2', '4,2'].filter(c => !items[c]);
-                if (merchantCandidates.length > 0) {
-                    items[merchantCandidates[0]] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                const merchantPos = ['1,4', '5,4', '3,4'].find(p => !items[p] && !doorClearance.has(p));
+                if (merchantPos) {
+                    items[merchantPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generateLibraryItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearance = new Set(['3,1', '3,5', '1,3', '5,3']);
+
+            const wallsToLine = WALL_DIRS.filter(w => w !== roomObj.entryWall && w !== roomObj.forwardWall);
+            
+            wallsToLine.forEach(wall => {
+                let coords = [];
+                if (wall === 'NORTH') coords = ['1,1', '2,1', '3,1', '4,1', '5,1'];
+                else if (wall === 'SOUTH') coords = ['1,5', '2,5', '3,5', '4,5', '5,5'];
+                else if (wall === 'WEST') coords = ['1,1', '1,2', '1,3', '1,4', '1,5'];
+                else if (wall === 'EAST') coords = ['5,1', '5,2', '5,3', '5,4', '5,5'];
+
+                coords.forEach(coord => {
+                    if (!doorClearance.has(coord)) {
+                        items[coord] = { char: BOOKSHELF_CHAR, state: 'INTACT' };
+                    }
+                });
+            });
+
+            items['3,3'] = { char: TABLE_CHAR, state: 'INTACT' };
+            items['3,4'] = { char: CHAIR_CHAR, state: 'INTACT' };
+
+            const featurePositions = ['2,3', '4,3', '3,2', '2,2', '4,2'];
+            const features = [GLOBE_CHAR, LAMP_CHAR, ALCHEMIST_TABLE_CHAR];
+            
+            features.forEach(featChar => {
+                const openPos = featurePositions.find(p => !items[p] && !doorClearance.has(p));
+                if (openPos) {
+                    items[openPos] = { char: featChar, state: 'INTACT' };
+                }
+            });
+
+            const corners = ['1,1', '5,1', '1,5', '5,5'];
+            corners.forEach(corner => {
+                if (!items[corner] && !doorClearance.has(corner)) {
+                    items[corner] = { char: LAMP_CHAR, state: 'INTACT' };
+                }
+            });
+
+            if (hasMerchant) {
+                const merchantPos = ['2,4', '4,4', '2,2', '4,2'].find(p => !items[p] && !doorClearance.has(p));
+                if (merchantPos) {
+                    items[merchantPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
+                }
+            }
+
+            return items;
+        }
+
+        function generateStorageRoomItems(roomObj, hasMerchant = false) {
+            const items = {};
+            const doorClearance = new Set(['3,1', '3,5', '1,3', '5,3']);
+
+            const wallCoords = [
+                '1,1', '2,1', '4,1', '5,1',
+                '1,2', '5,2',
+                '1,4', '5,4',
+                '1,5', '2,5', '4,5', '5,5'
+            ];
+
+            wallCoords.forEach(coord => {
+                if (doorClearance.has(coord)) return;
+
+                const roll = Math.random();
+                if (roll < 0.35) {
+                    items[coord] = { char: CRATE_CHAR, state: 'INTACT' };
+                } else if (roll < 0.60) {
+                    items[coord] = { char: BARREL_CHAR, state: 'INTACT' };
+                } else if (roll < 0.80) {
+                    items[coord] = { char: COBWEB_CHAR, state: 'INTACT' };
+                }
+            });
+
+            const dungeonSurplusPalette = [
+                BOOKSHELF_CHAR, WARDROBE_CHAR, CLOSED_DRESSER_CHAR, 
+                VASE_TABLE_CHAR, CHAIR_CHAR, LAMP_CHAR, GLOBE_CHAR, 
+                TABLE_CHAR, ALCHEMIST_TABLE_CHAR, TORCH_CHAR, 
+                BELLPOST_CHAR, ROCK_CHAR, '(', BARREL_CHAR
+            ];
+
+            const innerSpots = ['2,2', '3,2', '4,2', '2,3', '4,3', '2,4', '3,4', '4,4'];
+            const surplusCount = Math.floor(Math.random() * 3) + 3;
+
+            for (let i = 0; i < surplusCount; i++) {
+                const candidateSpots = innerSpots.filter(p => !items[p] && !doorClearance.has(p));
+                if (candidateSpots.length === 0) break;
+
+                const chosenCoord = candidateSpots[Math.floor(Math.random() * candidateSpots.length)];
+                const randomItemChar = dungeonSurplusPalette[Math.floor(Math.random() * dungeonSurplusPalette.length)];
+
+                items[chosenCoord] = { char: randomItemChar, state: 'INTACT' };
+            }
+
+            if (!items['3,3'] && !doorClearance.has('3,3')) {
+                items['3,3'] = { char: CRATE_CHAR, state: 'INTACT' };
+            }
+
+            if (hasMerchant) {
+                const openMerchantPos = ['2,3', '4,3', '3,2', '3,4'].find(p => !items[p] && !doorClearance.has(p));
+                if (openMerchantPos) {
+                    items[openMerchantPos] = { char: MERCHANT_CHAR, state: 'ACTIVE' };
                 }
             }
 
@@ -872,21 +1226,16 @@
                 }
 
                 if (Math.random() < 0.5) {
-                    const corners = [
-                        { fx: 1, fy: 1, w: [{x:2, y:1}, {x:1, y:2}] },
-                        { fx: 5, fy: 1, w: [{x:4, y:1}, {x:5, y:2}] },
-                        { fx: 1, fy: 5, w: [{x:1, y:4}, {x:2, y:5}] },
-                        { fx: 5, fy: 5, w: [{x:5, y:4}, {x:4, y:5}] }
-                    ];
-                    const chosenCorner = corners[Math.floor(Math.random() * corners.length)];
-                    const fKey = `${chosenCorner.fx},${chosenCorner.fy}`;
-
+                    const fKey = '3,3';
                     if (!items[fKey]) {
                         items[fKey] = { char: FOUNTAIN_CHAR, state: 'SOLID', isUsed: false };
 
-                        for (const wt of chosenCorner.w) {
-                            const wKey = `${wt.x},${wt.y}`;
-                            if (!items[wKey]) items[wKey] = { char: WATER_CHAR, state: 'SOLID', fountainKey: fKey };
+                        for (let x = 2; x <= 4; x++) {
+                            for (let y = 2; y <= 4; y++) {
+                                if (x === 3 && y === 3) continue;
+                                const wKey = `${x},${y}`;
+                                if (!items[wKey]) items[wKey] = { char: WATER_CHAR, state: 'WALKABLE', fountainKey: fKey };
+                            }
                         }
                     }
                 }
@@ -928,9 +1277,11 @@
                 }
 
                 const possibleItems = [
-                    '(', '<', '*', TORCH_CHAR, 
+                    '(', '<', ROCK_CHAR, TORCH_CHAR, 
                     WARDROBE_CHAR, BELLPOST_CHAR, 
-                    FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR
+                    FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR,
+                    LAMP_CHAR, GLOBE_CHAR, TABLE_CHAR, ALCHEMIST_TABLE_CHAR,
+                    CRATE_CHAR, BARREL_CHAR, COBWEB_CHAR
                 ];
                 const itemCount = Math.floor(Math.random() * 4) + 2;
 
@@ -993,7 +1344,25 @@
                     if (visited.has(key)) continue;
 
                     const item = items[key];
-                    if (item && (item.state === 'SOLID' || item.state === 'INTACT' || item.state === 'ACTIVE' || item.char === FOUNTAIN_CHAR || item.char === MERCHANT_CHAR || item.char === BOOKSHELF_CHAR || item.char === CHAIR_CHAR)) continue;
+                    if (item && (
+                        item.state === 'SOLID' || 
+                        item.state === 'INTACT' || 
+                        item.state === 'ACTIVE' || 
+                        item.char === MERCHANT_CHAR || 
+                        item.char === BOOKSHELF_CHAR || 
+                        item.char === CHAIR_CHAR || 
+                        item.char === THRONE_CHAR ||
+                        item.char === TABLE_CHAR ||
+                        item.char === ALCHEMIST_TABLE_CHAR ||
+                        item.char === GLOBE_CHAR ||
+                        item.char === LAMP_CHAR ||
+                        item.char === CRATE_CHAR ||
+                        item.char === BARREL_CHAR ||
+                        item.char === TREE_1_CHAR ||
+                        item.char === TREE_2_CHAR ||
+                        item.char === TREE_3_CHAR ||
+                        item.char === TOILET_CHAR
+                    )) continue;
 
                     visited.add(key);
                     queue.push(n);
@@ -1016,8 +1385,7 @@
             for (let r = 0; r < GRID_SIZE; r++) {
                 for (let c = 0; c < GRID_SIZE; c++) {
                     if (r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1) {
-                        const wallDec = roomData.wallDecorations[`${c},${r}`];
-                        activeLayout[r][c] = wallDec ? wallDec : 'W';
+                        activeLayout[r][c] = 'W';
                     }
                 }
             }
@@ -1028,6 +1396,7 @@
             }
 
             for (const [posKey, item] of Object.entries(roomData.items)) {
+                if (!item) continue;
                 const [ix, iy] = posKey.split(',').map(Number);
                 if (item.state !== 'DESTROYED') {
                     activeLayout[iy][ix] = item.char;
@@ -1061,15 +1430,13 @@
                     const charAt = activeLayout[r][c];
 
                     if (isWallBoundary) {
-                        if ([SHIELD_WALL_CHAR, WINDOW_WALL_CHAR, BANNER_WALL_CHAR].includes(charAt)) {
-                            glyph.innerText = charAt;
-                            glyph.classList.add('tile-wall-item');
-                        } else {
-                            glyph.innerText = ' ';
-                            glyph.classList.add('tile-wall');
-                        }
+                        glyph.innerText = ' ';
+                        glyph.classList.add('tile-wall');
                     } else {
-                        if (pathTiles.has(`${c},${r}`)) {
+                        if (charAt === WATER_CHAR) {
+                            glyph.innerText = WATER_CHAR;
+                            glyph.classList.add('tile-water');
+                        } else if (pathTiles.has(`${c},${r}`)) {
                             glyph.innerText = CRUSH_FLOOR_CHAR;
                             glyph.classList.add('tile-cracked');
                         } else {
@@ -1088,9 +1455,17 @@
 
                     if (char === DOOR_CHAR) {
                         spawnDoor(c, r);
-                    } else if (char !== ' ' && char !== 'W' && ![SHIELD_WALL_CHAR, WINDOW_WALL_CHAR, BANNER_WALL_CHAR].includes(char)) {
+                    } else if (char !== ' ' && char !== 'W' && char !== WATER_CHAR) {
                         spawnItem(c, r, char);
                     }
+                }
+            }
+
+            const roomData = currentFloorRooms[currentRoomIndex];
+            if (roomData && roomData.wallDecorations) {
+                for (const [posKey, char] of Object.entries(roomData.wallDecorations)) {
+                    const [x, y] = posKey.split(',').map(Number);
+                    spawnWallDecoration(x, y, char);
                 }
             }
 
@@ -1121,6 +1496,24 @@
             board.appendChild(doorNode);
         }
 
+        function spawnWallDecoration(x, y, char) {
+            const wallDecNode = document.createElement('div');
+            wallDecNode.classList.add('wall-dec-node');
+            wallDecNode.style.transform = `translate(${x * STEP}px, ${y * STEP}px)`;
+
+            const wallDecText = document.createElement('div');
+            wallDecText.classList.add('wall-dec-text');
+
+            if (y === 0) { wallDecText.classList.add('wall-dec-north'); }
+            else if (y === GRID_SIZE - 1) { wallDecText.classList.add('wall-dec-south'); }
+            else if (x === 0) { wallDecText.classList.add('wall-dec-west'); }
+            else if (x === GRID_SIZE - 1) { wallDecText.classList.add('wall-dec-east'); }
+
+            wallDecText.innerText = char;
+            wallDecNode.appendChild(wallDecText);
+            board.appendChild(wallDecNode);
+        }
+
         function spawnItem(x, y, char) {
             const itemNode = document.createElement('div');
             itemNode.classList.add('item-node');
@@ -1136,7 +1529,8 @@
             if (char === '(' || char === ')') itemText.classList.add('item-chest');
             else if (char === '<') itemText.classList.add('item-vase');
             else if (char === TORCH_CHAR) itemText.classList.add('item-torch');
-            else if (char === '*') itemText.classList.add('item-rock');
+            else if (char === ROCK_CHAR) itemText.classList.add('item-rock');
+            else if (char === TREE_1_CHAR || char === TREE_2_CHAR || char === TREE_3_CHAR) itemText.classList.add('item-tree');
             else if (char === '?') itemText.classList.add('item-demon');
             else if (char === '&') itemText.classList.add('item-ghost');
             else if (char === BOSS_CHAR) itemText.classList.add('item-boss');
@@ -1151,19 +1545,20 @@
             else if (char === VASE_TABLE_CHAR) itemText.classList.add('item-table-vase');
             else if (char === VASE_TABLE_KNOCKED_CHAR) itemText.classList.add('item-table-vase', 'item-knocked');
             else if (char === CHAIR_CHAR) itemText.classList.add('item-chair');
+            else if (char === THRONE_CHAR) itemText.classList.add('item-throne');
+            else if (char === LAMP_CHAR) itemText.classList.add('item-lamp');
+            else if (char === GLOBE_CHAR) itemText.classList.add('item-globe');
+            else if (char === TABLE_CHAR) itemText.classList.add('item-table');
+            else if (char === ALCHEMIST_TABLE_CHAR) itemText.classList.add('item-alchemist-table');
+            else if (char === CRATE_CHAR) itemText.classList.add('item-crate');
+            else if (char === BARREL_CHAR) itemText.classList.add('item-barrel');
+            else if (char === COBWEB_CHAR) itemText.classList.add('item-cobweb');
+            else if (char === TOILET_CHAR) itemText.classList.add('item-toilet');
             else if (char === FOUNTAIN_CHAR) {
                 if (itemData && itemData.isUsed) {
                     itemText.classList.add('item-fountain-used');
                 } else {
                     itemText.classList.add('item-fountain');
-                }
-            }
-            else if (char === WATER_CHAR) {
-                const parentFountain = findAssociatedFountain(x, y);
-                if (parentFountain && parentFountain.data.isUsed) {
-                    itemText.classList.add('item-water-used');
-                } else {
-                    itemText.classList.add('item-water');
                 }
             }
             else if (char === GRASS_CHAR) itemText.classList.add('item-grass');
@@ -1208,12 +1603,11 @@
 
             const char = activeLayout[y][x];
             if (char === 'W') return false;
-            
-            if ([SHIELD_WALL_CHAR, WINDOW_WALL_CHAR, BANNER_WALL_CHAR].includes(char)) return false;
 
             if ([
-                '(', '<', '*', TORCH_CHAR, '?', '&', BOSS_CHAR, MERCHANT_CHAR, FOUNTAIN_CHAR, WATER_CHAR, TRAP_CHAR,
-                BOOKSHELF_CHAR, WARDROBE_CHAR, BELLPOST_CHAR, FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR, CHAIR_CHAR
+                '(', '<', ROCK_CHAR, TREE_1_CHAR, TREE_2_CHAR, TREE_3_CHAR, TORCH_CHAR, '?', '&', BOSS_CHAR, MERCHANT_CHAR, TRAP_CHAR,
+                BOOKSHELF_CHAR, WARDROBE_CHAR, BELLPOST_CHAR, FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR, CHAIR_CHAR, THRONE_CHAR,
+                LAMP_CHAR, GLOBE_CHAR, TABLE_CHAR, ALCHEMIST_TABLE_CHAR, CRATE_CHAR, BARREL_CHAR, FOUNTAIN_CHAR, TOILET_CHAR
             ].includes(char)) return false;
 
             return true;
@@ -1294,8 +1688,9 @@
             }
 
             if ([
-                '(', '<', '*', '?', '&', BOSS_CHAR, MERCHANT_CHAR, FOUNTAIN_CHAR, WATER_CHAR, TRAP_CHAR,
-                BOOKSHELF_CHAR, WARDROBE_CHAR, BELLPOST_CHAR, FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR, CHAIR_CHAR
+                '(', '<', ROCK_CHAR, TREE_1_CHAR, TREE_2_CHAR, TREE_3_CHAR, '?', '&', BOSS_CHAR, MERCHANT_CHAR, FOUNTAIN_CHAR, WATER_CHAR, TRAP_CHAR,
+                BOOKSHELF_CHAR, WARDROBE_CHAR, BELLPOST_CHAR, FIREPLACE_CHAR, CLOSED_DRESSER_CHAR, VASE_TABLE_CHAR, CHAIR_CHAR, THRONE_CHAR,
+                LAMP_CHAR, GLOBE_CHAR, TABLE_CHAR, ALCHEMIST_TABLE_CHAR, CRATE_CHAR, BARREL_CHAR, COBWEB_CHAR, TOILET_CHAR
             ].includes(char)) {
                 
                 const roomItems = currentFloorRooms[currentRoomIndex].items;
@@ -1303,22 +1698,68 @@
 
                 if (char === MERCHANT_CHAR) {
                     interactWithMerchant(targetX, targetY);
+                } else if (char === TOILET_CHAR) {
+                    alert("FLUSH! The plumbing backfires violently! The room begins to flood!");
+                    triggerDoorChallenge();
+                } else if (char === BARREL_CHAR) {
+                    activeLayout[targetY][targetX] = ' ';
+                    if (itemData) itemData.state = 'DESTROYED';
+                    const gold = Math.floor(Math.random() * 30) + 15;
+                    playerScore += gold;
+                    uiScore.innerText = playerScore;
+                    alert(`You bust open the wooden barrel and find strange reagents (+${gold} Score)!`);
+                    renderBoard();
+                } else if (char === CRATE_CHAR) {
+                    activeLayout[targetY][targetX] = ' ';
+                    if (itemData) itemData.state = 'DESTROYED';
+                    const gold = Math.floor(Math.random() * 25) + 10;
+                    playerScore += gold;
+                    uiScore.innerText = playerScore;
+                    alert(`You smashed open the wooden storage crate and found extra supplies! (+${gold} Score)`);
+                    renderBoard();
+                } else if (char === COBWEB_CHAR) {
+                    activeLayout[targetY][targetX] = ' ';
+                    if (itemData) itemData.state = 'DESTROYED';
+                    playerScore += 5;
+                    uiScore.innerText = playerScore;
+                    alert("You cleared away the dusty cobwebs (+5 Score).");
+                    renderBoard();
                 } else if (char === BOOKSHELF_CHAR) {
                     interactWithBookshelf(targetX, targetY);
                 } else if (char === CHAIR_CHAR) {
                     alert("You take a brief rest in the comfortable study chair.");
+                } else if (char === THRONE_CHAR) {
+                    alert("You sit upon the ornate golden throne! You feel a surge of royal power (+75 Score).");
+                    playerScore += 75;
+                    uiScore.innerText = playerScore;
+                } else if (char === LAMP_CHAR) {
+                    alert("The warm brass lamp casts a soft yellow glow on the surrounding books.");
+                } else if (char === GLOBE_CHAR) {
+                    alert("You spin the terrestrial globe! It reveals unknown lands (+15 Score).");
+                    playerScore += 15;
+                    uiScore.innerText = playerScore;
+                } else if (char === TABLE_CHAR) {
+                    alert("A sturdy wooden desk covered in old parchment and inkwells.");
+                } else if (char === ALCHEMIST_TABLE_CHAR) {
+                    alert("Bubbling glass retorts and strange concoctions cover the table! You distill a strange potion (+35 Score).");
+                    playerScore += 35;
+                    uiScore.innerText = playerScore;
                 } else if (char === '(') {
                     activeLayout[targetY][targetX] = ')';
                     if (itemData) itemData.char = ')';
                     playerScore += 50;
                     uiScore.innerText = playerScore;
+                    alert("You opened the chest and secured the loot! (+50 Score)");
                     renderBoard();
-                } else if (char === '<' || char === '*') {
+                } else if (char === '<' || char === ROCK_CHAR) {
                     activeLayout[targetY][targetX] = ' ';
                     if (itemData) itemData.state = 'DESTROYED';
                     playerScore += 20;
                     uiScore.innerText = playerScore;
+                    alert("You cleared away the rubble!");
                     renderBoard();
+                } else if (char === TREE_1_CHAR || char === TREE_2_CHAR || char === TREE_3_CHAR) {
+                    alert("An ancient, sturdy tree stands firm.");
                 } else if (char === WARDROBE_CHAR) {
                     activeLayout[targetY][targetX] = WARDROBE_KNOCKED_CHAR;
                     if (itemData) itemData.char = WARDROBE_KNOCKED_CHAR;
