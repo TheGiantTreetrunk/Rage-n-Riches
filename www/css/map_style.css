@@ -36,15 +36,7 @@
             text-align: center;
         }
 
-        #rb_st_map_viewport {
-            position: relative;
-            width: 100vw;
-            height: 65vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-        }
+        
 
         #rb_st_map_game_board {
             font-family: 'DungeonFont', monospace;
