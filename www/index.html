@@ -160,6 +160,12 @@
             <hr>
         </div>
 
+        <div class="navbar">
+  <a href="#home" class="active">Home</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+</div>
+
         <div id="wrld">
             <div id="rb_st_map_hud" style="display: none">
             <div>Floor: <span id="ui-floor">1</span></div>
@@ -171,7 +177,12 @@
                 Move: <b>W, A, S, D / Arrows</b> | Interact / Search / Knock: <b>Space / E</b>
             </div>
             <div id="rb_st_map_viewport" class="window_scenes_base1">
-                <div id="rb_st_map_game_board"></div>
+                <div class="rb_st_vignette_wrapper">
+                    <!-- Your existing grid container goes here -->
+                    <div id="rb_st_map_game_board">
+                        <!-- tiles/characters -->
+                    </div>
+                </div>
             </div>
         </div>
 

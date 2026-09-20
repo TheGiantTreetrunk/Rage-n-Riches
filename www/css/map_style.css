@@ -36,7 +36,15 @@
             text-align: center;
         }
 
-        
+        #rb_st_map_viewport {
+            background: transparent; /* Let the board's own vignette handle the dark space */
+            border: none;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
 
         #rb_st_map_game_board {
             font-family: 'DungeonFont', monospace;
@@ -49,6 +57,24 @@
             transform: rotateX(60deg) rotateZ(-45deg);
             background-color: transparent;
         }
+
+.rb_st_vignette_wrapper {
+    position: relative;
+    /* Tighter radial gradient that starts fading almost immediately */
+    background: radial-gradient(
+        circle, 
+        rgba(5, 5, 8, 0.98) 25%, 
+        rgba(5, 5, 8, 0.8) 50%, 
+        rgba(5, 5, 8, 0) 70%
+    );
+    border-radius: 30px; /* Softer rounded corners that match the grid footprint */
+    padding: 20px; /* Reduced padding to bring the shadow right up to the tiles */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    box-shadow: none;
+}
 
         .rb_st_map_tile {
             width: var(--cell-size);
@@ -223,3 +249,31 @@
             margin-top: -6px;
             user-select: none;
         }
+
+        .navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
