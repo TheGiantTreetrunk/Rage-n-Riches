@@ -11,9 +11,11 @@
         <meta name="HandheldFriendly" content="true"/>
 
         <link href='css/game_style.css?=v1.0' rel='stylesheet'>
+        <link href='css/map_style.css?=v1.0' rel='stylesheet'>
         <script defer type="text/javascript" src="js/core.js"></script>
         <script defer type="text/javascript" src="js/quest_core.js"></script>
         <script defer type="text/javascript" src="js/text_adventure_core.js"></script>
+        <script defer type="text/javascript" src="js/core_map.js"></script>
 		
 		<script src="js/index.js"></script>
     </head>
@@ -156,6 +158,21 @@
                 <button class="uix_button" id="cl_st_bttn" onclick="Engine_Hud(3)">Play Now</button>
             </center>
             <hr>
+        </div>
+
+        <div id="wrld">
+            <div id="rb_st_map_hud" style="display: none">
+            <div>Floor: <span id="ui-floor">1</span></div>
+            <div>Room: <span id="ui-room">1 / 6</span></div>
+            <div>Score: <span id="ui-score">0</span></div>
+            <div>Facing: <span id="ui-facing">SOUTH</span></div>
+            </div>
+            <div id="rb_st_map_instructions" style="display: none">
+                Move: <b>W, A, S, D / Arrows</b> | Interact / Search / Knock: <b>Space / E</b>
+            </div>
+            <div id="rb_st_map_viewport">
+                <div id="rb_st_map_game_board"></div>
+            </div>
         </div>
 
         <div class="rb_dung_hud_tracker" id="tracker">
@@ -836,6 +853,16 @@
             document.getElementById('rb_wp_th_fog2').style.backgroundImage = `url(${TextureGenerators.fog(6.8)})`;
 
             //Core_Env_Updater('rock', false);
+
+            window.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowUp':    case 'w': case 'W': Core_Map_movePlayer(0, -1, 'NORTH'); break;
+                    case 'ArrowDown':  case 's': case 'S': Core_Map_movePlayer(0, 1, 'SOUTH');  break;
+                    case 'ArrowLeft':  case 'a': case 'A': Core_Map_movePlayer(-1, 0, 'WEST');  break;
+                    case 'ArrowRight': case 'd': case 'D': Core_Map_movePlayer(1, 0, 'EAST');  break;
+                    case ' ':          case 'e': case 'E': Core_Map_interact();                break;
+                }
+            });
         </script>
 
 

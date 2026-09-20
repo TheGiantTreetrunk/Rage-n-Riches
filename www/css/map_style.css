@@ -1,0 +1,233 @@
+@font-face {
+            font-family: 'DungeonFont';
+            src: url('../font/test.ttf') format('truetype');
+        }
+
+        :root {
+            --grid-size: 7;
+            --cell-size: 44px;
+            --grid-gap: 2px;
+            --font-size: 38px;
+
+            --floor-offset-y: 6px;  
+            --floor-offset-x: 0px;  
+            
+            --player-offset-y: -10px; 
+            --item-offset-y: -8px;
+            --door-offset-y: -6px;
+        }
+
+
+
+        #rb_st_map_hud {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 10px;
+            font-family: system-ui, sans-serif;
+            font-size: 1.1rem;
+            color: #45a29e;
+        }
+
+        #rb_st_map_instructions {
+            margin-bottom: 15px;
+            font-family: system-ui, sans-serif;
+            font-size: 0.9rem;
+            color: #c5c6c7;
+            text-align: center;
+        }
+
+        #rb_st_map_viewport {
+            position: relative;
+            width: 100vw;
+            height: 65vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        #rb_st_map_game_board {
+            font-family: 'DungeonFont', monospace;
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+            grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+            gap: var(--grid-gap);
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(-45deg);
+            background-color: transparent;
+        }
+
+        .rb_st_map_tile {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            position: relative;
+            transform-style: flat;
+            transform: translateZ(0px);
+        }
+
+        .rb_st_map_tile_glyph {
+            display: inline-block;
+            font-size: var(--font-size);
+            color: #45a29e;
+            user-select: none;
+            line-height: 1;
+            text-shadow: 0 0 6px rgba(69, 162, 158, 0.4);
+            transform: translate(var(--floor-offset-x), var(--floor-offset-y));
+        }
+
+        .rb_st_map_tile_wall {
+            color: #2b3a4a;
+            text-shadow: none;
+        }
+
+        .rb_st_map_tile_cracked {
+            color: #2d545e;
+            text-shadow: 0 0 4px rgba(45, 84, 94, 0.5);
+        }
+
+        .rb_st_map_tile_water {
+            color: #0077b6;
+            text-shadow: 0 0 8px rgba(0, 119, 182, 0.8);
+        }
+
+        .rb_st_map_item_node, .rb_st_map_door_node, .rb_st_map_wall_dec_node {
+            position: absolute;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transform-style: preserve-3d;
+        }
+
+        .rb_st_map_item_text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            font-size: var(--font-size);
+            line-height: 1;
+            user-select: none;
+            transform: translateZ(12px) rotateZ(45deg) rotateX(-60deg) translateY(var(--item-offset-y));
+        }
+
+        .rb_st_map_door_text, .rb_st_map_wall_dec_text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            font-size: calc(var(--font-size) * 0.9);
+            color: #e0a96d;
+            text-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .rb_st_map_door_locked {
+            color: #e63946;
+            text-shadow: 0 0 10px rgba(230, 57, 70, 0.9);
+        }
+
+        .rb_st_map_door_north, .rb_st_map_door_south, .rb_st_map_wall_dec_north, .rb_st_map_wall_dec_south {
+            transform: translateZ(8px) rotateZ(45deg) rotateX(-60deg) skewY(-26.5deg) translateY(var(--door-offset-y));
+        }
+
+        .rb_st_map_door_west, .rb_st_map_door_east, .rb_st_map_wall_dec_west, .rb_st_map_wall_dec_east {
+            transform: translateZ(8px) rotateZ(45deg) rotateX(-60deg) skewY(26.5deg) translateY(var(--door-offset-y));
+        }
+
+        .rb_st_map_wall_dec_text {
+            color: #a3c1ad;
+            text-shadow: 0 0 6px rgba(163, 193, 173, 0.5);
+            font-size: calc(var(--font-size) * 0.85);
+        }
+
+        .rb_st_map_item_chest          { color: #d4a373; text-shadow: 0 0 8px rgba(212, 163, 115, 0.6); }
+        .rb_st_map_item_vase           { color: #e76f51; text-shadow: 0 0 8px rgba(231, 111, 81, 0.6); }
+        .rb_st_map_item_torch          { color: #f4a261; text-shadow: 0 0 10px rgba(244, 162, 97, 0.9); }
+        .rb_st_map_item_rock           { color: #8d99ae; text-shadow: 0 0 6px rgba(141, 153, 174, 0.5); }
+        .rb_st_map_item_demon          { color: #d62828; text-shadow: 0 0 12px rgba(214, 40, 40, 0.9); }
+        .rb_st_map_item_ghost          { color: #a8dede; text-shadow: 0 0 12px rgba(168, 222, 222, 0.9); }
+        .rb_st_map_item_boss           { color: #9d4edd; text-shadow: 0 0 16px rgba(157, 78, 221, 1.0); font-weight: bold; }
+        .rb_st_map_item_merchant       { color: #e9c46a; text-shadow: 0 0 12px rgba(233, 196, 106, 0.9); font-weight: bold; }
+        
+        .rb_st_map_item_fountain       { color: #00b4d8; text-shadow: 0 0 12px rgba(0, 180, 216, 0.9); }
+        .rb_st_map_item_fountain_used  { color: #4a5568; text-shadow: none; opacity: 0.6; }
+        
+        .rb_st_map_item_grass          { color: #52b788; text-shadow: 0 0 6px rgba(82, 183, 136, 0.6); }
+        .rb_st_map_item_tree           { color: #2d6a4f; text-shadow: 0 0 8px rgba(45, 106, 79, 0.8); }
+        .rb_st_map_item_trap           { color: #ff4d6d; text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); }
+
+        .rb_st_map_item_bookshelf      { color: #b5651d; text-shadow: 0 0 8px rgba(181, 101, 29, 0.8); }
+        .rb_st_map_item_wardrobe       { color: #6e473b; text-shadow: 0 0 6px rgba(110, 71, 59, 0.6); }
+        .rb_st_map_item_knocked        { color: #5c4033; opacity: 0.8; }
+        .rb_st_map_item_bellpost       { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); }
+        .rb_st_map_item_fireplace      { color: #ff5500; text-shadow: 0 0 14px rgba(255, 85, 0, 0.9); }
+        .rb_st_map_item_dresser        { color: #a0522d; text-shadow: 0 0 6px rgba(160, 82, 45, 0.6); }
+        .rb_st_map_item_table_vase     { color: #e9c46a; text-shadow: 0 0 8px rgba(233, 196, 106, 0.7); }
+        .rb_st_map_item_chair          { color: #cd853f; text-shadow: 0 0 6px rgba(205, 133, 63, 0.7); }
+
+        .rb_st_map_item_lamp           { color: #ffea00; text-shadow: 0 0 10px rgba(255, 234, 0, 0.9); }
+        .rb_st_map_item_globe          { color: #4cc9f0; text-shadow: 0 0 8px rgba(76, 201, 240, 0.8); }
+        .rb_st_map_item_table          { color: #8b5a2b; text-shadow: 0 0 6px rgba(139, 90, 43, 0.7); }
+        .rb_st_map_item_alchemist_table { color: #a855f7; text-shadow: 0 0 12px rgba(168, 85, 247, 0.9); }
+
+        .rb_st_map_item_crate          { color: #c28d53; text-shadow: 0 0 6px rgba(194, 141, 83, 0.7); font-weight: bold; }
+        .rb_st_map_item_barrel         { color: #966f33; text-shadow: 0 0 6px rgba(150, 111, 51, 0.8); font-weight: bold; }
+        .rb_st_map_item_cobweb         { color: #e0e0e0; text-shadow: 0 0 6px rgba(224, 224, 224, 0.6); opacity: 0.75; }
+
+        .rb_st_map_item_throne         { color: #ffd700; text-shadow: 0 0 16px rgba(255, 215, 0, 0.95); font-weight: bold; }
+
+        .rb_st_map_item_toilet { 
+            color: #e0e0e0; 
+            text-shadow: 0 0 10px rgba(0, 180, 216, 0.9); 
+            font-weight: bold; 
+        }
+
+        #rb_st_map_player {
+            position: absolute;
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            transition: transform 0.12s ease-out;
+            transform-style: preserve-3d;
+            z-index: 10;
+        }
+
+        .rb_st_map_player_wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translateZ(20px) rotateZ(45deg) rotateX(-60deg) translateY(var(--player-offset-y));
+        }
+
+        .rb_st_map_player_text {
+            font-size: calc(var(--font-size) * 1.1);
+            color: #ffe600;
+            text-shadow: 0 0 10px rgba(255, 230, 0, 0.8);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .rb_st_map_facing_indicator {
+            display: none;
+            font-size: 14px;
+            color: #66fcf1;
+            text-shadow: 0 0 6px rgba(102, 252, 241, 0.9);
+            font-family: system-ui, sans-serif;
+            font-weight: bold;
+            margin-top: -6px;
+            user-select: none;
+        }

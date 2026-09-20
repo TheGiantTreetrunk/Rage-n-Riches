@@ -288,9 +288,12 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 3) {
-        document.getElementById("tracker").style.display = "";
-        document.getElementById("dr").style.display = "";
-        Core_Door_Randomizer(0);
+        //document.getElementById("tracker").style.display = "";
+        //document.getElementById("dr").style.display = "";
+        //Core_Door_Randomizer(0);
+        Core_Map_generateFloorData();
+        Core_Map_loadRoom(0);
+
     }
 
     if(comand == 4) {
