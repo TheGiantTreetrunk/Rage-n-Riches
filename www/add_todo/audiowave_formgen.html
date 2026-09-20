@@ -130,15 +130,18 @@
                 <select id="trackSelect">
                     <option value="dungeonTheme">Dungeon Theme (Low Bass Drone)</option>
                     <option value="treasureRoom">Treasure Room (Sparkling Major)</option>
-                                        <option value="regularBattle">enemy encounter (Fast & Driving)</option>
+                    <option value="regularBattle">enemy encounter (Fast & Driving)</option>
                     <option value="bossEncounter">Boss Encounter (Fast & Driving)</option>
-                                        <option value="dungeonExplorer">explore (Fast & Driving)</option>
-                                        <option value="wackyDungeon">merchant (Fast & Driving)</option>
-                                        <option value="dramaticDungeon">dramatic (Fast & Driving)</option>
-                                        <option value="redOctober">redoctober</option>
-                    <option value="ussrAnthem">USSR</option>
-                    <option value="sacredWar">Sacred War</option>
-                    <option value="auferstanden">Auferstanded</option>
+                    <option value="dungeonExplorer">explore (Fast & Driving)</option>
+                    <option value="wackyDungeon">merchant (Fast & Driving)</option>
+                    <option value="dramaticDungeon">dramatic (Fast & Driving)</option>
+                    <option value="redOctober">redoctober</option>
+					<option value="ussrAnthem">USSR</option>
+					<option value="sacredWar">Sacred War</option>
+					<option value="auferstanden">Auferstanded</option>
+					<option value="challengeVictory">victory</option>
+					<option value="youDied">death</option>
+					<option value="morningSunrise">sunrise</option>
                 </select>
                 <button id="loadPresetBtn" class="btn-action">Load into Editor</button>
             </div>
@@ -382,6 +385,74 @@ sounds.auferstanden = {
   voice3: {
     wave: "triangle",
     notes: ["D2", "D2", "D3", "F2", "G2", "D2", "A2", "D2", "A2", "A2", "A2", "D2", "D2", "F2", "A2", "D2"]
+  }
+};
+
+sounds.challengeVictory = {
+  tempo: 150,
+  voice1: {
+    wave: "square",
+    notes: ["C4", "E4", "G4", "C5", 0, "G4", "C5", "E5", "G5", 0, "E5", "G5", "C6", 0, "C6", 0]
+  },
+  voice2: {
+    wave: "square",
+    notes: ["G3", "C4", "E4", "G4", 0, "E4", "G4", "C5", "E5", 0, "C5", "E5", "G5", 0, "G5", 0]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["C3", 0, "C3", 0, "C3", "C3", 0, "C3", "C3", 0, "C3", 0, "C3", "C3", "C3", 0]
+  }
+};
+
+sounds.youDied = {
+  tempo: 60,
+  voice1: {
+    wave: "sawtooth",
+    notes: ["Eb4", "D4", "Db4", "C4", 0, "B3", 0, 0, "C4", 0, 0, 0, 0, 0, 0, 0]
+  },
+  voice2: {
+    wave: "square",
+    notes: ["C4", "B3", "Bb3", "A3", 0, "Ab3", 0, 0, "G3", 0, 0, 0, 0, 0, 0, 0]
+  },
+  voice3: {
+    wave: "sawtooth",
+    notes: ["C2", 0, "C2", 0, "C2", 0, "G1", 0, "C2", 0, 0, 0, 0, 0, 0, 0]
+  }
+};
+
+sounds.morningSunrise = {
+  tempo: 90,
+  voice1: {
+    wave: "sine",
+    notes: [
+      // Phrase 1: Sunrise Call
+      "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", "Fs5", "Gs5", "Fs5",
+      "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", "Fs5", "E5", 0,
+      
+      // Phrase 2: Ascending Answer
+      "E5", "Gs5", "B5", "E6", "Eb6", "Cs6", "B5", "Gs5", "E5", "Fs5", "Gs5", "Fs5",
+      "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", 0, "E5", 0
+    ]
+  },
+  voice2: {
+    wave: "triangle",
+    notes: [
+      // Gentle rolling accompaniment
+      "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
+      "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
+      "E4", 0, "A4", 0, "Cs5", 0, "A4", 0, "E4", 0, "A4", 0,
+      "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "E4", 0
+    ]
+  },
+  voice3: {
+    wave: "sine",
+    notes: [
+      // Low drone foundation
+      "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
+      "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
+      "A2", 0, 0, 0, "A2", 0, 0, 0, "A2", 0, 0, 0,
+      "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0
+    ]
   }
 };
 
