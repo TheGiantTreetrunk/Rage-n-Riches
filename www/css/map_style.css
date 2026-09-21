@@ -60,20 +60,20 @@
 
 .rb_st_vignette_wrapper {
     position: relative;
-    /* Tighter radial gradient that starts fading almost immediately */
+    /* Use an ellipse shape so the shadow stretches naturally along the isometric axes */
     background: radial-gradient(
-        circle, 
-        rgba(5, 5, 8, 0.98) 25%, 
-        rgba(5, 5, 8, 0.8) 50%, 
-        rgba(5, 5, 8, 0) 70%
+        ellipse 65% 55% at 50% 50%, 
+        rgba(3, 3, 5, 0.95) 30%, 
+        rgba(3, 3, 5, 0.6) 60%, 
+        rgba(3, 3, 5, 0) 85%
     );
-    border-radius: 30px; /* Softer rounded corners that match the grid footprint */
-    padding: 20px; /* Reduced padding to bring the shadow right up to the tiles */
+    padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: visible;
-    box-shadow: none;
+    /* Soft ambient shadow to lift the map slightly off the background pattern */
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
 }
 
         .rb_st_map_tile {

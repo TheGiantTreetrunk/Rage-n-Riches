@@ -10,12 +10,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="HandheldFriendly" content="true"/>
 
+        <script defer type="text/javascript" src="js/core_map.js"></script>
+        <script defer type="text/javascript" src="js/core_audio.js"></script>
         <link href='css/game_style.css?=v1.0' rel='stylesheet'>
         <link href='css/map_style.css?=v1.0' rel='stylesheet'>
         <script defer type="text/javascript" src="js/core.js"></script>
         <script defer type="text/javascript" src="js/quest_core.js"></script>
         <script defer type="text/javascript" src="js/text_adventure_core.js"></script>
-        <script defer type="text/javascript" src="js/core_map.js"></script>
+        
 		
 		<script src="js/index.js"></script>
     </head>
@@ -161,9 +163,9 @@
         </div>
 
         <div class="navbar">
-  <a href="#home" class="active">Home</a>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
+  <a href="#home" class="active"><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></a>
+  <a href="#news"><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></a>
+  <a href="#contact"><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></a>
 </div>
 
         <div id="wrld">
@@ -212,17 +214,6 @@
             
             <p id="dr_sc" style="text-align: center" class="text_shadow">You see a door, we should break it down...</p>
             <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
-            <center>
-                <table id="door_nav">
-                    <tr>
-                        <td><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></td>
-                        <td><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></td>
-                        <td><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></td>
-                        <td><button onclick="Engine_Hud(12)" class="icns nav_uix text_shadow story">t</button></td>
-                    </tr>
-                </table>
-            </center>
-            
             <hr>
         </div>
 

@@ -203,6 +203,9 @@ function Engine_Hud(comand) {
 
     if(comand == 1) {
 
+        audioEngine.setVolume(0.8);
+        audioEngine.loop("dungeonTheme");
+
         if(player.class != 0) {
 
             //player has died and is reloading...
@@ -295,6 +298,9 @@ function Engine_Hud(comand) {
         document.getElementById("wrld").style.display = "";
         Core_Map_generateFloorData();
         Core_Map_loadRoom(0);
+
+        audioEngine.stop();
+        audioEngine.loop("dungeonExplorer");
 
     }
 
