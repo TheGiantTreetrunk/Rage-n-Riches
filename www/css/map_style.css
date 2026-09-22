@@ -300,13 +300,13 @@
 /* Controls Overlay - Lifted higher to avoid navbar */
 #game-controls-overlay {
     position: absolute;
-    bottom: 130px; 
+    bottom: 110px; /* Balanced to clear mobile bottom navigation bars */
     left: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0 20px;
+    padding: 0 16px;
     box-sizing: border-box;
     pointer-events: none;
     z-index: 50;
@@ -322,6 +322,8 @@
     border: 3px solid #5c5c7a;
     box-shadow: inset 2px 2px 0px #42425c, inset -2px -2px 0px #1a1a26, 0 4px 0 rgba(0,0,0,0.5);
     text-transform: uppercase;
+    touch-action: manipulation; /* Eliminates mobile tap delay */
+    -webkit-tap-highlight-color: transparent;
     transition: transform 0.05s ease, background 0.05s ease;
 }
 
@@ -331,25 +333,25 @@
     background: #383852;
 }
 
-/* Clean 3x3 Grid Layout for the Diamond D-Pad */
+/* Compact 3x3 Grid Layout for the Diamond D-Pad */
 .dpad-container {
     display: grid;
-    grid-template-columns: repeat(3, 72px);
-    grid-template-rows: repeat(3, 72px);
-    gap: 12px;
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: repeat(3, 64px);
+    gap: 8px;
     align-items: center;
     justify-content: center;
 }
 
-/* Button Base Style */
+/* Button Base Style - Scaled slightly for better mobile thumb reach */
 .dpad-btn {
-    width: 72px;
-    height: 72px;
-    font-size: 26px;
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 /* Lock each diagonal button into the four corners of the grid */
@@ -373,20 +375,20 @@
     grid-row: 3;
 }
 
-/* Also scale up the Action buttons to match the larger D-pad */
+/* Action buttons container */
 .actions-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 8px; /* Aligns nicely with the D-pad height */
+    gap: 10px;
+    margin-bottom: 4px; 
 }
 
 /* Style for individual action buttons */
 .action-btn {
-    width: 90px;
-    height: 52px;
-    font-size: 12px;
-    border-radius: 8px;
+    width: 84px;
+    height: 48px;
+    font-size: 11px;
+    border-radius: 6px;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;

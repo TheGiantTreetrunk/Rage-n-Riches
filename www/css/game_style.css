@@ -198,17 +198,17 @@ button {
 
 .window_scenes_base1 {
     position: absolute;
-    top: 34%; /* Pulled much higher up the screen */
+    top: 32%; 
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 400px;
+    width: 95%;          /* Expanded width so the map and shadow aren't cut off */
+    max-width: 440px;    /* Slightly larger max-width to match */
     height: auto;
     max-height: 80vh;
-    overflow: hidden;
+    overflow: visible;   /* Changed from hidden so the drop-shadow isn't clipped */
     padding: 15px;
     box-sizing: border-box;
-    z-index: 100;
+    z-index: 10;         /* Kept lower than the controls */
 }
 
 .body_class_main_menu {
