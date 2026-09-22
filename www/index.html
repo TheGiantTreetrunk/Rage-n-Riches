@@ -162,11 +162,27 @@
             <hr>
         </div>
 
-        <div class="navbar">
-  <a href="#home" class="active"><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></a>
-  <a href="#news"><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></a>
-  <a href="#contact"><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></a>
-</div>
+        <div id="shrtct" class="navbar">
+            <a><button onclick="Engine_Hud(14)" class="icns nav_uix text_shadow inventory">)</button><p class="text_shadow" style="text-align: center">Stash</p></a>
+            <a><button onclick="Engine_Hud(15)" class="icns nav_uix text_shadow stats">@</button><p class="text_shadow" style="text-align: center">Stats</p></a>
+            <a><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></a>
+        </div>
+
+        <div id="game-controls-overlay">
+            <!-- Diagonal D-Pad (Bottom-Left) -->
+            <div class="dpad-container">
+                <button class="retro-btn dpad-btn" data-dir="up-left" aria-label="Up-Left">↖</button>
+                <button class="retro-btn dpad-btn" data-dir="up-right" aria-label="Up-Right">↗</button>
+                <button class="retro-btn dpad-btn" data-dir="down-left" aria-label="Down-Left">↙</button>
+                <button class="retro-btn dpad-btn" data-dir="down-right" aria-label="Down-Right">↘</button>
+            </div>
+
+            <!-- Action Buttons (Bottom-Right) -->
+            <div class="actions-container">
+                <button class="retro-btn action-btn" id="btn-smash">SMASH</button>
+                <button class="retro-btn action-btn" id="btn-search">SEARCH</button>
+            </div>
+        </div>
 
         <div id="wrld">
             <div id="rb_st_map_hud" style="display: none">

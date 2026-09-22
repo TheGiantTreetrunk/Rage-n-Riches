@@ -198,18 +198,17 @@ button {
 
 .window_scenes_base1 {
     position: absolute;
-    top: 50%;
+    top: 34%; /* Pulled much higher up the screen */
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
     max-width: 400px;
     height: auto;
-    max-height: 85vh;
-    overflow-y: auto;
+    max-height: 80vh;
+    overflow: hidden;
     padding: 15px;
     box-sizing: border-box;
     z-index: 100;
-    overflow: hidden;
 }
 
 .body_class_main_menu {
