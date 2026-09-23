@@ -17,7 +17,46 @@
             --door-offset-y: -6px;
         }
 
+        /* Vertical wrapper inside the viewport to stack score, map, and log */
+.rb_st_map_layout_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
 
+/* Shared Banner Style for Retro UI Feel */
+.rb_st_map_banner {
+    font-family: 'main';
+    background: #212626;
+    border: 2px solid #fff;
+    padding: 6px 14px;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+}
+
+/* Score Indicator (Above) */
+.rb_st_map_score_banner {
+    font-size: 0.95rem;
+    color: #ffffff;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Action Log Indicator (Below) */
+.rb_st_map_log_banner {
+    font-size: 0.85rem;
+    color: #ffffff;
+    text-shadow: 0 0 4px rgba(102, 252, 241, 0.4);
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: #ffffff;
+}
 
         #rb_st_map_hud {
             display: flex;
@@ -25,7 +64,7 @@
             margin-bottom: 10px;
             font-family: system-ui, sans-serif;
             font-size: 1.1rem;
-            color: #45a29e;
+            color: #ffffff;
         }
 
         #rb_st_map_instructions {
@@ -58,23 +97,23 @@
             background-color: transparent;
         }
 
-.rb_st_vignette_wrapper {
-    position: relative;
-    /* Use an ellipse shape so the shadow stretches naturally along the isometric axes */
-    background: radial-gradient(
-        ellipse 65% 55% at 50% 50%, 
-        rgba(3, 3, 5, 0.95) 30%, 
-        rgba(3, 3, 5, 0.6) 60%, 
-        rgba(3, 3, 5, 0) 85%
-    );
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: visible;
-    /* Soft ambient shadow to lift the map slightly off the background pattern */
-    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
-}
+        .rb_st_vignette_wrapper {
+            position: relative;
+            /* Use an ellipse shape so the shadow stretches naturally along the isometric axes */
+            background: radial-gradient(
+                ellipse 65% 55% at 50% 50%, 
+                rgba(3, 3, 5, 0.95) 30%, 
+                rgba(3, 3, 5, 0.6) 60%, 
+                rgba(3, 3, 5, 0) 85%
+            );
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            /* Soft ambient shadow to lift the map slightly off the background pattern */
+            filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
+        }
 
         .rb_st_map_tile {
             width: var(--cell-size);
@@ -147,6 +186,8 @@
             text-shadow: 0 0 8px rgba(224, 169, 109, 0.8);
             line-height: 1;
             user-select: none;
+            /* Added universal 3D upright transform so they pop up automatically */
+            transform: translateZ(14px) rotateZ(45deg) rotateX(-60deg) translateY(var(--door-offset-y));
         }
 
         .rb_st_map_door_locked {

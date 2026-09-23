@@ -195,13 +195,27 @@
                 Move: <b>W, A, S, D / Arrows</b> | Interact / Search / Knock: <b>Space / E</b>
             </div>
             <div id="rb_st_map_viewport" class="window_scenes_base1">
-                <div class="rb_st_vignette_wrapper">
-                    <!-- Your existing grid container goes here -->
-                    <div id="rb_st_map_game_board">
-                        <!-- tiles/characters -->
-                    </div>
+        <div class="rb_st_map_layout_wrapper">
+            
+            <!-- Score Indicator (Above Map View) -->
+            <div id="rb_st_map_score" class="rb_st_map_banner rb_st_map_score_banner">
+                Score: <span id="score-val">0</span>
+            </div>
+
+            <!-- Existing Map Vignette Wrapper -->
+            <div class="rb_st_vignette_wrapper">
+                <div id="rb_st_map_game_board">
+                    <!-- tiles/characters -->
                 </div>
             </div>
+
+            <!-- Action Log Indicator (Under Map View) -->
+            <div id="rb_st_map_action_log" class="rb_st_map_banner rb_st_map_log_banner">
+                You stepped into the room.
+            </div>
+
+        </div>
+    </div>
         </div>
 
         <div class="rb_dung_hud_tracker" id="tracker">
