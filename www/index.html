@@ -171,16 +171,16 @@
         <div id="game-controls-overlay">
             <!-- Diagonal D-Pad (Bottom-Left) -->
             <div class="dpad-container">
-                <button class="retro-btn dpad-btn" data-dir="up-left" aria-label="Up-Left">↖</button>
-                <button class="retro-btn dpad-btn" data-dir="up-right" aria-label="Up-Right">↗</button>
-                <button class="retro-btn dpad-btn" data-dir="down-left" aria-label="Down-Left">↙</button>
-                <button class="retro-btn dpad-btn" data-dir="down-right" aria-label="Down-Right">↘</button>
+                <button class="retro-btn dpad-btn" data-dir="up-left" aria-label="Up-Left" onclick="Core_Map_movePlayer(0, -1, 'NORTH')">↖</button>
+                <button class="retro-btn dpad-btn" data-dir="up-right" aria-label="Up-Right" onclick="Core_Map_movePlayer(1, 0, 'EAST')">↗</button>
+                <button class="retro-btn dpad-btn" data-dir="down-left" aria-label="Down-Left" onclick="Core_Map_movePlayer(-1, 0, 'WEST')">↙</button>
+                <button class="retro-btn dpad-btn" data-dir="down-right" aria-label="Down-Right" onclick="Core_Map_movePlayer(0, 1, 'SOUTH')">↘</button>
             </div>
 
             <!-- Action Buttons (Bottom-Right) -->
             <div class="actions-container">
                 <button class="retro-btn action-btn" id="btn-smash">SMASH</button>
-                <button class="retro-btn action-btn" id="btn-search">SEARCH</button>
+                <button class="retro-btn action-btn" id="btn-search" onclick="Core_Map_interact()">SEARCH</button>
             </div>
         </div>
 
