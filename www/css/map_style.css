@@ -22,40 +22,46 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 0px;
     width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
 }
 
 /* Shared Banner Style for Retro UI Feel */
 .rb_st_map_banner {
-    font-family: 'main';
+    font-family: 'main', monospace;
     background: #212626;
     border: 2px solid #fff;
-    padding: 6px 14px;
+    padding: 2px 6px;
     box-sizing: border-box;
-    width: 100%;
+    width: 65%; /* Tighter width to match the inner grid */
     text-align: center;
 }
 
 /* Score Indicator (Above) */
 .rb_st_map_score_banner {
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     color: #ffffff;
     text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
     letter-spacing: 1px;
     text-transform: uppercase;
+    margin-top: 4px;   /* Small buffer away from the top floor bar */
+    margin-bottom: -12px; /* Pulls it down to overlap the top of the dark vignette */
+    z-index: 20;
 }
 
-/* Action Log Indicator (Below) */
 .rb_st_map_log_banner {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     color: #ffffff;
     text-shadow: 0 0 4px rgba(102, 252, 241, 0.4);
-    min-height: 32px;
+    min-height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-color: #ffffff;
+    margin-top: -12px; /* Pulls it up to overlap the bottom of the dark vignette */
+    z-index: 20;
 }
 
         #rb_st_map_hud {
@@ -75,15 +81,15 @@
             text-align: center;
         }
 
-        #rb_st_map_viewport {
-            background: transparent; /* Let the board's own vignette handle the dark space */
-            border: none;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-        }
+#rb_st_map_viewport {
+    background: transparent;
+    border: none;
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
 
         #rb_st_map_game_board {
             font-family: 'DungeonFont', monospace;
@@ -97,23 +103,21 @@
             background-color: transparent;
         }
 
-        .rb_st_vignette_wrapper {
-            position: relative;
-            /* Use an ellipse shape so the shadow stretches naturally along the isometric axes */
-            background: radial-gradient(
-                ellipse 65% 55% at 50% 50%, 
-                rgba(3, 3, 5, 0.95) 30%, 
-                rgba(3, 3, 5, 0.6) 60%, 
-                rgba(3, 3, 5, 0) 85%
-            );
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: visible;
-            /* Soft ambient shadow to lift the map slightly off the background pattern */
-            filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
-        }
+.rb_st_vignette_wrapper {
+    position: relative;
+    background: radial-gradient(
+        ellipse 60% 50% at 50% 50%, 
+        rgba(3, 3, 5, 0.95) 30%, 
+        rgba(3, 3, 5, 0.6) 58%, 
+        rgba(3, 3, 5, 0) 80%
+    );
+    padding: 2px; /* Minimized padding so the gradient sits right against the grid bounds */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
+}
 
         .rb_st_map_tile {
             width: var(--cell-size);
