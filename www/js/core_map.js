@@ -142,7 +142,7 @@ const Core_Map_RoomPrefabs = {
     study: () => ({
         '1,1': { char: rb_cr_map_BOOKSHELF_CHAR, state: 'INTACT' },
         '1,2': { char: rb_cr_map_BOOKSHELF_CHAR, state: 'INTACT' },
-        '1,3': { char: rb_cr_map_BOOKSHELF_CHAR, state: 'INTACT' },
+        '1,4': { char: rb_cr_map_BOOKSHELF_CHAR, state: 'INTACT' },
         '3,3': { char: rb_cr_map_CHAIR_CHAR, state: 'INTACT' },
         '5,5': { char: rb_cr_map_LAMP_CHAR, state: 'INTACT' },
         '1,5': { char: rb_cr_map_GLOBE_CHAR, state: 'INTACT' },
@@ -174,7 +174,7 @@ function Core_Map_generateFloorData() {
         entryWall: null,
         forwardWall: firstExit,
         doors: { [firstExit]: { type: 'FORWARD', isLocked: false, targetRoom: 1 } },
-        items: { '3,3': { char: rb_cr_map_TORCH_CHAR, state: 'INTACT' } },
+        items: { '1,1': { char: rb_cr_map_TORCH_CHAR, state: 'INTACT' } },
         wallDecorations: Core_Map_generateWallDecorations(null, firstExit)
     };
     room1.pathTiles = Core_Map_generatePathsForRoom(room1.doors);

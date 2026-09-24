@@ -19,13 +19,15 @@
 
         /* Vertical wrapper inside the viewport to stack score, map, and log */
 .rb_st_map_layout_wrapper {
+    position: relative; /* Establishes a clean stacking context for absolute children */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0px;
+    gap: 6px;
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
+    z-index: 40; /* Lifts the entire map component stack above background layers */
 }
 
 /* Shared Banner Style for Retro UI Feel */
@@ -33,35 +35,54 @@
     font-family: 'main', monospace;
     background: #212626;
     border: 2px solid #fff;
-    padding: 2px 6px;
+    padding: 4px 10px;
     box-sizing: border-box;
-    width: 65%; /* Tighter width to match the inner grid */
     text-align: center;
 }
 
 /* Score Indicator (Above) */
+/* Score Indicator (Above) */
+/* Score Indicator (Above) */
 .rb_st_map_score_banner {
+    position: absolute;
+    top: 24px;
+    left: 53%; /* Nudges it slightly further right */
+    transform: translateX(-50%); 
+    width: 65%;
+    max-width: 220px;
     font-size: 0.75rem;
     color: #ffffff;
     text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-top: 4px;   /* Small buffer away from the top floor bar */
-    margin-bottom: -12px; /* Pulls it down to overlap the top of the dark vignette */
-    z-index: 20;
+    margin-bottom: 0px;
+    z-index: 50;
+    text-align: center;
+    box-sizing: border-box;
+    background: #212626;
+    border: 2px solid #fff;
+    padding: 4px 10px;
 }
 
 .rb_st_map_log_banner {
-    font-size: 0.7rem;
+    position: absolute;
+    bottom: 42px; /* Pushes it way up from the bottom of the vignette to overlap the lower grid tiles */
+    left: 50%;
+    transform: translateX(-50%); /* Keeps it perfectly centered horizontally */
+    width: 75%;
+    max-width: 240px;
+    font-size: 0.65rem;
     color: #ffffff;
+    background: rgba(33, 38, 38, 0.95);
+    border: 2px solid #ffffff;
     text-shadow: 0 0 4px rgba(102, 252, 241, 0.4);
-    min-height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-color: #ffffff;
-    margin-top: -12px; /* Pulls it up to overlap the bottom of the dark vignette */
-    z-index: 20;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 50;
+    max-height: 48px;
+    overflow-y: auto;
+    line-height: 1.2;
 }
 
         #rb_st_map_hud {
@@ -111,12 +132,13 @@
         rgba(3, 3, 5, 0.6) 58%, 
         rgba(3, 3, 5, 0) 80%
     );
-    padding: 2px; /* Minimized padding so the gradient sits right against the grid bounds */
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: visible;
     filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.7));
+    width: 100%;
 }
 
         .rb_st_map_tile {
