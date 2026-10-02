@@ -295,17 +295,15 @@ function Engine_Hud(comand) {
 
     if(comand == 3) {
         document.getElementById("tracker").style.display = "";
-        //document.getElementById("dr").style.display = "";
-        //Core_Door_Randomizer(0);
-        document.getElementById("wrld").style.display = "";
-        Core_Map_generateFloorData();
-        Core_Map_loadRoom(0);
+        document.getElementById("dr").style.display = "";
+        Core_Door_Randomizer(0);
+        //document.getElementById("wrld").style.display = "";
+        //Core_Map_generateFloorData();
+        //Core_Map_loadRoom(0);
         document.getElementById("shrtct").style.display = "";
-        document.getElementById("game-controls-overlay").style.display = "";
-
+        //document.getElementById("game-controls-overlay").style.display = "";
         audioEngine.stop();
         audioEngine.loop("dungeonExplorer");
-
     }
 
     if(comand == 4) {
@@ -497,7 +495,7 @@ function Core_Door_Randomizer(fun) {
             var door_scc = Math.floor(Math.random() * dr_sc_end.length);
             document.getElementById("dr_sc").innerHTML = dr_sc_end[door_scc];
             document.getElementById("dr_hp").innerHTML = "Hp: " + door_hp;
-            document.getElementById("dr_actual_door").innerHTML = "X";
+            document.getElementById("dr_actual_door").innerHTML = "K";
             document.getElementById("dr_actual_door").disabled = true;
             //alert("opening door!");
             var room_selection_ran = Math.floor(Math.random() * rooms_en.length);
