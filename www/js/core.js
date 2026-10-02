@@ -408,6 +408,7 @@ function Engine_Hud(comand) {
     if(comand == 18) {
         document.getElementById("tracker").style.display = "";
         document.getElementById("dr").style.display = "";
+        document.getElementById("shrtct").style.display = "";
         //Core_Door_Randomizer(0);
     }
 }
