@@ -297,11 +297,8 @@ function Engine_Hud(comand) {
         document.getElementById("tracker").style.display = "";
         document.getElementById("dr").style.display = "";
         Core_Door_Randomizer(0);
-        //document.getElementById("wrld").style.display = "";
-        //Core_Map_generateFloorData();
-        //Core_Map_loadRoom(0);
         document.getElementById("shrtct").style.display = "";
-        //document.getElementById("game-controls-overlay").style.display = "";
+        
         audioEngine.stop();
         audioEngine.loop("dungeonExplorer");
     }
@@ -404,10 +401,25 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 18) {
-        document.getElementById("tracker").style.display = "";
-        document.getElementById("dr").style.display = "";
-        document.getElementById("shrtct").style.display = "";
+
+        if(room_number == 1) {
+            document.getElementById("tracker").style.display = "";
+            document.getElementById("dr").style.display = "";
+            document.getElementById("shrtct").style.display = "";
+        } else {
+            document.getElementById("tracker").style.display = "";
+            document.getElementById("wrld").style.display = "";
+            document.getElementById("shrtct").style.display = "";
+            world_gen();
+        }
         //Core_Door_Randomizer(0);
+    }
+
+    if(comand == 19) {
+            document.getElementById("tracker").style.display = "";
+            document.getElementById("wrld").style.display = "";
+            document.getElementById("shrtct").style.display = "";
+            world_gen();
     }
 }
 var room_number = 0;

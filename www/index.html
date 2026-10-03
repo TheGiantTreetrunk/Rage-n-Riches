@@ -184,34 +184,6 @@
             </div>
         </div>
 
-        <div id="wrld">
-            <div id="rb_st_map_hud" style="display: none">
-            <div>Floor: <span id="ui-floor">1</span></div>
-            <div>Room: <span id="ui-room">1 / 6</span></div>
-            <div>Score: <span id="ui-score">0</span></div>
-            <div>Facing: <span id="ui-facing">SOUTH</span></div>
-            </div>
-            <div id="rb_st_map_instructions" style="display: none">
-                Move: <b>W, A, S, D / Arrows</b> | Interact / Search / Knock: <b>Space / E</b>
-            </div>
-            <div id="rb_st_map_viewport" class="window_scenes_base1">
-        <div class="rb_st_map_layout_wrapper">
-    <!-- Score Banner at the top -->
-    <div class="rb_st_map_banner rb_st_map_score_banner" id="rb_st_score_display">SCORE: 0</div>
-    
-    <!-- Map Viewport with Floating Log Inside -->
-    <div id="rb_st_map_viewport">
-        <div class="rb_st_vignette_wrapper">
-            <div id="rb_st_map_game_board"></div>
-            
-            <!-- Floating Action Log Banner anchored over the bottom of the map -->
-            <div class="rb_st_map_banner rb_st_map_log_banner" id="rb_st_map_log">Entered Room 1.</div>
-        </div>
-    </div>
-</div>
-    </div>
-        </div>
-
         <div class="rb_dung_hud_tracker" id="tracker">
             <div class="rb_dung_hud_node icns" id="room_1_id">?</div>
             <div class="rb_dung_hud_connector"></div>
@@ -226,6 +198,15 @@
             <div class="rb_dung_hud_node icns" id="room_5_id">?</div>
             <div class="rb_dung_hud_connector"></div>
             <div class="rb_dung_hud_node icns" id="room_6_id">?</div>
+        </div>
+
+        <div id="wrld" class="window_scenes_base">
+            <hr>
+            <h2>Dungeon</h2>
+            <br>
+            <p id="map" class="icns"></p>
+            <br>
+            <button onclick="">Door Action 'Temp'</button>
         </div>
  
         <div id="dr" class="window_scenes_base">
