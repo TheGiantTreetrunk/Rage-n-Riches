@@ -88,112 +88,40 @@
     color: #04AA6D;
 }
 
-/* Controls Overlay - Lifted higher to avoid navbar */
-#game-controls-overlay {
-    position: absolute;
-    bottom: 110px; /* Balanced to clear mobile bottom navigation bars */
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 16px;
-    box-sizing: border-box;
-    pointer-events: none;
-    z-index: 50;
+.gamepad-container {
+  justify-content: center;
+  align-items: center;
 }
 
-#game-controls-overlay button {
-    pointer-events: auto;
-    cursor: pointer;
-    font-family: monospace;
-    font-weight: bold;
-    color: #fff;
-    background: #2b2b3d;
-    border: 3px solid #5c5c7a;
-    box-shadow: inset 2px 2px 0px #42425c, inset -2px -2px 0px #1a1a26, 0 4px 0 rgba(0,0,0,0.5);
-    text-transform: uppercase;
-    touch-action: manipulation; /* Eliminates mobile tap delay */
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 0.05s ease, background 0.05s ease;
+/* Ensure table cells align nicely and don't shrink */
+.gamepad-table td {
+  text-align: center;
+  vertical-align: middle;
+  width: 60px;
+  height: 60px;
+  padding: 0;
 }
 
-#game-controls-overlay button:active {
-    transform: translateY(2px);
-    box-shadow: inset 2px 2px 0px #1a1a26, inset -2px -2px 0px #42425c, 0 2px 0 rgba(0,0,0,0.5);
-    background: #383852;
+/* Square buttons for the gamepad */
+button.gamepad-btn {
+  width: 50px;
+  height: 50px;
+  line-height: 46px; /* Aligns arrow text vertically */
+  padding: 0;
+  margin: 0;
+  border-radius: 6px; /* Optional: gives a slight retro game controller feel */
 }
 
-/* Compact 3x3 Grid Layout for the Diamond D-Pad */
-.dpad-container {
-    display: grid;
-    grid-template-columns: repeat(3, 64px);
-    grid-template-rows: repeat(3, 64px);
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
+/* Action buttons (Search / Smash) if text needs auto-width or smaller font */
+button.gamepad-btn.action-btn {
+  width: auto;
+  min-width: 60px;
+  padding: 0 8px;
+  font-size: 12px;
 }
 
-/* Button Base Style - Scaled slightly for better mobile thumb reach */
-.dpad-btn {
-    width: 64px;
-    height: 64px;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
+/* Interactive click effect */
+button.gamepad-btn:active {
+  box-shadow: 2px 3px #000000;
+  transform: translateY(2px);
 }
-
-/* Lock each diagonal button into the four corners of the grid */
-.dpad-btn[data-dir="up-left"] {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.dpad-btn[data-dir="down-left"] {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.dpad-btn[data-dir="up-right"] {
-    grid-column: 3;
-    grid-row: 2;
-}
-
-.dpad-btn[data-dir="down-right"] {
-    grid-column: 2;
-    grid-row: 3;
-}
-
-/* Action buttons container */
-.actions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 4px; 
-}
-
-/* Style for individual action buttons */
-.action-btn {
-    width: 84px;
-    height: 48px;
-    font-size: 11px;
-    border-radius: 6px;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#btn-smash {
-    border-color: #8b3a3a;
-    background: #522525;
-}
-#btn-smash:active { background: #6b3030; }
-
-#btn-search {
-    border-color: #3a6b8b;
-    background: #254052;
-}
-#btn-search:active { background: #30546b; }

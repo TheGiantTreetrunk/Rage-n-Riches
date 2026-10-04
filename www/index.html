@@ -208,9 +208,36 @@
             <hr>
             <h2>Dungeon</h2>
             <br>
-            <table id="map" class="icns"></table>
+            <table id="map" class="icns" style="text-align: center; vertical-align: middle;"></table>
             <br>
-            <button onclick="">Door Action 'Temp'</button>
+            <br>
+            <br>
+            <div class="gamepad-container">
+            <table class="gamepad-table">
+            <tr>
+                <td></td>
+                <td><button class="gamepad-btn" onclick="movePlayer(0, -1, 'up')">▲</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="gamepad-btn action-btn" onclick="actionSearch()">Search</button></td>
+            </tr>
+            <tr>
+                <td><button class="gamepad-btn" onclick="movePlayer(-1, 0, 'left')">◀</button></td>
+                <td></td>
+                <td><button class="gamepad-btn" onclick="movePlayer(1, 0, 'right')">▶</button></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button class="gamepad-btn" onclick="movePlayer(0, 1, 'down')">▼</button></td>
+                <td></td>
+                <td></td>
+                <td><button class="gamepad-btn action-btn" onclick="actionBreak()">Smash</button></td>
+            </tr>
+            </table>
+        </div>
+            <hr>
         </div>
  
         <div id="dr" class="window_scenes_base">
