@@ -3,7 +3,7 @@ var floor_number = 1;
 var floor_tally = 0;
 var rooms_en = ["Merchant","BS","RPS","FAC","WAM","BS","PLGDR","HP","TR","BS"];
 
-var room_entrd = ["X","X","X","X","X","X","X"];
+var room_entrd = [":",":",":",":",":",":",":"];
 
 var dr_sc_opt = ["You see a door, we should break it down...","BREAK THE DOOR DOWN!","I bet ya a gold you cant break that door down...","Maybe we should knock on that door?"];
 var dr_sc_end = ["Welp, we broke it","I TOLD YOU TO KNOCK NICELY!","QUICK ROB THE PLACE!","FBI OPEN UP!","Stealth is optional at this point..."]
@@ -83,6 +83,7 @@ function Core_Door_Randomizer(fun) {
         }
 
         if(door_hp <= 0) {
+            room_entrd[room_number] = "K";
             door_hp = 0;
             var door_scc = Math.floor(Math.random() * dr_sc_end.length);
             document.getElementById("dr_sc").innerHTML = dr_sc_end[door_scc];
