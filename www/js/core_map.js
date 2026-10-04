@@ -1,6 +1,7 @@
 // --- Character Keys ---
 const rb_cr_map_TORCH_CHAR = 'Z';
 const rb_cr_map_DOOR_CHAR = ':';
+const rb_cr_map_BRKN_DOOR_CHAR = 'K';
 const rb_cr_map_FOUNTAIN_CHAR = 'g';
 const rb_cr_map_WATER_CHAR = 'D';
 const rb_cr_map_GRASS_CHAR = 'o';
