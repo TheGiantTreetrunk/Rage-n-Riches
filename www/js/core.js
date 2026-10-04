@@ -78,7 +78,6 @@ function Engine_Hud(comand) {
     document.getElementById("fclr").style.display = "none";
     document.getElementById("sc_story_line").style.display = "none";
     document.getElementById("shrtct").style.display = "none";
-    document.getElementById("game-controls-overlay").style.display = "none";
 
     document.getElementById("sc_dr_inv").style.display = "none";
     document.getElementById("sc_dr_sts").style.display = "none";

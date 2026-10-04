@@ -35,11 +35,12 @@
 
 .rb_st_map_item_throne         { color: #ffd700; text-shadow: 0 0 16px rgba(255, 215, 0, 0.95); font-weight: bold; }
 
-.rb_st_map_item_toilet { 
-    color: #e0e0e0; 
-    text-shadow: 0 0 10px rgba(0, 180, 216, 0.9); 
-    font-weight: bold; 
-}
+.rb_st_map_item_toilet         { color: #e0e0e0; text-shadow: 0 0 10px rgba(0, 180, 216, 0.9); font-weight: bold; }
+
+.rb_st_map_item_door           { color: #835a02;}
+.rb_st_map_item_broken_door    { color: #835a02;}
+.rb_st_map_item_brick          { color: #a9a9a9;}
+.rb_st_map_item_floor          { color: #918f8f;}
 
 .navbar {
     overflow: hidden;
@@ -124,4 +125,32 @@ button.gamepad-btn.action-btn {
 button.gamepad-btn:active {
   box-shadow: 2px 3px #000000;
   transform: translateY(2px);
+}
+
+#map td {
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  box-sizing: border-box;
+  
+  /* Allocate border space on ALL tiles so adding a visible border never warps the grid */
+  border: 3px solid transparent; 
+}
+
+/* Directional indicator overlays for the player cell */
+#map td.facing-up {
+  border-top-color: #ffcc00;
+}
+
+#map td.facing-down {
+  border-bottom-color: #ffcc00;
+}
+
+#map td.facing-left {
+  border-left-color: #ffcc00;
+}
+
+#map td.facing-right {
+  border-right-color: #ffcc00;
 }

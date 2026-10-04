@@ -212,9 +212,9 @@ button {
 }
 
 .body_class_main_menu {
-    background-color: #2a2a2b;
+    background-color: #212626;
 	font-family: 'main';
-    border: 8px solid #45494d;
+    border: 8px solid #636262;
     border-style: dashed;
 }
 
@@ -667,14 +667,26 @@ td.tavern, th.tavern {
 .rb_dung_hud_tracker {
     display: flex;
     align-items: center;
+    justify-content: center; /* Centers the inner node chain */
     gap: 8px;
     padding: 12px 8px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--rb_dung_hud_border);
-    box-shadow: 5px 8px #000000;
     background-color: #212626;
-    width: fit-content;
-    margin: 0 auto;
+    
+    /* Fixed Positioning at Top */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; /* Prevents overflow with padding */
+    z-index: 100;
+    
+    /* Bottom-Only Border Matching Navbar */
+    border: none;
+    border-bottom: 2px solid var(--rb_dung_hud_border, #ffffff);
+    
+    /* Drop redundant background/margin/box-shadow rules */
+    margin: 0;
+    box-shadow: none; 
 }
 
 .rb_dung_hud_banner {

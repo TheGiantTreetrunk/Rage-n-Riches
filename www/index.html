@@ -79,7 +79,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.400 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.404 alpha test</p>
             <hr>
         </div>
 
@@ -172,36 +172,20 @@
             <a><button onclick="Engine_Hud(16)" class="icns nav_uix text_shadow story">#</button><p class="text_shadow" style="text-align: center">Quests</p></a>
         </div>
 
-        <div id="game-controls-overlay">
-            <!-- Diagonal D-Pad (Bottom-Left) -->
-            <div class="dpad-container">
-                <button class="retro-btn dpad-btn" data-dir="up-left" aria-label="Up-Left" onclick="Core_Map_movePlayer(0, -1, 'NORTH')">↖</button>
-                <button class="retro-btn dpad-btn" data-dir="up-right" aria-label="Up-Right" onclick="Core_Map_movePlayer(1, 0, 'EAST')">↗</button>
-                <button class="retro-btn dpad-btn" data-dir="down-left" aria-label="Down-Left" onclick="Core_Map_movePlayer(-1, 0, 'WEST')">↙</button>
-                <button class="retro-btn dpad-btn" data-dir="down-right" aria-label="Down-Right" onclick="Core_Map_movePlayer(0, 1, 'SOUTH')">↘</button>
-            </div>
-
-            <!-- Action Buttons (Bottom-Right) -->
-            <div class="actions-container">
-                <button class="retro-btn action-btn" id="btn-smash">SMASH</button>
-                <button class="retro-btn action-btn" id="btn-search" onclick="Core_Map_interact()">SEARCH</button>
-            </div>
-        </div>
-
         <div class="rb_dung_hud_tracker" id="tracker">
-            <div class="rb_dung_hud_node icns" id="room_1_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_1_id">:</div>
             <div class="rb_dung_hud_connector"></div>
-            <div class="rb_dung_hud_node icns" id="room_2_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_2_id">:</div>
             <div class="rb_dung_hud_connector"></div>
-            <div class="rb_dung_hud_node icns" id="room_3_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_3_id">:</div>
 
             <div class="rb_dung_hud_banner" id="room_floor_tracker">Floor 1-3</div>
 
-            <div class="rb_dung_hud_node icns" id="room_4_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_4_id">:</div>
             <div class="rb_dung_hud_connector"></div>
-            <div class="rb_dung_hud_node icns" id="room_5_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_5_id">:</div>
             <div class="rb_dung_hud_connector"></div>
-            <div class="rb_dung_hud_node icns" id="room_6_id">?</div>
+            <div class="rb_dung_hud_node icns" id="room_6_id">:</div>
         </div>
 
         <div id="wrld" class="window_scenes_base">
@@ -250,7 +234,6 @@
             
             <p id="dr_sc" style="text-align: center" class="text_shadow">You see a door, we should break it down...</p>
             <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
-            <button onclick="Engine_Hud(19)">map Action 'Temp'</button>
             <hr>
         </div>
 

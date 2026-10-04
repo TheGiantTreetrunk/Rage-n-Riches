@@ -38,6 +38,39 @@ const rb_cr_map_BANNER_WALL_CHAR = 'h';
 const rb_cr_map_CRUSHED_PATH = 'O';
 const rb_cr_map_BRICK = '#';
 
+const TILE_STYLE_MAP = {
+  [rb_cr_map_TORCH_CHAR]: "rb_st_map_item_torch",
+  [rb_cr_map_ROCK_CHAR]: "rb_st_map_item_rock",
+  [rb_cr_map_BOSS_CHAR]: "rb_st_map_item_boss",
+  [rb_cr_map_MERCHANT_CHAR]: "rb_st_map_item_merchant",
+  [rb_cr_map_FOUNTAIN_CHAR]: "rb_st_map_item_fountain",
+  [rb_cr_map_GRASS_CHAR]: "rb_st_map_item_grass",
+  [rb_cr_map_TREE_1_CHAR]: "rb_st_map_item_tree",
+  [rb_cr_map_TREE_2_CHAR]: "rb_st_map_item_tree",
+  [rb_cr_map_TREE_3_CHAR]: "rb_st_map_item_tree",
+  [rb_cr_map_TRAP_CHAR]: "rb_st_map_item_trap",
+  [rb_cr_map_BOOKSHELF_CHAR]: "rb_st_map_item_bookshelf",
+  [rb_cr_map_WARDROBE_CHAR]: "rb_st_map_item_wardrobe",
+  [rb_cr_map_BELLPOST_CHAR]: "rb_st_map_item_bellpost",
+  [rb_cr_map_CHAIR_CHAR]: "rb_st_map_item_chair",
+  [rb_cr_map_THRONE_CHAR]: "rb_st_map_item_throne",
+  [rb_cr_map_LAMP_CHAR]: "rb_st_map_item_lamp",
+  [rb_cr_map_GLOBE_CHAR]: "rb_st_map_item_globe",
+  [rb_cr_map_TABLE_CHAR]: "rb_st_map_item_table",
+  [rb_cr_map_ALCHEMIST_TABLE_CHAR]: "rb_st_map_item_alchemist_table",
+  [rb_cr_map_DRESSER_CHAR]: "rb_st_map_item_dresser",
+  [rb_cr_map_FIREPLACE_CHAR]: "rb_st_map_item_fireplace",
+  [rb_cr_map_VASE_TABLE_CHAR]: "rb_st_map_item_table_vase",
+  [rb_cr_map_CRATE_CHAR]: "rb_st_map_item_crate",
+  [rb_cr_map_BARREL_CHAR]: "rb_st_map_item_barrel",
+  [rb_cr_map_COBWEB_CHAR]: "rb_st_map_item_cobweb",
+  [rb_cr_map_TOILET_CHAR]: "rb_st_map_item_toilet",
+  [rb_cr_map_DOOR_CHAR]: "rb_st_map_item_door",
+  [rb_cr_map_BRKN_DOOR_CHAR]: "rb_st_map_item_broken_door",
+  [rb_cr_map_BRICK]: "rb_st_map_item_brick",
+  [rb_cr_map_CRUSHED_PATH]: "rb_st_map_item_floor"
+};
+
 var map = [
     rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
 	rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRATE_CHAR,rb_cr_map_BRICK,
@@ -61,7 +94,6 @@ function world_gen() {
   let currentRow = document.createElement("tr");
 
   for (let i = 0; i < map.length; i++) {
-    // Determine 2D coordinates for index 'i'
     const tileX = i % rowWidth;
     const tileY = Math.floor(i / rowWidth);
 
@@ -71,13 +103,27 @@ function world_gen() {
     }
 
     const cell = document.createElement("td");
+    const tileChar = map[i];
 
     // Check if player position matches current tile coordinates
     if (tileX === rb_player.x && tileY === rb_player.y) {
       cell.textContent = rb_player.icon;
-      cell.classList.add("player-cell"); // Optional styling handle
+      cell.classList.add("player-cell");
+      cell.classList.add("facing-" + rb_player.dir);
+
+      // Get class color string (e.g., "white", "red", "purple") from class_colors array
+      // Default to class_colors[0] ("white") if player.class is undefined
+      const playerColorClass = class_colors[player.class] || class_colors[0];
+      
+      // Apply class color (DO NOT apply TILE_STYLE_MAP[tileChar])
+      cell.classList.add(playerColorClass);
     } else {
-      cell.textContent = map[i];
+      cell.textContent = tileChar;
+
+      // Apply standard map tile styling if it exists in the map
+      if (TILE_STYLE_MAP[tileChar]) {
+        cell.classList.add(TILE_STYLE_MAP[tileChar]);
+      }
     }
 
     currentRow.appendChild(cell);
