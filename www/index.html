@@ -208,7 +208,7 @@
             <hr>
             <h2>Dungeon</h2>
             <br>
-            <p id="map" class="icns"></p>
+            <table id="map" class="icns"></table>
             <br>
             <button onclick="">Door Action 'Temp'</button>
         </div>
@@ -223,6 +223,7 @@
             
             <p id="dr_sc" style="text-align: center" class="text_shadow">You see a door, we should break it down...</p>
             <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
+            <button onclick="Engine_Hud(19)">map Action 'Temp'</button>
             <hr>
         </div>
 
@@ -864,16 +865,6 @@
             document.getElementById('rb_wp_th_fog2').style.backgroundImage = `url(${TextureGenerators.fog(6.8)})`;
 
             //Core_Env_Updater('rock', false);
-
-            window.addEventListener('keydown', (e) => {
-                switch (e.key) {
-                    case 'ArrowUp':    case 'w': case 'W': Core_Map_movePlayer(0, -1, 'NORTH'); break;
-                    case 'ArrowDown':  case 's': case 'S': Core_Map_movePlayer(0, 1, 'SOUTH');  break;
-                    case 'ArrowLeft':  case 'a': case 'A': Core_Map_movePlayer(-1, 0, 'WEST');  break;
-                    case 'ArrowRight': case 'd': case 'D': Core_Map_movePlayer(1, 0, 'EAST');  break;
-                    case ' ':          case 'e': case 'E': Core_Map_interact();                break;
-                }
-            });
         </script>
 
 
