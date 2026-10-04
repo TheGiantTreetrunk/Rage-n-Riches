@@ -233,8 +233,9 @@ function actionInteract() {
     const currentTile = map[targetIdx];
 
     if (currentTile === rb_cr_map_DOOR_CHAR) {
-      // Example: Open door by turning it into a broken door or path
-      map[targetIdx] = rb_cr_map_BRKN_DOOR_CHAR;
+      
+      //activate the next door view
+      Engine_Hud(3);
       world_gen();
     } else if (currentTile === rb_cr_map_BOSS_CHAR) {
       // Example: Trigger boss fight logic here

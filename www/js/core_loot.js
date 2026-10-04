@@ -14,6 +14,10 @@ function Core_Loot_Randomizer() {
     document.getElementById("chest_2").disabled = false;
     document.getElementById("chest_3").disabled = false;
 
+    document.getElementById("chest_1").innerHTML = "(";
+    document.getElementById("chest_2").innerHTML = "(";
+    document.getElementById("chest_3").innerHTML = "(";
+
     //encounter_outcome
     if(encounter_outcome == 0) {
         document.getElementById("loot_selection").style.display = "none";

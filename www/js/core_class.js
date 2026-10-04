@@ -20,6 +20,11 @@ var class_health = [0, 15, 18, 8,  15, 12, 10];
 var class_damage = [0, 6,  5,  7,  3,  5,  9];
 var class_armor  = [0, 12, 18, 0,  8,  5,  3];
 
+var class_light_attk_speed  = [1000, 1500, 1800, 1300, 1600, 1100, 2200];
+var class_heavy_attk_speed  = [1500, 2600, 3000, 2200, 2500, 1900, 3500];
+var class_armor_attk_speed  = [1000, 1800, 2200, 1400, 1600, 1200, 2000];
+var class_health_heal_speed = [1000, 2000, 2400, 1800, 1200, 1600, 2800];
+
 var class_unique_weapon = ["None", "Zweihandler", "Long Sword", "Chemicals", "Mace", "Long Bow", "Mortar"];
 var class_unique_armor  = ["None", "Field Plate", "Gothic Plate", "Simple Clothes", "Brigandine", "Leather Coat", "Heavy Canvas"];
 var class_unique_shield = ["None", "None", "Kite", "None", "Heater", "None", "None"];

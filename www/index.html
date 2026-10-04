@@ -240,7 +240,7 @@
         <div id="bs" class="window_scenes_base">
             <hr>
             <h2 style="text-align: center;" class="text_shadow">BATTLE</h2>
-            <p id="en_bs_sc" class="text_shadow">You come across a 'enemy' they look mad...</p>
+            <p id="en_bs_sc" class="text_shadow" style="text-align: center;">You come across a 'enemy' they look mad...</p>
             <br>
             <table style="width: 100%; table-layout: fixed; text-align: center;">
                 <tr>
@@ -259,11 +259,11 @@
 
             <br>
             <div id="combat_books" class="combat_book">
-                <button class="book_action text_shadow" onclick="">Light Hit</button>
-                <button class="book_action text_shadow" onclick="">Heavy Hit</button>
+                <button class="book_action text_shadow" onclick="Core_Player_Light_Attack()">Light Hit</button>
+                <button class="book_action text_shadow" onclick="Core_Player_Heavy_Attack()">Heavy Hit</button>
 
-                <button class="book_action text_shadow" onclick="">Armour Up</button>
-                <button class="book_action text_shadow" onclick="">Heal Up</button>
+                <button class="book_action text_shadow" onclick="Core_Player_Armor_Buff()">Armour Up</button>
+                <button class="book_action text_shadow" onclick="Core_Player_Health_Heal()">Heal Up</button>
             </div>
 
             
@@ -498,7 +498,7 @@
             </div>
             <div id="end_of_end">
                 <center>
-                    <button class="en_uix_button" onclick="Engine_Hud(3)">continue</button>
+                    <button class="en_uix_button" onclick="Engine_Hud(19)">continue</button>
                 </center>
                 
             </div>
@@ -517,8 +517,8 @@
 
         <div id="eg" class="window_scenes_base">
             <hr>
-            <h3 id="eg_title" style="text-align: center;">Victory / Defeat Condition</h3>
-            <p id="eg_sc" style="text-align: center;">Window for showing either a game over or a game won</p>
+            <h3 id="eg_title" style="text-align: center;">Game Over</h3>
+            <p id="eg_sc" style="text-align: center;">Another Hero fallen in battle...</p>
             <br>
             <p id="eg_plyr_scr" style="text-align: center;">shows the players score</p>
             <button class="en_uix_button" onclick="Engine_Hud(1)">continue</button>

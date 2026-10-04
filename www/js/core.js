@@ -1,5 +1,6 @@
 var is_dev = 1;
 var rb_core_score = 0;
+var rb_core_has_completed_first_flr_cmbt = 0;
 
 function Start() {
 
@@ -324,7 +325,7 @@ function Engine_Hud(comand) {
 
     if(comand == 18) {
 
-        if(room_number == 1) {
+        if(rb_core_has_completed_first_flr_cmbt == 0) {
             document.getElementById("tracker").style.display = "";
             document.getElementById("dr").style.display = "";
             document.getElementById("shrtct").style.display = "";
