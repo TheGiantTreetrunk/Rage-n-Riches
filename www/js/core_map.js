@@ -71,26 +71,106 @@ const TILE_STYLE_MAP = {
   [rb_cr_map_CRUSHED_PATH]: "rb_st_map_item_floor"
 };
 
-var map = [
-    rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
-	rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRATE_CHAR,rb_cr_map_BRICK,
-	rb_cr_map_BRICK,rb_cr_map_LAMP_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRATE_CHAR,rb_cr_map_BRICK,
-	rb_cr_map_BRICK,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRATE_CHAR,rb_cr_map_BRICK,
-	rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK
+var room_prefab = [
+  /*Simple Room*/[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /*Toilet Room*/[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /*Default Room*/[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_FIREPLACE_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /*Garden*/[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_TREE_2_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_GRASS_CHAR,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_GRASS_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_GRASS_CHAR,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_GRASS_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_TREE_3_CHAR,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK]
 ];
+
+// --- Dungeon & Room Generation State ---
+var currentRoomIndex = 1; // Active room (1 to 5; 0 is entry backtrack, 6 is boss)
+var roomCleared = {
+  0: true,
+  1: true,
+  2: true,
+  3: true,
+  4: true,
+  5: true,
+  6: true
+};
+
+var room_tracker = [[], [], [], [], [], [], []];
+var map = [];
+
+// Room variables maintained for global reference
+var room0 = [];
+var room1 = [];
+var room2 = [];
+var room3 = [];
+var room4 = [];
+var room5 = [];
+var room6 = [];
+
+function initDungeonRooms() {
+  // room0: Backtrack room layout
+  room_tracker[0] = [...room_prefab[0]];
+
+  // Generate rooms 1 through 5 from prefabs
+  for (let i = 1; i <= 5; i++) {
+    const randomPrefabIdx = Math.floor(Math.random() * room_prefab.length);
+    room_tracker[i] = [...room_prefab[randomPrefabIdx]];
+  }
+
+  // room6: Custom Boss room layout
+  room_tracker[6] = [
+    rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK,
+    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_BOSS_CHAR, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
+    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
+    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
+    rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK
+  ];
+
+  // Assign global room references
+  room0 = room_tracker[0];
+  room1 = room_tracker[1];
+  room2 = room_tracker[2];
+  room3 = room_tracker[3];
+  room4 = room_tracker[4];
+  room5 = room_tracker[5];
+  room6 = room_tracker[6];
+
+  // Set initial map state to room1
+  map = [...room_tracker[currentRoomIndex]];
+}
 
 var rb_player = {
   x: 2,
   y: 2,
   icon: "@",
-  dir: "down" // Stores last direction moved/looked: "up", "down", "left", "right"
+  dir: "down"
 };
+
+const MAP_WIDTH = 5;
+const MAP_HEIGHT = 5;
 
 function world_gen() {
   const table = document.getElementById("map");
+  if (!table) return;
+  
   table.replaceChildren();
 
-  const rowWidth = 5;
+  const rowWidth = MAP_WIDTH;
   let currentRow = document.createElement("tr");
 
   for (let i = 0; i < map.length; i++) {
@@ -105,22 +185,19 @@ function world_gen() {
     const cell = document.createElement("td");
     const tileChar = map[i];
 
-    // Check if player position matches current tile coordinates
     if (tileX === rb_player.x && tileY === rb_player.y) {
       cell.textContent = rb_player.icon;
       cell.classList.add("player-cell");
       cell.classList.add("facing-" + rb_player.dir);
 
-      // Get class color string (e.g., "white", "red", "purple") from class_colors array
-      // Default to class_colors[0] ("white") if player.class is undefined
-      const playerColorClass = class_colors[player.class] || class_colors[0];
+      const playerColorClass = (typeof class_colors !== 'undefined' && typeof player !== 'undefined' && class_colors[player.class]) 
+        ? class_colors[player.class] 
+        : "white";
       
-      // Apply class color (DO NOT apply TILE_STYLE_MAP[tileChar])
       cell.classList.add(playerColorClass);
     } else {
       cell.textContent = tileChar;
 
-      // Apply standard map tile styling if it exists in the map
       if (TILE_STYLE_MAP[tileChar]) {
         cell.classList.add(TILE_STYLE_MAP[tileChar]);
       }
@@ -134,23 +211,17 @@ function world_gen() {
   }
 }
 
-const MAP_WIDTH = 5;
-const MAP_HEIGHT = Math.ceil(map.length / MAP_WIDTH);
-
-// 1. Movement & Collision
+// --- Movement & Boundaries ---
 function movePlayer(dx, dy, dirName) {
-  // Always update the facing direction, even if blocked by a wall
   rb_player.dir = dirName;
 
   const targetX = rb_player.x + dx;
   const targetY = rb_player.y + dy;
 
-  // Boundary check
   if (targetX >= 0 && targetX < MAP_WIDTH && targetY >= 0 && targetY < MAP_HEIGHT) {
     const targetIndex = targetY * MAP_WIDTH + targetX;
     const targetTile = map[targetIndex];
 
-    // Walkable only if it's a crushed path or a rock
     const isWalkable = (targetTile === rb_cr_map_CRUSHED_PATH || targetTile === rb_cr_map_ROCK_CHAR);
 
     if (isWalkable) {
@@ -159,11 +230,9 @@ function movePlayer(dx, dy, dirName) {
     }
   }
 
-  // Re-render to reflect move/facing change
   world_gen();
 }
 
-// Helper: Get target tile index in front of player based on current direction
 function getTargetIndexInFront() {
   let targetX = rb_player.x;
   let targetY = rb_player.y;
@@ -173,7 +242,6 @@ function getTargetIndexInFront() {
   else if (rb_player.dir === "left") targetX -= 1;
   else if (rb_player.dir === "right") targetX += 1;
 
-  // Out of bounds safety check
   if (targetX < 0 || targetX >= MAP_WIDTH || targetY < 0 || targetY >= MAP_HEIGHT) {
     return -1;
   }
@@ -190,31 +258,42 @@ function isIndestructible(tile) {
   );
 }
 
-// 2. Search Action: Replaces breakable objects with a crushed path
-function actionSearch() {
-  const targetIdx = getTargetIndexInFront();
-  if (targetIdx !== -1) {
-    const currentTile = map[targetIdx];
-    
-    // Cannot search empty path, rocks, or indestructible structures
-    if (
-      currentTile !== rb_cr_map_CRUSHED_PATH &&
-      currentTile !== rb_cr_map_ROCK_CHAR &&
-      !isIndestructible(currentTile)
-    ) {
-      map[targetIdx] = rb_cr_map_CRUSHED_PATH;
-      world_gen();
+// --- Room Navigation ---
+function transitionRoom(direction) {
+  // Save modifications to current room before swapping maps
+  room_tracker[currentRoomIndex] = [...map];
+
+  if (direction === "forward") {
+    if (currentRoomIndex < 6) {
+      currentRoomIndex++;
+      map = [...room_tracker[currentRoomIndex]];
+      
+      // Spawn at bottom broken door facing up
+      rb_player.x = 2;
+      rb_player.y = 3;
+      rb_player.dir = "up";
+    }
+  } else if (direction === "backward") {
+    if (currentRoomIndex > 0) {
+      currentRoomIndex--;
+      map = [...room_tracker[currentRoomIndex]];
+      
+      // Spawn at top door facing down
+      rb_player.x = 2;
+      rb_player.y = 1;
+      rb_player.dir = "down";
     }
   }
+
+  world_gen();
 }
 
-// 3. Break Action: Destroys breakable objects into rocks
+// --- Combined Actions ---
 function actionBreak() {
   const targetIdx = getTargetIndexInFront();
   if (targetIdx !== -1) {
     const currentTile = map[targetIdx];
 
-    // Block breaking if it's ground, existing rock, or an indestructible tile
     if (
       currentTile !== rb_cr_map_CRUSHED_PATH &&
       currentTile !== rb_cr_map_ROCK_CHAR &&
@@ -226,25 +305,47 @@ function actionBreak() {
   }
 }
 
-// 4. Interact Action: Dedicated handler for doors, boss tiles, etc.
 function actionInteract() {
   const targetIdx = getTargetIndexInFront();
-  if (targetIdx !== -1) {
-    const currentTile = map[targetIdx];
+  if (targetIdx === -1) return;
 
-    if (currentTile === rb_cr_map_DOOR_CHAR) {
-      
-      //activate the next door view
-      Engine_Hud(3);
-      world_gen();
-    } else if (currentTile === rb_cr_map_BOSS_CHAR) {
-      // Example: Trigger boss fight logic here
-      console.log("Boss encounter triggered!");
+  const currentTile = map[targetIdx];
+
+  // 1. Top Door (Forward Transition)
+  if (currentTile === rb_cr_map_DOOR_CHAR) {
+    if (roomCleared[currentRoomIndex]) {
+      transitionRoom("forward");
+    } else {
+      console.log("Door is locked! Clear the room first.");
     }
+  } 
+  // 2. Bottom Broken Door (Backward Transition)
+  else if (currentTile === rb_cr_map_BRKN_DOOR_CHAR && targetIdx >= 20) {
+    transitionRoom("backward");
+  }
+  // 3. Boss Encounter
+  else if (currentTile === rb_cr_map_BOSS_CHAR) {
+    console.log("Boss encounter triggered!");
+  } 
+  // 4. Fountain Restoration
+  else if (currentTile === rb_cr_map_FOUNTAIN_CHAR) {
+    console.log("Drank from fountain! HP restored.");
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  }
+  // 5. General Search / Clear Furniture
+  else if (
+    currentTile !== rb_cr_map_CRUSHED_PATH &&
+    currentTile !== rb_cr_map_ROCK_CHAR &&
+    !isIndestructible(currentTile)
+  ) {
+    console.log("Searched container/furniture!");
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
   }
 }
 
-// Updated Keyboard Controls
+// --- Controls ---
 window.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowUp":
@@ -268,18 +369,22 @@ window.addEventListener("keydown", (e) => {
       movePlayer(1, 0, "right");
       break;
 
-    // Action Key Bindings
+    // Combined Search / Interact Action
     case "e":
     case "E":
-      actionSearch();
+    case " ":
+    case "Enter":
+      actionInteract();
       break;
+
+    // Break Action
     case "f":
     case "F":
       actionBreak();
       break;
-    case " ":
-    case "Enter":
-      actionInteract(); // Use space/enter to interact with doors/bosses
-      break;
   }
 });
+
+// Initialize dungeon rooms and generate initial map
+initDungeonRooms();
+world_gen();
