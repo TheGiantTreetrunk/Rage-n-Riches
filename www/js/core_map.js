@@ -84,7 +84,7 @@ var room_prefab = [
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
-  /*Default Room*/[
+  /*Study Room*/[
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_FIREPLACE_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
@@ -95,63 +95,40 @@ var room_prefab = [
   rb_cr_map_BRICK,rb_cr_map_TREE_2_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_GRASS_CHAR,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_GRASS_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_GRASS_CHAR,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_GRASS_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_TREE_3_CHAR,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /* Throne */[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_THRONE_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_VASE_TABLE_CHAR,rb_cr_map_BRICK, 
+  rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /* bookroom */[  
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BOOKSHELF_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /* Cellar */[ 
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BARREL_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BARREL_CHAR,rb_cr_map_BRICK, 
+  rb_cr_map_BRICK,rb_cr_map_BARREL_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BARREL_CHAR,rb_cr_map_BRICK, 
+  rb_cr_map_BRICK,rb_cr_map_BARREL_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_BARREL_CHAR,rb_cr_map_BRICK, 
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /* spiders */[  
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK]
+
 ];
 
-// --- Dungeon & Room Generation State ---
-var currentRoomIndex = 1; // Active room (1 to 5; 0 is entry backtrack, 6 is boss)
-var roomCleared = {
-  0: true,
-  1: true,
-  2: true,
-  3: true,
-  4: true,
-  5: true,
-  6: true
-};
-
-var room_tracker = [[], [], [], [], [], [], []];
+// Active room layout array
 var map = [];
 
-// Room variables maintained for global reference
-var room0 = [];
-var room1 = [];
-var room2 = [];
-var room3 = [];
-var room4 = [];
-var room5 = [];
-var room6 = [];
-
-function initDungeonRooms() {
-  // room0: Backtrack room layout
-  room_tracker[0] = [...room_prefab[0]];
-
-  // Generate rooms 1 through 5 from prefabs
-  for (let i = 1; i <= 5; i++) {
-    const randomPrefabIdx = Math.floor(Math.random() * room_prefab.length);
-    room_tracker[i] = [...room_prefab[randomPrefabIdx]];
-  }
-
-  // room6: Custom Boss room layout
-  room_tracker[6] = [
-    rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRICK,
-    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_BOSS_CHAR, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
-    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
-    rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
-    rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK
-  ];
-
-  // Assign global room references
-  room0 = room_tracker[0];
-  room1 = room_tracker[1];
-  room2 = room_tracker[2];
-  room3 = room_tracker[3];
-  room4 = room_tracker[4];
-  room5 = room_tracker[5];
-  room6 = room_tracker[6];
-
-  // Set initial map state to room1
-  map = [...room_tracker[currentRoomIndex]];
+function loadRandomPrefab() {
+  const randomIdx = Math.floor(Math.random() * room_prefab.length);
+  map = [...room_prefab[randomIdx]];
 }
 
 var rb_player = {
@@ -211,7 +188,7 @@ function world_gen() {
   }
 }
 
-// --- Movement & Boundaries ---
+// --- Movement & Collision ---
 function movePlayer(dx, dy, dirName) {
   rb_player.dir = dirName;
 
@@ -258,37 +235,19 @@ function isIndestructible(tile) {
   );
 }
 
-// --- Room Navigation ---
-function transitionRoom(direction) {
-  // Save modifications to current room before swapping maps
-  room_tracker[currentRoomIndex] = [...map];
+// --- Room Transitions ---
+function transitionRoomForward() {
+  loadRandomPrefab();
 
-  if (direction === "forward") {
-    if (currentRoomIndex < 6) {
-      currentRoomIndex++;
-      map = [...room_tracker[currentRoomIndex]];
-      
-      // Spawn at bottom broken door facing up
-      rb_player.x = 2;
-      rb_player.y = 3;
-      rb_player.dir = "up";
-    }
-  } else if (direction === "backward") {
-    if (currentRoomIndex > 0) {
-      currentRoomIndex--;
-      map = [...room_tracker[currentRoomIndex]];
-      
-      // Spawn at top door facing down
-      rb_player.x = 2;
-      rb_player.y = 1;
-      rb_player.dir = "down";
-    }
-  }
+  // Always spawn near bottom entrance facing up
+  rb_player.x = 2;
+  rb_player.y = 3;
+  rb_player.dir = "up";
 
   world_gen();
 }
 
-// --- Combined Actions ---
+// --- Actions ---
 function actionBreak() {
   const targetIdx = getTargetIndexInFront();
   if (targetIdx !== -1) {
@@ -311,29 +270,26 @@ function actionInteract() {
 
   const currentTile = map[targetIdx];
 
-  // 1. Top Door (Forward Transition)
-  if (currentTile === rb_cr_map_DOOR_CHAR) {
-    if (roomCleared[currentRoomIndex]) {
-      transitionRoom("forward");
-    } else {
-      console.log("Door is locked! Clear the room first.");
+  // Top Door / Exit Door (Forward Movement Only)
+  if (currentTile === rb_cr_map_DOOR_CHAR || (currentTile === rb_cr_map_BRKN_DOOR_CHAR && targetIdx === 2)) {
+    if (currentTile === rb_cr_map_DOOR_CHAR) {
+      if (typeof Engine_Hud === "function") {
+        Engine_Hud(3);
+      }
     }
+    transitionRoomForward();
   } 
-  // 2. Bottom Broken Door (Backward Transition)
-  else if (currentTile === rb_cr_map_BRKN_DOOR_CHAR && targetIdx >= 20) {
-    transitionRoom("backward");
-  }
-  // 3. Boss Encounter
+  // Boss Encounter
   else if (currentTile === rb_cr_map_BOSS_CHAR) {
     console.log("Boss encounter triggered!");
   } 
-  // 4. Fountain Restoration
+  // Fountain Interaction
   else if (currentTile === rb_cr_map_FOUNTAIN_CHAR) {
     console.log("Drank from fountain! HP restored.");
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   }
-  // 5. General Search / Clear Furniture
+  // Furniture & Container Search
   else if (
     currentTile !== rb_cr_map_CRUSHED_PATH &&
     currentTile !== rb_cr_map_ROCK_CHAR &&
@@ -343,6 +299,7 @@ function actionInteract() {
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   }
+  // Note: Bottom broken door (rb_cr_map_BRKN_DOOR_CHAR at targetIdx >= 20) is deliberately ignored here so it acts as vanity.
 }
 
 // --- Controls ---
@@ -369,7 +326,6 @@ window.addEventListener("keydown", (e) => {
       movePlayer(1, 0, "right");
       break;
 
-    // Combined Search / Interact Action
     case "e":
     case "E":
     case " ":
@@ -377,7 +333,6 @@ window.addEventListener("keydown", (e) => {
       actionInteract();
       break;
 
-    // Break Action
     case "f":
     case "F":
       actionBreak();
@@ -385,6 +340,6 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// Initialize dungeon rooms and generate initial map
-initDungeonRooms();
+// Load initial room prefab and start
+loadRandomPrefab();
 world_gen();
