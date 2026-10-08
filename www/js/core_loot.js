@@ -10,6 +10,10 @@ var total_crates = 0;
 
 
 function Core_Loot_Randomizer() {
+
+    audioEngine.stop();
+    audioEngine.play("challengeVictory");
+
     document.getElementById("chest_1").disabled = false;
     document.getElementById("chest_2").disabled = false;
     document.getElementById("chest_3").disabled = false;

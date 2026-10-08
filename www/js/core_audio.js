@@ -251,5 +251,54 @@ audioEngine.registerSounds({
                 "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0
             ]
         }
+    },
+
+    merchantShop : {
+        tempo: 120,
+        voice1: { wave: "triangle", notes: ["E5", "G5", "B5", "A5", "G5", "E5", "D5", "E5", "G5", "B5", "D6", "C6", "B5", "G5", "A5", 0] },
+        voice2: { wave: "sine",     notes: ["G4", 0, "D5", "C5", 0, "B4", "A4", 0, "D5", 0, "F5", "E5", 0, "D5", "C5", 0] },
+        voice3: { wave: "triangle", notes: ["C3", 0, "G3", "C3", 0, "G3", "D3", 0, "A3", "G2", 0, "D3", "C3", 0, "G3", 0] }
+    },
+
+    challengeTune : {
+        tempo: 155,
+        voice1: { wave: "square",   notes: ["E4", "E4", "G4", "E4", "A4", "E4", "Bb4", "A4", "G4", "E4", "G4", "A4", "Bb4", "B4", "C5", "D5"] },
+        voice2: { wave: "sawtooth", notes: ["E5", 0, "G5", 0, "A5", 0, "Bb5", 0, "G5", 0, "Bb5", 0, "B5", 0, "D6", 0] },
+        voice3: { wave: "sawtooth", notes: ["E2", "E2", "E2", "E2", "G2", "G2", "Bb2", "Bb2", "E2", "E2", "G2", "G2", "C3", "C3", "D3", "D3"] }
+    },
+
+    exploreCavern : {
+        tempo: 110,
+        voice1: { wave: "triangle", notes: ["A3", 0, "C4", "D4", "E4", 0, "G4", "E4", "A4", 0, "G4", "E4", "D4", 0, "C4", 0] },
+        voice2: { wave: "sine",     notes: [0, "E5", 0, 0, 0, "G5", 0, 0, 0, "A5", 0, 0, "E5", 0, 0, 0] },
+        voice3: { wave: "triangle", notes: ["A2", "A2", "C3", "A2", "D3", "A2", "E3", "D3", "A2", "A2", "G2", "A2", "D3", "D3", "C3", "G2"] }
+    },
+
+    exploreForest : {
+        tempo: 115,
+        voice1: { wave: "sine",     notes: ["G4", "A4", "B4", "D5", "E5", "D5", "B4", "A4", "G4", "B4", "D5", "E5", "D5", "B4", "A4", 0] },
+        voice2: { wave: "triangle", notes: ["D4", 0, "G4", 0, "B4", 0, "G4", 0, "C4", 0, "E4", 0, "D4", 0, "D4", 0] },
+        voice3: { wave: "triangle", notes: ["G2", 0, "G2", "G2", "D3", 0, "G2", 0, "C3", 0, "C3", "C3", "D3", 0, "D2", 0] }
+    },
+
+    exploreDesert : {
+        tempo: 100,
+        voice1: { wave: "square",   notes: ["A4", "Bb4", "Cs5", "D5", "Cs5", "Bb4", "A4", "G4", "A4", "Bb4", "D5", "Cs5", "Bb4", "A4", "G4", 0] },
+        voice2: { wave: "sawtooth", notes: ["A3", 0, "Cs4", 0, "E4", 0, "Cs4", 0, "G3", 0, "Bb3", 0, "A3", 0, "Cs4", 0] },
+        voice3: { wave: "triangle", notes: ["A2", "A2", "A2", 0, "A2", "A2", "G2", 0, "A2", "A2", "Bb2", 0, "A2", "A2", "E2", 0] }
+    },
+
+    exploreMushroomCave : {
+        tempo: 105,
+        voice1: { wave: "square",   notes: ["C4", "Fs4", "F4", "B4", "Bb4", "E4", "Eb4", "A4", "Ab4", "D4", "Db4", "G4", "Fs4", "C4", "Eb4", 0] },
+        voice2: { wave: "sawtooth", notes: [0, "C6", 0, "Fs5", 0, "Bb5", 0, "E5", 0, "Ab5", 0, "D5", 0, "G5", 0, 0] },
+        voice3: { wave: "sine",     notes: ["C2", 0, "Fs2", 0, "Bb2", 0, "Eb2", 0, "Ab2", 0, "D2", 0, "G2", 0, "C2", 0] }
+    },
+
+    exploreSnow : {
+        tempo: 85,
+        voice1: { wave: "sine",     notes: ["E5", "B5", "Cs6", "E6", "Eb6", "B5", "Gs5", "E5", "Fs5", "B5", "Cs6", "Eb6", "E6", 0, "B5", 0] },
+        voice2: { wave: "sine",     notes: ["E6", 0, "Gs6", 0, "B6", 0, "Gs6", 0, "Fs6", 0, "A6", 0, "Gs6", 0, "E6", 0] },
+        voice3: { wave: "triangle", notes: ["E3", 0, 0, 0, "B2", 0, 0, 0, "A2", 0, 0, 0, "E3", 0, 0, 0] }
     }
 });

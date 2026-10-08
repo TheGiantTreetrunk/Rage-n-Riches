@@ -1,6 +1,7 @@
 var is_dev = 1;
 var rb_core_score = 0;
 var rb_core_has_completed_first_flr_cmbt = 0;
+var chosen_theme = 0;
 
 function Start() {
 
@@ -185,6 +186,7 @@ function Engine_Hud(comand) {
             var themes = ["rock","forest","snow","desert","mushroom","lava"];
 
             var tm_sel = Math.floor(Math.random() * themes.length);
+            chosen_theme = tm_sel;
 
             if(tm_sel == 0) {
                 Core_Env_Updater('rock', false);
@@ -222,8 +224,35 @@ function Engine_Hud(comand) {
         Core_Door_Randomizer(0);
         document.getElementById("shrtct").style.display = "";
         
-        audioEngine.stop();
-        audioEngine.loop("dungeonExplorer");
+        if(chosen_theme == 0) {
+            audioEngine.stop();
+            audioEngine.loop("dungeonExplorer");
+        }
+
+        if(chosen_theme == 1) {
+            audioEngine.stop();
+            audioEngine.loop("exploreForest");
+        }
+
+        if(chosen_theme == 2) {
+            audioEngine.stop();
+            audioEngine.loop("exploreSnow");
+        }
+
+        if(chosen_theme == 3) {
+            audioEngine.stop();
+            audioEngine.loop("exploreDesert");
+        }
+
+        if(chosen_theme == 4) {
+            audioEngine.stop();
+            audioEngine.loop("exploreMushroomCave");
+        }
+
+        if(chosen_theme == 5) {
+            audioEngine.stop();
+            audioEngine.loop("dungeonExplorer");
+        }
     }
 
     if(comand == 4) {
@@ -278,6 +307,8 @@ function Engine_Hud(comand) {
         document.getElementById("tracker").style.display = "";
         document.getElementById("bs").style.display = "";
         Core_Engine_Combat(0);
+        audioEngine.stop();
+        audioEngine.loop("regularBattle");
     }
 
     if(comand == 12) {
@@ -334,6 +365,36 @@ function Engine_Hud(comand) {
             document.getElementById("wrld").style.display = "";
             document.getElementById("shrtct").style.display = "";
             world_gen();
+
+            if(chosen_theme == 0) {
+            audioEngine.stop();
+            audioEngine.loop("dungeonExplorer");
+        }
+
+        if(chosen_theme == 1) {
+            audioEngine.stop();
+            audioEngine.loop("exploreForest");
+        }
+
+        if(chosen_theme == 2) {
+            audioEngine.stop();
+            audioEngine.loop("exploreSnow");
+        }
+
+        if(chosen_theme == 3) {
+            audioEngine.stop();
+            audioEngine.loop("exploreDesert");
+        }
+
+        if(chosen_theme == 4) {
+            audioEngine.stop();
+            audioEngine.loop("exploreMushroomCave");
+        }
+
+        if(chosen_theme == 5) {
+            audioEngine.stop();
+            audioEngine.loop("dungeonExplorer");
+        }
         }
         //Core_Door_Randomizer(0);
     }

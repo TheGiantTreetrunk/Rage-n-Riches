@@ -42,6 +42,10 @@
 .rb_st_map_item_brick          { color: #a9a9a9;}
 .rb_st_map_item_floor          { color: #918f8f;}
 
+#map {
+  margin-left: auto;
+  margin-right: auto;
+}
 .navbar {
     overflow: hidden;
     background-color: #212626;
