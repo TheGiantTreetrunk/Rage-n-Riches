@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#qte_banquet_table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border: 3px solid #ffffff;
+    background-color: #000;
+    overflow-y: auto; 
+    box-shadow: 10px 10px #ffffff;
+    color: #fff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The Sticky Header Area */
+.banquet-container {
+    position: sticky;
+    top: 0;
+    z-index: 1; 
+    text-align: center;
+    background-color: #000;
+    /* Height is determined by the content (Art + Title) */
+    padding-bottom: 10px;
+}
+
+/* THE FROSTED EFFECT - Reduced blur to 2px */
+.glass-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05); /* Lighter tint */
+    backdrop-filter: blur(2px);            /* Less blurry as requested */
+    -webkit-backdrop-filter: blur(2px);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Title and Dice are now both z-index 3 to sit on top of the glass */
+.sticky-title {
+    position: relative;
+    z-index: 3;
+    margin: 0;
+    padding: 15px 0 5px 0;
+    background: transparent;
+}
+
+#dice-display {
+    position: absolute;
+    top: 60%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    z-index: 3; 
+    text-shadow: 0 0 15px rgba(0,0,0,0.9);
+}
+
+.banquet_table {
+    font-size: 8px;
+    margin: 0 auto;
+    display: inline-block;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1; /* Under the glass */
+}
+
+/* The Scrolling Content */
+.qte-scroll-content {
+    background-color: #000000;
+    position: relative;
+    z-index: 10; 
+    padding: 20px;
+}
+
+.qte-scroll-content button {
+	width: 100%;
+}
+#banquet_table_roll_chart {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+#banquet_table_roll_chart td {
+    padding: 12px;
+}
+  
+#banquet_table_roll_chart tr:nth-child(even){background-color: #1a1a1a;}
+
+button {
+    padding: 14px 0px;
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer;
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background: #ccc;
+}
+</style>
+</head>
+<body>
+
+<div id="qte_banquet_table">
+    <div class="banquet-container">
+        <h3 class="sticky-title">The Banquet Table</h3>
+        
+        <div class="glass-overlay"></div>
+        
+        <div id="dice-display">⚄</div>
+
+        <pre class="banquet_table">
+            _________________________________________________
+           /                                                 \
+          /      (  )           _______           (  )        \
+         /      __||__         |   _   |         __||__        \
+        /      |      |        |  ( )  |        |      |        \
+       /       | BANQ |        |_______|        | UET  |         \
+      /        |______|          _|_|_          |______|          \
+     /                          (_____)                            \
+    /            ____             ___             ____              \
+   /      _     /    \     _     (   )     _     /    \     _        \
+  /      ( )   |  RO  |   ( )     | |     ( )   | AST  |   ( )        \
+ /      __|_   |______|   _|_     | |     _|_   |______|   _|_         \
+/      |____|            |___|    |_|    |___|            |____|        \
+/_________________________________________________________________________\
+||                                                                       ||
+||         _|_                     _|_                     _|_           ||
+||        |   |                   |   |                   |   |          ||
+||        |   |                   |   |                   |   |          ||
+||        |___|                   |___|                   |___|          ||
+||_______________________________________________________________________||
+        |   |                                               |   |
+        |   |                                               |   |
+        |___|                                               |___|
+        </pre>
+    </div>
+
+    <div class="qte-scroll-content">
+        <hr>
+		<p id="qte_banquet_text" style="text-align: center;">You've come across a banquet table! Looks like some table scraps are still left over...</p>
+        <button id="qte_banquet_dice_button">Roll Dice</button>
+		<hr>
+        <table id="banquet_table_roll_chart">
+            <tr><td>Rolls 6</td><td>Rare Steak</td></tr>
+            <tr><td>Rolls 5</td><td>Old Bread</td></tr>
+            <tr><td>Rolls 4</td><td>Mystery Soup</td></tr>
+            <tr><td>Rolls 3</td><td>Empty Plate</td></tr>
+            <tr><td>Rolls 2</td><td>Apple Core</td></tr>
+            <tr><td>Rolls 1</td><td>Rat Droppings</td></tr>
+            <tr><td>Misc</td><td>Scroll down to hide the table...</td></tr>
+            <tr><td>Misc</td><td>The glass and title will disappear.</td></tr>
+        </table>
+        <br>
+        <button id="qte_banquet_dice_button">Roll Dice</button>
+        <button id="qte_banquet_cont_button">Ok, Got It.</button>
+    </div>
+</div>
+
+</body>
+</html>

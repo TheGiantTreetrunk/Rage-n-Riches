@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Root variables for easy color management */
+:root {
+    --card-color: #333;
+    --match-color: #4CAF50;
+    --shadow-color: #ffffff;
+}
+
+#qte_the_chapel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border: 3px solid #ffffff;
+    background-color: #000;
+    overflow: hidden; /* Changed to hidden since we're centering */
+    box-shadow: 10px 10px var(--shadow-color);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* MAIN CONTAINER - Handles the "True Center" logic */
+.chapel-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    z-index: 2; /* Sits above the glass */
+    padding: 20px;
+}
+
+/* GAME BOARD - Changed from absolute to grid for true centering */
+#chapel-display {
+    display: grid;
+    grid-template-columns: repeat(4, 64px); /* 4 columns across */
+    grid-gap: 15px;
+    perspective: 1000px;
+    margin-top: 20px;
+}
+
+.sticky-title {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 1.5rem;
+}
+
+/* Card Styling */
+.card {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.card-front {
+    background-color: var(--card-color);
+    color: white;
+}
+
+.card-back {
+    background-color: #fff;
+    transform: rotateY(180deg);
+    color: #000;
+}
+
+.card.matched .card-back {
+    background-color: var(--match-color);
+    color: white;
+}
+</style>
+</head>
+<body>
+
+    <div id="qte_the_chapel">
+        <div class="glass-overlay1"></div>
+
+        <div class="chapel-container">
+            <h3 class="sticky-title">The Mint Room</h3>
+            
+            <div id="chapel-display"></div>
+        </div>
+    </div>
+		
+    <script>
+        const board = document.getElementById('chapel-display');
+        const symbols = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉'];
+        let cards = [...symbols, ...symbols];
+        let flippedCards = [];
+        let matchedCount = 0;
+        let lockBoard = false;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createCard(symbol) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <div class="card-face card-front">?</div>
+                <div class="card-face card-back">${symbol}</div>
+            `;
+            card.addEventListener('click', flipCard);
+            return card;
+        }
+
+        function flipCard() {
+            if (lockBoard || this.classList.contains('flipped')) return;
+
+            this.classList.add('flipped');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            lockBoard = true;
+            const [card1, card2] = flippedCards;
+            
+            // Match logic based on text symbol inside the card
+            const symbol1 = card1.querySelector('.card-back').textContent;
+            const symbol2 = card2.querySelector('.card-back').textContent;
+
+            if (symbol1 === symbol2) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                resetTurn();
+                matchedCount += 2;
+                if (matchedCount === cards.length) setTimeout(() => alert('You Won!'), 500);
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    resetTurn();
+                }, 1000);
+            }
+        }
+
+        function resetTurn() {
+            flippedCards = [];
+            lockBoard = false;
+        }
+
+        function initGame() {
+            board.innerHTML = '';
+            matchedCount = 0;
+            const shuffledCards = shuffle(cards);
+            shuffledCards.forEach(symbol => {
+                board.appendChild(createCard(symbol));
+            });
+        }
+
+        initGame();
+    </script>
+
+</body>
+</html>
