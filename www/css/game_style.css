@@ -1280,3 +1280,99 @@ td.tavern, th.tavern {
       background: #ff4d6d;
       color: #fff;
     }
+
+    .rb_cr_challenge_table {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: rgba(33, 38, 38, 0.85);
+    overflow-y: auto; 
+    color: #fff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The Sticky Header Area */
+.rb-cr-container {
+    position: sticky;
+    top: 0;
+    z-index: 1; 
+    text-align: center;
+    /* Height is determined by the content (Art + Title) */
+    padding-bottom: 10px;
+}
+
+/* Title and Dice are now both z-index 3 to sit on top of the glass */
+.rb_cr_sticky-title {
+    position: relative;
+    z-index: 3;
+    margin: 0;
+    padding: 15px 0 5px 0;
+    background: transparent;
+}
+
+#rb_cr_dice-display {
+    position: absolute;
+    top: 60%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    z-index: 3; 
+    text-shadow: 0 0 15px rgba(0,0,0,0.9);
+}
+
+/* The Scrolling Content */
+.rb-cr-scroll-content {
+    position: relative;
+    z-index: 10; 
+    padding: 20px;
+}
+
+.rb-cr-scroll-content button {
+	width: 100%;
+}
+.rb_cr_table_roll_chart {
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+.rb_cr_table_roll_chart td {
+    padding: 12px;
+}
+  
+.rb_cr_table_roll_chart tr:nth-child(even){background-color: #1a1a1a;}
+
+.rb_cr_dice_button {
+    padding: 14px 0px;
+    width: 100%;
+    margin-bottom: 10px;
+    
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #212626; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}

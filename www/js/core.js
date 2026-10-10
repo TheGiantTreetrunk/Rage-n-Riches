@@ -162,6 +162,8 @@ function Engine_Hud(comand) {
     document.getElementById("firefly14").style.display = "none";
     document.getElementById("firefly15").style.display = "none";
 
+    document.getElementById("test_table").style.display = "none";
+
 
     if(comand == 0) {
         Core_Env_Updater('brick', false);
@@ -358,7 +360,7 @@ function Engine_Hud(comand) {
         document.getElementById("bs").style.display = "";
         Core_Engine_Combat(0);
         audioEngine.stop();
-        audioEngine.loop("regularBattle");
+        audioEngine.loop("bossEncounter");
     }
 
     if(comand == 12) {

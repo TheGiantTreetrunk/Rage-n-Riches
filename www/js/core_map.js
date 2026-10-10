@@ -133,7 +133,7 @@ function loadRandomPrefab() {
 
 var rb_player = {
   x: 2,
-  y: 2,
+  y: 3,
   icon: "@",
   dir: "down"
 };
