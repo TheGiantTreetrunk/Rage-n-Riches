@@ -37,6 +37,7 @@
 .rb_st_map_item_throne         { color: #ffd700; text-shadow: 0 0 16px rgba(255, 215, 0, 0.95); font-weight: bold; }
 
 .rb_st_map_item_toilet         { color: #e0e0e0; text-shadow: 0 0 10px rgba(0, 180, 216, 0.9); font-weight: bold; }
+.rb_st_map_laddar              { color: #7e6102;}
 
 .rb_st_map_item_door           { color: #835a02;}
 .rb_st_map_item_broken_door    { color: #835a02;}

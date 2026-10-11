@@ -148,12 +148,19 @@ audioEngine.registerSounds({
         voice2: { wave: "sine", notes: ["E5", 0, "B4", 0, "G4", 0, "E4", 0, "F4", 0, "A4", 0, "C5", 0, "A4", 0] },
         voice3: { wave: "triangle", notes: ["E2", "E2", "G2", "G2", "B2", "B2", "E3", "E3", "F2", "F2", "A2", "A2", "C3", "C3", "A2", "A2"] }
     },
+
+    floorCleared: {
+        tempo: 130,
+        voice1: { wave: "square",   notes: ["C5", "E5", "G5", "C6", "G5", "E5", "G5", "C6", "D6", "C6", "B5", "A5", "G5", 0, "C6", 0] },
+        voice2: { wave: "triangle", notes: ["G4", "C5", "E5", "G5", "E5", "C5", "E5", "G5", "B5", "A5", "G5", "F5", "E5", 0, "G5", 0] },
+        voice3: { wave: "sawtooth", notes: ["C3", "C3", "C3", "C3", "C3", "C3", "C3", "C3", "G2", "G2", "G2", "G2", "C3", "C3", "C3", 0] }
+    },
     
     challengeVictory: {
-        tempo: 150,
-        voice1: { wave: "square", notes: ["C4", "E4", "G4", "C5", 0, "G4", "C5", "E5", "G5", 0, "E5", "G5", "C6", 0, "C6", 0] },
-        voice2: { wave: "square", notes: ["G3", "C4", "E4", "G4", 0, "E4", "G4", "C5", "E5", 0, "C5", "E5", "G5", 0, "G5", 0] },
-        voice3: { wave: "sawtooth", notes: ["C3", 0, "C3", 0, "C3", "C3", 0, "C3", "C3", 0, "C3", 0, "C3", "C3", "C3", 0] }
+        tempo: 140,
+        voice1: { wave: "square",   notes: ["E5", "Gs5", "B5", "E6", 0, "B5", "E6", "Gs6", "B6", 0, "Gs6", "B6", "E7", 0, "E7", 0] },
+        voice2: { wave: "sine",     notes: ["B4", "E5", "Gs5", "B5", 0, "Gs5", "B5", "E6", "Gs6", 0, "E6", "Gs6", "B6", 0, "B6", 0] },
+        voice3: { wave: "triangle", notes: ["E3", 0, "E3", 0, "E3", "E3", 0, "E3", "A2", 0, "A2", 0, "E3", "E3", "E3", 0] }
     },
     youDied: {
         tempo: 60,

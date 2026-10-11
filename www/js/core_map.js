@@ -38,6 +38,7 @@ const rb_cr_map_BANNER_WALL_CHAR = 'h';
 
 const rb_cr_map_CRUSHED_PATH = 'O';
 const rb_cr_map_BRICK = '#';
+const rb_cr_map_ladder = "H";
 
 const TILE_STYLE_MAP = {
   [rb_cr_map_TORCH_CHAR]: "rb_st_map_item_torch",
@@ -70,7 +71,8 @@ const TILE_STYLE_MAP = {
   [rb_cr_map_DOOR_CHAR]: "rb_st_map_item_door",
   [rb_cr_map_BRKN_DOOR_CHAR]: "rb_st_map_item_broken_door",
   [rb_cr_map_BRICK]: "rb_st_map_item_brick",
-  [rb_cr_map_CRUSHED_PATH]: "rb_st_map_item_floor"
+  [rb_cr_map_CRUSHED_PATH]: "rb_st_map_item_floor",
+  [rb_cr_map_ladder]: "rb_st_map_laddar"
 };
 
 var room_prefab = [
@@ -131,12 +133,24 @@ var room_prefab = [
 
 ];
 
+var end_room = [
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_ladder,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,  
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK
+];
+
 // Active room layout array
 var map = [];
 
 function loadRandomPrefab() {
-  const randomIdx = Math.floor(Math.random() * room_prefab.length);
-  map = [...room_prefab[randomIdx]];
+  if(room_number == 6) {
+        map = end_room;
+  } else {
+        const randomIdx = Math.floor(Math.random() * room_prefab.length);
+        map = [...room_prefab[randomIdx]];
+  }
 }
 
 var rb_player = {
@@ -241,7 +255,8 @@ function isIndestructible(tile) {
     tile === rb_cr_map_BRKN_DOOR_CHAR ||
     tile === rb_cr_map_BOSS_CHAR ||
     tile === rb_cr_map_TOILET_CHAR ||
-    tile === rb_cr_map_FOUNTAIN_CHAR
+    tile === rb_cr_map_FOUNTAIN_CHAR ||
+    tile === rb_cr_map_ladder
   );
 }
 
@@ -306,7 +321,13 @@ function actionInteract() {
       }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
+  } else if (currentTile === rb_cr_map_ladder) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(17);
+      }
+      transitionRoomForward();
   }
+
   // Furniture & Container Search
   else if (
     currentTile !== rb_cr_map_CRUSHED_PATH &&

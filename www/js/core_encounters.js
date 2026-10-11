@@ -31,42 +31,6 @@ function Core_Door_Randomizer(fun) {
             for (let i = 1; i < room_entrd.length; i++) {
                 document.getElementById(`room_${i}_id`).innerHTML = room_entrd[i];
             }
-        } else if (floor_tally == 6) {
-            floor_tally = 0;
-            room_number = 0;
-            floor_number += 1;
-            Engine_Hud(17);
-
-            //pick a new theme...
-            room_entrd = [":",":",":",":",":",":",":"];
-
-            var themes = ["rock","forest","snow","desert","mushroom","lava"];
-
-            var tm_sel = Math.floor(Math.random() * themes.length);
-
-            if(tm_sel == 0) {
-                Core_Env_Updater('rock', false);
-            }
-
-            if(tm_sel == 1) {
-                Core_Env_Updater('forest', false);
-            }
-
-            if(tm_sel == 2) {
-                Core_Env_Updater('snow', false);
-            }
-
-            if(tm_sel == 3) {
-                Core_Env_Updater('desert', false);
-            }
-
-            if(tm_sel == 4) {
-                Core_Env_Updater('mushroom', false);
-            }
-
-            if(tm_sel == 5) {
-                Core_Env_Updater('lava', false);
-            }
         }
     }
 

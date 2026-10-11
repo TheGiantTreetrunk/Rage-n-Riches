@@ -1,5 +1,5 @@
 var unlockedClasses = [
-    true, true, false, false, false, false, false
+    true, true, false, false, false, false, false, false
 ];
 
 var classes = [
@@ -10,24 +10,25 @@ var classes = [
     "Theologian",
     "Ranger",
     "Artillerist"
+    ,"TEST123"
 ];
 
 var class_colors = [
-    "white", "red", "purple", "blue", "lime", "yellow", "magenta"
+    "white", "red", "purple", "blue", "lime", "yellow", "magenta","brown"
 ];
 
-var class_health = [0, 15, 18, 8,  15, 12, 10];
-var class_damage = [0, 6,  5,  7,  3,  5,  9];
-var class_armor  = [0, 12, 18, 0,  8,  5,  3];
+var class_health = [0, 15, 18, 8,  15, 12, 10, 100];
+var class_damage = [0, 6,  5,  7,  3,  5,  9, 30];
+var class_armor  = [0, 12, 18, 0,  8,  5,  3, 50];
 
-var class_light_attk_speed  = [1000, 1500, 1800, 1300, 1600, 1100, 2200];
-var class_heavy_attk_speed  = [1500, 2600, 3000, 2200, 2500, 1900, 3500];
-var class_armor_attk_speed  = [1000, 1800, 2200, 1400, 1600, 1200, 2000];
-var class_health_heal_speed = [1000, 2000, 2400, 1800, 1200, 1600, 2800];
+var class_light_attk_speed  = [1000, 1500, 1800, 1300, 1600, 1100, 2200, 500];
+var class_heavy_attk_speed  = [1500, 2600, 3000, 2200, 2500, 1900, 3500, 500];
+var class_armor_attk_speed  = [1000, 1800, 2200, 1400, 1600, 1200, 2000, 500];
+var class_health_heal_speed = [1000, 2000, 2400, 1800, 1200, 1600, 2800, 500];
 
-var class_unique_weapon = ["None", "Zweihandler", "Long Sword", "Chemicals", "Mace", "Long Bow", "Mortar"];
-var class_unique_armor  = ["None", "Field Plate", "Gothic Plate", "Simple Clothes", "Brigandine", "Leather Coat", "Heavy Canvas"];
-var class_unique_shield = ["None", "None", "Kite", "None", "Heater", "None", "None"];
+var class_unique_weapon = ["None", "Zweihandler", "Long Sword", "Chemicals", "Mace", "Long Bow", "Mortar", "A GUN"];
+var class_unique_armor  = ["None", "Field Plate", "Gothic Plate", "Simple Clothes", "Brigandine", "Leather Coat", "Heavy Canvas", "armour"];
+var class_unique_shield = ["None", "None", "Kite", "None", "Heater", "None", "None", "None"];
 
 var class_data = {
     1: { name: "Fighter", description: "High Health/Strength (Balanced Tank)" },
@@ -36,6 +37,7 @@ var class_data = {
     4: { name: "Theologian", description: "Durable Backline Support & Protector" },
     5: { name: "Ranger", description: "Precision Striker (Speed & High Criticals)" },
     6: { name: "Artillerist", description: "Focused Heavy Firepower (Frail Vanguard)" }
+    ,7: {name: "Test Tannk", description: "Testing purposes for full map"}
 };
 
 var player = {
@@ -65,7 +67,7 @@ function renderClassTable() {
     let tableHtml = '<table style="margin: auto; text-align: center;"><tr>';
     let cols = 4;
 
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < classes.length; i++) {
         if (i > 0 && i % cols === 0) {
             tableHtml += '</tr><tr>';
         }

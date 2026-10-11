@@ -336,6 +336,8 @@ function Engine_Hud(comand) {
         document.getElementById("en4").style.display = "";
         document.getElementById("water_container").style.display = "";
         Core_Encounter_PLG_DR(0);
+        audioEngine.stop();
+        audioEngine.loop("challengeTune");
     }
 
     if(comand == 8) {
@@ -391,6 +393,44 @@ function Engine_Hud(comand) {
 
     if(comand == 17) {
         document.getElementById("fclr").style.display = "";
+
+        audioEngine.stop();
+        audioEngine.loop("floorCleared");
+
+        floor_tally = 0;
+        room_number = 0;
+        floor_number += 1;
+        room_entrd = [":",":",":",":",":",":",":"];
+
+        var themes = ["rock","forest","snow","desert","mushroom","lava"];
+
+            var tm_sel = Math.floor(Math.random() * themes.length);
+            chosen_theme = tm_sel;
+            
+            if(tm_sel == 0) {
+                Core_Env_Updater('rock', false);
+            }
+
+            if(tm_sel == 1) {
+                Core_Env_Updater('forest', false);
+            }
+
+            if(tm_sel == 2) {
+                Core_Env_Updater('snow', false);
+            }
+
+            if(tm_sel == 3) {
+                Core_Env_Updater('desert', false);
+            }
+
+            if(tm_sel == 4) {
+                Core_Env_Updater('mushroom', false);
+            }
+
+            if(tm_sel == 5) {
+                Core_Env_Updater('lava', false);
+            }
+
         document.getElementById("firefly1").style.display = "";
         document.getElementById("firefly2").style.display = "";
         document.getElementById("firefly3").style.display = "";
