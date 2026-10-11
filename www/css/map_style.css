@@ -27,6 +27,7 @@
 .rb_st_map_item_lamp           { color: #ffea00; text-shadow: 0 0 10px rgba(255, 234, 0, 0.9); }
 .rb_st_map_item_globe          { color: #4cc9f0; text-shadow: 0 0 8px rgba(76, 201, 240, 0.8); }
 .rb_st_map_item_table          { color: #8b5a2b; text-shadow: 0 0 6px rgba(139, 90, 43, 0.7); }
+.rb_st_map_item_table_en       { color: #facd03; text-shadow: 0 0 6px rgba(252, 122, 2, 0.7); }
 .rb_st_map_item_alchemist_table { color: #a855f7; text-shadow: 0 0 12px rgba(168, 85, 247, 0.9); }
 
 .rb_st_map_item_crate          { color: #c28d53; text-shadow: 0 0 6px rgba(194, 141, 83, 0.7); font-weight: bold; }

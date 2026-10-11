@@ -22,6 +22,7 @@ const rb_cr_map_THRONE_CHAR = 'z';
 const rb_cr_map_LAMP_CHAR = 's';
 const rb_cr_map_GLOBE_CHAR = 'u';
 const rb_cr_map_TABLE_CHAR = 'v';
+const rb_cr_map_TABLE_CHAR_en = 'v';
 const rb_cr_map_ALCHEMIST_TABLE_CHAR = 'y';
 const rb_cr_map_DRESSER_CHAR = 'V';
 const rb_cr_map_FIREPLACE_CHAR = 'Q';
@@ -57,6 +58,7 @@ const TILE_STYLE_MAP = {
   [rb_cr_map_LAMP_CHAR]: "rb_st_map_item_lamp",
   [rb_cr_map_GLOBE_CHAR]: "rb_st_map_item_globe",
   [rb_cr_map_TABLE_CHAR]: "rb_st_map_item_table",
+  [rb_cr_map_TABLE_CHAR_en]: "rb_st_map_item_table_en",
   [rb_cr_map_ALCHEMIST_TABLE_CHAR]: "rb_st_map_item_alchemist_table",
   [rb_cr_map_DRESSER_CHAR]: "rb_st_map_item_dresser",
   [rb_cr_map_FIREPLACE_CHAR]: "rb_st_map_item_fireplace",
@@ -78,25 +80,13 @@ var room_prefab = [
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /*fountain Room*/[
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_FOUNTAIN_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
   /*Toilet Room*/[
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
-  [
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
-  [
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
-  [
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
@@ -250,7 +240,8 @@ function isIndestructible(tile) {
     tile === rb_cr_map_DOOR_CHAR ||
     tile === rb_cr_map_BRKN_DOOR_CHAR ||
     tile === rb_cr_map_BOSS_CHAR ||
-    tile === rb_cr_map_TOILET_CHAR
+    tile === rb_cr_map_TOILET_CHAR ||
+    tile === rb_cr_map_FOUNTAIN_CHAR
   );
 }
 
@@ -304,7 +295,9 @@ function actionInteract() {
   } 
   // Fountain Interaction
   else if (currentTile === rb_cr_map_FOUNTAIN_CHAR) {
-    console.log("Drank from fountain! HP restored.");
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(9);
+      }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   } else if (currentTile === rb_cr_map_TOILET_CHAR) {
