@@ -84,6 +84,24 @@ var room_prefab = [
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  [
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  [
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  [
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_TOILET_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
   /*Study Room*/[
   rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK,
   rb_cr_map_BRICK,rb_cr_map_CHAIR_CHAR,rb_cr_map_CRUSHED_PATH,rb_cr_map_CRUSHED_PATH,rb_cr_map_BRICK,
@@ -286,6 +304,12 @@ function actionInteract() {
   // Fountain Interaction
   else if (currentTile === rb_cr_map_FOUNTAIN_CHAR) {
     console.log("Drank from fountain! HP restored.");
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  } else if (currentTile === rb_cr_map_TOILET_CHAR) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(7);
+      }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   }

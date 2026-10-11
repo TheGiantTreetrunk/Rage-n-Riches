@@ -185,6 +185,7 @@ function Engine_Hud(comand) {
         audioEngine.loop("dungeonTheme");
 
         if(player.class != 0) {
+            Core_Env_Updater('brick', false);
 
             //player has died and is reloading...
             rb_core_score = 0;
@@ -208,6 +209,7 @@ function Engine_Hud(comand) {
             player.inv.pot_speed = 0;
             player.inv.food = 3;
             player.inv.water = 3;
+            room_entrd = [":",":",":",":",":",":",":"];
 	
         }
         //load class select
@@ -278,7 +280,7 @@ function Engine_Hud(comand) {
         
         if(chosen_theme == 0) {
             audioEngine.stop();
-            audioEngine.loop("dungeonExplorer");
+            audioEngine.loop("exploreCavern");
         }
 
         if(chosen_theme == 1) {
@@ -303,7 +305,7 @@ function Engine_Hud(comand) {
 
         if(chosen_theme == 5) {
             audioEngine.stop();
-            audioEngine.loop("dungeonExplorer");
+            audioEngine.loop("exploreLava");
         }
     }
 
@@ -360,7 +362,7 @@ function Engine_Hud(comand) {
         document.getElementById("bs").style.display = "";
         Core_Engine_Combat(0);
         audioEngine.stop();
-        audioEngine.loop("bossEncounter");
+        audioEngine.loop("Battle");
     }
 
     if(comand == 12) {
@@ -407,6 +409,9 @@ function Engine_Hud(comand) {
     }
 
     if(comand == 18) {
+        for (let i = 1; i < room_entrd.length; i++) {
+            document.getElementById(`room_${i}_id`).innerHTML = room_entrd[i];
+        }
 
         if(rb_core_has_completed_first_flr_cmbt == 0) {
             document.getElementById("tracker").style.display = "";
@@ -420,7 +425,7 @@ function Engine_Hud(comand) {
 
             if(chosen_theme == 0) {
             audioEngine.stop();
-            audioEngine.loop("dungeonExplorer");
+            audioEngine.loop("exploreCavern");
         }
 
         if(chosen_theme == 1) {
@@ -445,13 +450,17 @@ function Engine_Hud(comand) {
 
         if(chosen_theme == 5) {
             audioEngine.stop();
-            audioEngine.loop("dungeonExplorer");
+            audioEngine.loop("exploreLava");
         }
         }
         //Core_Door_Randomizer(0);
     }
 
     if(comand == 19) {
+            for (let i = 1; i < room_entrd.length; i++) {
+                document.getElementById(`room_${i}_id`).innerHTML = room_entrd[i];
+            }
+
             document.getElementById("tracker").style.display = "";
             document.getElementById("wrld").style.display = "";
             document.getElementById("shrtct").style.display = "";
@@ -459,11 +468,12 @@ function Engine_Hud(comand) {
     }
 }
 
-function Core_Engine_Game_Over(comand) {
-    if(comand == 0) {
+function Core_Engine_Game_Over() {
+        audioEngine.stop();
+        audioEngine.play("youDied");
         document.getElementById("eg").style.display = "block";
         document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
-    }
+        document.getElementById("eg_plyr_scr").innerHTML = rb_core_score + "<br> Final Score";
 }
 
 function toggleAppPopup() {

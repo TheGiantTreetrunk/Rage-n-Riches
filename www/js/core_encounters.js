@@ -38,6 +38,7 @@ function Core_Door_Randomizer(fun) {
             Engine_Hud(17);
 
             //pick a new theme...
+            room_entrd = [":",":",":",":",":",":",":"];
 
             var themes = ["rock","forest","snow","desert","mushroom","lava"];
 

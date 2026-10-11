@@ -142,66 +142,13 @@ audioEngine.registerSounds({
         voice2: { wave: "sine", notes: ["G4", 0, "Fs4", 0, "F4", 0, "E4", 0, "Eb4", 0, "D4", 0, "Db4", 0, "C4", 0] },
         voice3: { wave: "sawtooth", notes: ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"] }
     },
-    treasureRoom: {
-        tempo: 130,
-        voice1: { wave: "square", notes: ["C5", "E5", "G5", "B5", "C6", "B5", "G5", "E5"] },
-        voice2: { wave: "sine", notes: ["E4", "G4", "B4", "D5", "E5", "D5", "B4", "G4"] },
-        voice3: { wave: "triangle", notes: ["C3", 0, "G3", 0, "C3", 0, "G3", 0] }
+    Battle: {
+        tempo: 120,
+        voice1: { wave: "square", notes: ["E4", 0, "G4", 0, "B4", 0, "E5", 0, "D5", 0, "B4", 0, "G4", 0, "E4", 0] },
+        voice2: { wave: "sine", notes: ["E5", 0, "B4", 0, "G4", 0, "E4", 0, "F4", 0, "A4", 0, "C5", 0, "A4", 0] },
+        voice3: { wave: "triangle", notes: ["E2", "E2", "G2", "G2", "B2", "B2", "E3", "E3", "F2", "F2", "A2", "A2", "C3", "C3", "A2", "A2"] }
     },
-    bossEncounter: {
-        tempo: 160,
-        voice1: { wave: "square", notes: ["C4", "C4", "Eb4", "C4", "F4", "C4", "Fs4", "G4"] },
-        voice2: { wave: "sawtooth", notes: ["C5", 0, "Eb5", 0, "F5", 0, "Fs5", "G5"] },
-        voice3: { wave: "sawtooth", notes: ["C2", "C2", "C2", "C2", "C2", "C2", "C2", "C2"] }
-    },
-    dungeonExplorer: {
-        tempo: 110,
-        voice1: { wave: "triangle", notes: ["A3", 0, "C4", "D4", "E4", 0, "G4", "E4", "A4", 0, "G4", "E4", "D4", 0, "C4", 0] },
-        voice2: { wave: "sine", notes: [0, "E5", 0, 0, 0, "G5", 0, 0, 0, "A5", 0, 0, "E5", 0, 0, 0] },
-        voice3: { wave: "triangle", notes: ["A2", "A2", "C3", "A2", "D3", "A2", "E3", "D3", "A2", "A2", "G2", "A2", "D3", "D3", "C3", "G2"] }
-    },
-    wackyDungeon: {
-        tempo: 145,
-        voice1: { wave: "square", notes: ["C4", "Eb4", "Fs4", "G4", "C5", 0, "Fs4", "G4", "Eb4", "C4", "A4", "Ab4", "G4", "Fs4", "F4", "E4"] },
-        voice2: { wave: "sine", notes: ["C6", 0, "Fs5", 0, "C6", "Eb6", 0, "Fs5", 0, "C6", 0, "Fs5", "C6", 0, "B5", 0] },
-        voice3: { wave: "sawtooth", notes: ["C3", 0, "C3", "C3", "Eb3", 0, "C3", 0, "Fs3", 0, "F3", 0, "E3", "E3", "Eb3", "D3"] }
-    },
-    dramaticDungeon: {
-        tempo: 145,
-        voice1: { wave: "sawtooth", notes: ["C4", "C4", "Eb4", "C4", "Fs4", "G4", "C5", 0, "B4", "Ab4", "G4", "Fs4", "G4", "Eb4", "D4", "B3"] },
-        voice2: { wave: "square", notes: ["C5", 0, "C5", 0, "Eb5", 0, "Fs5", "G5", "Ab5", 0, "G5", 0, "Fs5", 0, "D5", 0] },
-        voice3: { wave: "sawtooth", notes: ["C2", "C2", "C3", "C2", "C2", "C2", "Eb3", "D3", "C2", "C2", "C3", "C2", "Ab2", "G2", "Fs2", "F2"] }
-    },
-    regularBattle: {
-        tempo: 160,
-        voice1: { wave: "square", notes: ["E4", "G4", "B4", "E5", "D5", "B4", "G4", "E4", "F4", "A4", "C5", "F5", "E5", "C5", "A4", "F4"] },
-        voice2: { wave: "sawtooth", notes: ["E5", 0, "E5", "G5", 0, "B5", 0, "G5", "F5", 0, "F5", "A5", 0, "C6", 0, "A5"] },
-        voice3: { wave: "sawtooth", notes: ["E2", "E2", "E3", "E2", "E2", "E2", "G2", "B2", "F2", "F2", "F3", "F2", "F2", "F2", "A2", "C3"] }
-    },
-    redOctober: {
-        tempo: 80,
-        voice1: { wave: "square", notes: ["D4", "D4", "A4", "A4", "F4", "G4", "A4", 0, "D4", "D4", "Bb4", "A4", "G4", "E4", "F4", "D4"] },
-        voice2: { wave: "sawtooth", notes: ["D3", "F3", "A3", "F3", "D3", "E3", "F3", 0, "D3", "F3", "G3", "F3", "E3", "C3", "D3", "A2"] },
-        voice3: { wave: "sawtooth", notes: ["D2", "D2", "D2", "D2", "D2", "C2", "F2", "A2", "Bb2", "Bb2", "G2", "D2", "A2", "A2", "D2", "D2"] }
-    },
-    ussrAnthem: {
-        tempo: 88,
-        voice1: { wave: "square", notes: ["G4", "C5", 0, "G5", "E5", 0, "A5", "G5", "F5", "G5", "C5", 0, "C5", "D5", "D5", "E5"] },
-        voice2: { wave: "triangle", notes: ["E4", "E4", "G4", "C5", "C5", "C5", "F5", "E5", "D5", "E5", "G4", "G4", "A4", "B4", "B4", "C5"] },
-        voice3: { wave: "sawtooth", notes: ["C2", "C3", "C2", "E3", "A2", "A2", "F2", "C3", "D2", "E2", "E2", "C3", "F2", "F2", "G2", "G2"] }
-    },
-    sacredWar: {
-        tempo: 105,
-        voice1: { wave: "sawtooth", notes: ["A4", "A4", "C5", "A4", "E4", "F4", "A4", "G4", "F4", "E4", 0, "A4", "D5", "D5", "F5", "D5"] },
-        voice2: { wave: "square", notes: ["E4", "E4", "A4", "E4", "C4", "D4", "F4", "E4", "D4", "C4", 0, "E4", "F4", "F4", "A4", "F4"] },
-        voice3: { wave: "sawtooth", notes: ["A2", "A2", "A2", "A2", "A2", "D3", "D3", "E3", "E3", "A2", "A2", "A2", "D2", "D2", "D2", "D2"] }
-    },
-    auferstanden: {
-        tempo: 92,
-        voice1: { wave: "square", notes: ["D4", "F4", "A4", "A4", "B4", "A4", "G4", "F4", "E4", "F4", "G4", "A4", "F4", "D4", "E4", 0] },
-        voice2: { wave: "sine", notes: ["A3", "D4", "F4", "F4", "G4", "F4", "E4", "D4", "C4", "D4", "E4", "F4", "D4", "A3", "C4", 0] },
-        voice3: { wave: "triangle", notes: ["D2", "D2", "D3", "F2", "G2", "D2", "A2", "D2", "A2", "A2", "A2", "D2", "D2", "F2", "A2", "D2"] }
-    },
+    
     challengeVictory: {
         tempo: 150,
         voice1: { wave: "square", notes: ["C4", "E4", "G4", "C5", 0, "G4", "C5", "E5", "G5", 0, "E5", "G5", "C6", 0, "C6", 0] },
@@ -213,44 +160,6 @@ audioEngine.registerSounds({
         voice1: { wave: "sawtooth", notes: ["Eb4", "D4", "Db4", "C4", 0, "B3", 0, 0, "C4", 0, 0, 0, 0, 0, 0, 0] },
         voice2: { wave: "square", notes: ["C4", "B3", "Bb3", "A3", 0, "Ab3", 0, 0, "G3", 0, 0, 0, 0, 0, 0, 0] },
         voice3: { wave: "sawtooth", notes: ["C2", 0, "C2", 0, "C2", 0, "G1", 0, "C2", 0, 0, 0, 0, 0, 0, 0] }
-    },
-    morningSunrise: {
-        tempo: 90,
-        voice1: {
-            wave: "sine",
-            notes: [
-                "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", "Fs5", "Gs5", "Fs5",
-                "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", "Fs5", "E5", 0,
-                "E5", "Gs5", "B5", "E6", "Eb6", "Cs6", "B5", "Gs5", "E5", "Fs5", "Gs5", "Fs5",
-                "E5", "Fs5", "Gs5", "B5", "Cs6", "B5", "Gs5", "Fs5", "E5", 0, "E5", 0
-            ]
-        },
-        voice2: {
-            wave: "triangle",
-            notes: [
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
-                "E4", 0, "A4", 0, "Cs5", 0, "A4", 0, "E4", 0, "A4", 0,
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "E4", 0,
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "Gs4", 0,
-                "E4", 0, "A4", 0, "Cs5", 0, "A4", 0, "E4", 0, "A4", 0,
-                "E4", 0, "Gs4", 0, "B4", 0, "Gs4", 0, "E4", 0, "E4", 0
-            ]
-        },
-        voice3: {
-            wave: "sine",
-            notes: [
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
-                "A2", 0, 0, 0, "A2", 0, 0, 0, "A2", 0, 0, 0,
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0,
-                "A2", 0, 0, 0, "A2", 0, 0, 0, "A2", 0, 0, 0,
-                "E2", 0, 0, 0, "E2", 0, 0, 0, "E2", 0, 0, 0
-            ]
-        }
     },
 
     merchantShop : {
@@ -281,18 +190,18 @@ audioEngine.registerSounds({
         voice3: { wave: "triangle", notes: ["G2", 0, "G2", "G2", "D3", 0, "G2", 0, "C3", 0, "C3", "C3", "D3", 0, "D2", 0] }
     },
 
-    exploreDesert : {
-        tempo: 100,
-        voice1: { wave: "square",   notes: ["A4", "Bb4", "Cs5", "D5", "Cs5", "Bb4", "A4", "G4", "A4", "Bb4", "D5", "Cs5", "Bb4", "A4", "G4", 0] },
-        voice2: { wave: "sawtooth", notes: ["A3", 0, "Cs4", 0, "E4", 0, "Cs4", 0, "G3", 0, "Bb3", 0, "A3", 0, "Cs4", 0] },
-        voice3: { wave: "triangle", notes: ["A2", "A2", "A2", 0, "A2", "A2", "G2", 0, "A2", "A2", "Bb2", 0, "A2", "A2", "E2", 0] }
+    exploreDesert: {
+        tempo: 95,
+        voice1: { wave: "sine",     notes: ["D5", "E5", "G5", "A5", "G5", "E5", "D5", 0, "G5", "A5", "B5", "D6", "B5", "A5", "G5", 0] },
+        voice2: { wave: "triangle", notes: ["D4", 0, "G4", 0, "A4", 0, "G4", 0, "G4", 0, "B4", 0, "D5", 0, "A4", 0] },
+        voice3: { wave: "triangle", notes: ["D3", 0, "A2", 0, "D3", 0, "A2", 0, "G2", 0, "D3", 0, "G2", 0, "A2", 0] }
     },
 
-    exploreMushroomCave : {
-        tempo: 105,
-        voice1: { wave: "square",   notes: ["C4", "Fs4", "F4", "B4", "Bb4", "E4", "Eb4", "A4", "Ab4", "D4", "Db4", "G4", "Fs4", "C4", "Eb4", 0] },
-        voice2: { wave: "sawtooth", notes: [0, "C6", 0, "Fs5", 0, "Bb5", 0, "E5", 0, "Ab5", 0, "D5", 0, "G5", 0, 0] },
-        voice3: { wave: "sine",     notes: ["C2", 0, "Fs2", 0, "Bb2", 0, "Eb2", 0, "Ab2", 0, "D2", 0, "G2", 0, "C2", 0] }
+    exploreMushroomCave: {
+        tempo: 90,
+        voice1: { wave: "sine",     notes: ["C5", "G5", "E5", "C6", "B5", "G5", "E5", 0, "A5", "E5", "C5", "A5", "G5", "E5", "C5", 0] },
+        voice2: { wave: "triangle", notes: ["C4", 0, "E4", 0, "G4", 0, "C5", 0, "A4", 0, "E4", 0, "C4", 0, "G3", 0] },
+        voice3: { wave: "sine",     notes: ["C2", 0, 0, 0, "G2", 0, 0, 0, "A2", 0, 0, 0, "F2", 0, 0, 0] }
     },
 
     exploreSnow : {
@@ -300,5 +209,12 @@ audioEngine.registerSounds({
         voice1: { wave: "sine",     notes: ["E5", "B5", "Cs6", "E6", "Eb6", "B5", "Gs5", "E5", "Fs5", "B5", "Cs6", "Eb6", "E6", 0, "B5", 0] },
         voice2: { wave: "sine",     notes: ["E6", 0, "Gs6", 0, "B6", 0, "Gs6", 0, "Fs6", 0, "A6", 0, "Gs6", 0, "E6", 0] },
         voice3: { wave: "triangle", notes: ["E3", 0, 0, 0, "B2", 0, 0, 0, "A2", 0, 0, 0, "E3", 0, 0, 0] }
+    },
+
+    exploreLava: {
+        tempo: 80,
+        voice1: { wave: "triangle", notes: ["F4", "Ab4", "C5", "Eb5", "C5", "Ab4", "F4", 0, "Db5", "C5", "Ab4", "F4", "Eb4", "F4", "Ab4", 0] },
+        voice2: { wave: "sine",     notes: ["F5", 0, "C5", 0, "Ab4", 0, "F4", 0, "Db5", 0, "Ab4", 0, "C5", 0, "F4", 0] },
+        voice3: { wave: "sine",     notes: ["F2", "F2", "C2", "C2", "Db2", "Db2", "Ab1", "Ab1", "F2", "F2", "C2", "C2", "Eb2", "Eb2", "F2", "F2"] }
     }
 });

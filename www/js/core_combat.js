@@ -62,6 +62,7 @@ function Core_Engine_Combat(comand) {
             document.getElementById("combat_books").style.display = "none";
             document.getElementById("en_bs_sc").innerHTML = "You have been defeated by the " + enemy.name + "...";
             encounter_outcome = 5;
+            Engine_Hud(13);
         }
 
         // ENEMY DEFEAT
