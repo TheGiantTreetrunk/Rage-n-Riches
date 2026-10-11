@@ -79,7 +79,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.450 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.451 alpha test</p>
             <hr>
         </div>
 
@@ -231,6 +231,7 @@
             
             <p id="dr_sc" style="text-align: center" class="text_shadow">You see a door, we should break it down...</p>
             <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
+            <button style="display: none;" onclick="Engine_Hud(9);">test</button>
             <hr>
         </div>
 
@@ -344,20 +345,24 @@
         </div>
 
         <div id="en4" class="window_scenes_base">
-            <h3 style="text-align: center">Encounter</h3><br>
-            <p style="text-align: center">Plugged Drain</p><br>
+            <hr>
+            <h3 style="text-align: center">Plugged Drain</h3>
             <p id="c_en_plg_dr_oc" style="text-align: center">Water starts filling the room. Unclog the drain quickly!</p>
-            <br><br>
+            <br>
             <center>
                 <div id="en_plgdr_board">
-                    <progress id="pg_en_plgdr" value="12" max="100"></progress>
-                    <br><br><br>
-                    <button class="en_uix_button" onclick="Core_Encounter_PLG_DR(3)">Plunge!</button>
+                    <progress id="pg_en_plgdr" value="12" max="100" style="display: none;"></progress>
+                    <center>
+                        <button id="actual_plunger" class="icns" style="text-align: center; font-size: 128px;" onclick="Core_Encounter_PLG_DR(3)"></button>
+                    </center>
                 </div>
+
                 <div id="en_plgdr_end" style="display: none;">
                     <button class="en_uix_button" onclick="Engine_Hud(12)">Continue</button>
                 </div>
             </center>
+            <br>
+            <hr>
         </div>
 
         <div class="water-container" id="water_container">
@@ -412,28 +417,30 @@
             <hr>
         </div>
 
-        <div id="en6" class="window_scenes_base">
-            <hr>
-            <h3 style="text-align: center">Encounter</h3>
-            <p style="text-align: center">Healing Pool</p>
-            <center>
-                <div id="en_hp_dice" class="dice-display">⚀</div>
-            </center>
-            <p id="c_en_hp_oc" style="text-align: center">You have discovered a healing pool </p>
-            <p style="text-align: center">
-                +10 Health
+        <div id="en6" class="rb_cr_challenge_table">
+            <div class="rb-cr-container">
+                <h3 class="rb_cr_sticky-title">Healing Pool</h3>
+                
+                
+                <div id="en_hp_dice" class="rb_cr_dice-display">⚄</div>
+
+                <br><br><br><Br><br><Br>
+            </div>
+
+            <div class="rb-cr-scroll-content">
+                <hr>
+                <p id="c_en_hp_oc" style="text-align: center">You have discovered a healing pool </p>
+                <hr>
+                <table class="rb_cr_table_roll_chart">
+                    <tr><td>Rolls 6</td><td>+10 Health</td></tr>
+                    <tr><td>Rolls 5</td><td>+5 Health</td></tr>
+                    <tr><td>Rolls 4</td><td>+2 Health</td></tr>
+                    <tr><td>Rolls 3</td><td>Fight!</td></tr>
+                    <tr><td>Rolls 2</td><td>Nothing</td></tr>
+                    <tr><td>Rolls 1</td><td>Death!</td></tr>
+                </table>
                 <br>
-                +5 Health
-                <br>
-                +2 Health
-                <br>
-                Fight!
-                <br>
-                Nothing
-                <br>
-                Death!
-            </p>
-            <center>
+                <center>
                 <div id="en_hp_op">
                     <button class="en_uix_button" onclick="Core_Encounter_HP(1)">Drink the water</button>
                     <br>
@@ -444,7 +451,7 @@
                 <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
             </div>
             </center>
-            <hr>
+            </div>
         </div>
 
         <div id="en7" class="window_scenes_base">

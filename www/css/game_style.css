@@ -428,6 +428,25 @@ img {
     box-shadow: none;
 }
 
+#actual_plunger {
+    font-family: 'Game_Icns';
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    color: red;
+    box-shadow: none;
+}
+
+#actual_plunger::after {
+    content: "a";
+}
+
+#actual_plunger:active::after {
+  content: "b";
+}
+
 #dr_actual_door:active {
     font-family: 'Game_Icns';
     background: none;
@@ -1315,7 +1334,7 @@ td.tavern, th.tavern {
     background: transparent;
 }
 
-#rb_cr_dice-display {
+.rb_cr_dice-display {
     position: absolute;
     top: 60%; 
     left: 50%;

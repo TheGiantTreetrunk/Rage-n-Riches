@@ -249,7 +249,8 @@ function isIndestructible(tile) {
     tile === rb_cr_map_BRICK ||
     tile === rb_cr_map_DOOR_CHAR ||
     tile === rb_cr_map_BRKN_DOOR_CHAR ||
-    tile === rb_cr_map_BOSS_CHAR
+    tile === rb_cr_map_BOSS_CHAR ||
+    tile === rb_cr_map_TOILET_CHAR
   );
 }
 
