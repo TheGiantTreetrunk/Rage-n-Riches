@@ -31,6 +31,23 @@ const rb_cr_map_CRATE_CHAR = 'r';
 const rb_cr_map_BARREL_CHAR = 'x';
 const rb_cr_map_COBWEB_CHAR = 'w';
 const rb_cr_map_TOILET_CHAR = 'q';
+const rb_cr_map_Mushroom_CHAR = 'A';
+const rb_cr_map_bag = 'B';
+const rb_cr_map_jar = 'C';
+const rb_cr_map_flask = 'E';
+const rb_cr_map_medkit = 'F';
+const rb_cr_map_mirror = 'G';
+const rb_cr_map_anvil = 'L';
+const rb_cr_map_bed = 'N';
+const rb_cr_map_bellpost = 'P';
+
+const rb_cr_map_glarb = '?';
+const rb_cr_map_ghost = '&';
+const rb_cr_map_shield = '%';
+const rb_cr_map_sword = '$';
+const rb_cr_map_vase = '<';
+const rb_cr_map_chest = '(';
+
 
 const rb_cr_map_SHIELD_WALL_CHAR = 'e';
 const rb_cr_map_WINDOW_WALL_CHAR = 'f';
@@ -129,7 +146,97 @@ var room_prefab = [
   rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
   rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
   rb_cr_map_BRICK,rb_cr_map_COBWEB_CHAR,rb_cr_map_CRUSH_FLOOR_CHAR,rb_cr_map_COBWEB_CHAR,rb_cr_map_BRICK,  
-  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK]
+  rb_cr_map_BRICK,rb_cr_map_BRICK,rb_cr_map_BRKN_DOOR_CHAR,rb_cr_map_BRICK,rb_cr_map_BRICK],
+  /* Bed Room */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_bed, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_DRESSER_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CHAIR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_LAMP_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Trap Room */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_TRAP_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_TRAP_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_TRAP_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_TRAP_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_TRAP_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Merchant Shop */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOOKSHELF_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_TABLE_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_MERCHANT_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRATE_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BARREL_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_LAMP_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Graveyard */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOSS_CHAR, rb_cr_map_GRASS_CHAR, rb_cr_map_BOSS_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSHED_PATH, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOSS_CHAR, rb_cr_map_GRASS_CHAR, rb_cr_map_BOSS_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Glarb's Lair */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_COBWEB_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_COBWEB_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_glarb, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BARREL_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BARREL_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Haunted Crypt */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOSS_CHAR, rb_cr_map_COBWEB_CHAR, rb_cr_map_ghost, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRUSHED_PATH, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_chest, rb_cr_map_COBWEB_CHAR, rb_cr_map_BOSS_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Armoury */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_anvil, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRATE_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOOKSHELF_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRATE_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_TABLE_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BARREL_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Weaponry Vault */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_sword, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_shield, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_chest, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_chest, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_sword, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_shield, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Overgrown Garden */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_TREE_1_CHAR, rb_cr_map_GRASS_CHAR, rb_cr_map_Mushroom_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_GRASS_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_chest, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_Mushroom_CHAR, rb_cr_map_GRASS_CHAR, rb_cr_map_TREE_2_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Alchemist Lab */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_ALCHEMIST_TABLE_CHAR, rb_cr_map_flask, rb_cr_map_jar, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_jar, rb_cr_map_flask, rb_cr_map_ALCHEMIST_TABLE_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Barracks Hall */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_bed, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_bed, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_chest, rb_cr_map_TABLE_CHAR, rb_cr_map_chest, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_bed, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_bed, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Fallen Hero's Gravesite */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOSS_CHAR, rb_cr_map_TORCH_CHAR, rb_cr_map_BOSS_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_GRASS_CHAR, rb_cr_map_BOSS_CHAR, rb_cr_map_GRASS_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_flask, rb_cr_map_GRASS_CHAR, rb_cr_map_jar, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK],
+
+  /* Pastor's Study */[
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BOOKSHELF_CHAR, rb_cr_map_LAMP_CHAR, rb_cr_map_BOOKSHELF_CHAR, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_TABLE_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_bellpost, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_CHAIR_CHAR, rb_cr_map_CRUSH_FLOOR_CHAR, rb_cr_map_jar, rb_cr_map_BRICK,
+  rb_cr_map_BRICK, rb_cr_map_BRICK, rb_cr_map_BRKN_DOOR_CHAR, rb_cr_map_BRICK, rb_cr_map_BRICK]
 
 ];
 
@@ -253,7 +360,6 @@ function isIndestructible(tile) {
     tile === rb_cr_map_BRICK ||
     tile === rb_cr_map_DOOR_CHAR ||
     tile === rb_cr_map_BRKN_DOOR_CHAR ||
-    tile === rb_cr_map_BOSS_CHAR ||
     tile === rb_cr_map_TOILET_CHAR ||
     tile === rb_cr_map_FOUNTAIN_CHAR ||
     tile === rb_cr_map_ladder
@@ -310,6 +416,18 @@ function actionInteract() {
   } 
   // Fountain Interaction
   else if (currentTile === rb_cr_map_FOUNTAIN_CHAR) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(9);
+      }
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  } else if (currentTile === rb_cr_map_MERCHANT_CHAR) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(8);
+      }
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  } else if (currentTile === rb_cr_map_anvil) {
     if (typeof Engine_Hud === "function") {
         Engine_Hud(9);
       }
