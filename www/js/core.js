@@ -177,6 +177,8 @@ function Engine_Hud(comand) {
         //document.body.classList.remove('body_class_main_menu');
         document.body.classList.add('body_class_main_menu');
         trackLogin();
+        var quoterdm = Math.floor(Math.random() * mottos.length);
+        document.getElementById("motomoto").innerHTML = mottos[quoterdm];
     }
 
     if(comand == 1) {
@@ -514,6 +516,9 @@ function Core_Engine_Game_Over() {
         document.getElementById("eg").style.display = "block";
         document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
         document.getElementById("eg_plyr_scr").innerHTML = rb_core_score + "<br> Final Score";
+
+        var quoterdm = Math.floor(Math.random() * quotes.length);
+        document.getElementById("eg_plyr_quote").innerHTML = quotes[quoterdm];
 }
 
 function toggleAppPopup() {
