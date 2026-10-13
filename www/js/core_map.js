@@ -362,6 +362,9 @@ function isIndestructible(tile) {
     tile === rb_cr_map_BRKN_DOOR_CHAR ||
     tile === rb_cr_map_TOILET_CHAR ||
     tile === rb_cr_map_FOUNTAIN_CHAR ||
+    tile === rb_cr_map_MERCHANT_CHAR ||
+    tile === rb_cr_map_ghost ||
+    tile === rb_cr_map_glarb ||
     tile === rb_cr_map_ladder
   );
 }
@@ -436,6 +439,18 @@ function actionInteract() {
   } else if (currentTile === rb_cr_map_TOILET_CHAR) {
     if (typeof Engine_Hud === "function") {
         Engine_Hud(7);
+      }
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  } else if (currentTile === rb_cr_map_glarb) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(5);
+      }
+    map[targetIdx] = rb_cr_map_CRUSHED_PATH;
+    world_gen();
+  }else if (currentTile === rb_cr_map_ghost) {
+    if (typeof Engine_Hud === "function") {
+        Engine_Hud(4);
       }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();

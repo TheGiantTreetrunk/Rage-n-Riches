@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8-Bit Lock Pick</title>
+  <!-- Pixel font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #111116;
+      --green: #00ff66;
+      --dark-green: #00441a;
+      --white: #f0f0f0;
+      --border-gray: #444455;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      image-rendering: pixelated;
+    }
+
+    #game-container {
+      position: relative;
+      width: 16rem;
+      height: 16rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 8-Bit Pixelated Target Ring */
+    #target-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px dashed var(--border-gray);
+    }
+
+    /* Pixel Art Target Point */
+    .point {
+      position: absolute;
+      top: -6px;
+      left: calc(50% - 8px);
+      width: 1rem;
+      height: 1rem;
+      background-color: var(--green);
+      box-shadow: 2px 2px 0px 0px var(--dark-green);
+    }
+
+    /* 8-Bit Spinning Wheel */
+    #wheel {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--white);
+      cursor: pointer;
+      background: rgba(0, 255, 102, 0.03);
+    }
+
+    /* Pixel Art Pointer */
+    #pointer {
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 6px);
+      width: 12px;
+      height: 1.5rem;
+      background-color: var(--green);
+      border: 2px solid var(--bg);
+      box-shadow: 0 2px 0 0 var(--dark-green);
+      z-index: 10;
+    }
+
+    /* UI Layout */
+    #ui-display {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+
+    #digit-count {
+      font-size: 2rem;
+      color: var(--green);
+      margin: 0;
+      text-shadow: 2px 2px 0px var(--dark-green);
+    }
+
+    #digit-label {
+      font-size: 0.6rem;
+      color: var(--white);
+      margin-top: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Arcade Screens / Overlays */
+    .screen {
+      position: absolute;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 2rem;
+      text-transform: uppercase;
+    }
+
+    .screen span {
+      font-size: 0.6rem;
+      color: var(--green);
+      animation: blink 1s infinite steps(1);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <div id="target-circle">
+      <div class="point"></div>
+    </div>
+    <div id="wheel">
+      <div id="pointer"></div>
+    </div>
+  </div>
+
+  <div id="ui-display">
+    <h1 id="digit-count">5</h1>
+    <div id="digit-label">pins left</div>
+  </div>
+
+  <div id="retry-screen" class="screen hidden">
+    LOCK JAMMED<br><br>
+    <span>[ CLICK TO RETRY ]</span>
+  </div>
+
+  <div id="win-screen" class="screen hidden">
+    SUCCESS!<br><br>
+    <span>[ PLAY AGAIN ]</span>
+  </div>
+
+  <script>
+    const wheel = document.getElementById('wheel');
+    const targetCircle = document.getElementById('target-circle');
+    const digitCountEl = document.getElementById('digit-count');
+    const digitLabelEl = document.getElementById('digit-label');
+    const retryScreen = document.getElementById('retry-screen');
+    const winScreen = document.getElementById('win-screen');
+    const uiDisplay = document.getElementById('ui-display');
+
+    let digits = 5;
+    let currentRotation = 0;
+    let targetAngle = 0;
+    let rotationSpeed = 1.5; // degrees per frame
+    let isPlaying = false;
+    let animationFrameId = null;
+
+    function initGame() {
+      digits = 5;
+      currentRotation = 0;
+      rotationSpeed = 1.5;
+      
+      retryScreen.classList.add('hidden');
+      winScreen.classList.add('hidden');
+      wheel.classList.remove('hidden');
+      targetCircle.classList.remove('hidden');
+      uiDisplay.classList.remove('hidden');
+
+      setNewTarget();
+      isPlaying = true;
+      
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      spinLoop();
+    }
+
+    function setNewTarget() {
+      targetAngle = Math.floor(Math.random() * 360);
+      targetCircle.style.transform = `rotate(${targetAngle}deg)`;
+      
+      digitCountEl.textContent = digits;
+      digitLabelEl.textContent = digits === 1 ? 'pin left' : 'pins left';
+    }
+
+    // Smooth continuous JS animation loop
+    function spinLoop() {
+      if (!isPlaying) return;
+      
+      currentRotation = (currentRotation + rotationSpeed) % 360;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+      
+      animationFrameId = requestAnimationFrame(spinLoop);
+    }
+
+    wheel.addEventListener('click', () => {
+      if (!isPlaying) return;
+      isPlaying = false;
+      cancelAnimationFrame(animationFrameId);
+
+      // Check alignment (within 25 degrees)
+      let diff = Math.abs(currentRotation - targetAngle);
+      if (diff > 180) diff = 360 - diff;
+
+      const hit = diff <= 25;
+
+      if (hit) {
+        digits--;
+        if (digits === 0) {
+          wheel.classList.add('hidden');
+          targetCircle.classList.add('hidden');
+          uiDisplay.classList.add('hidden');
+          winScreen.classList.remove('hidden');
+          return;
+        }
+        // Brief pause, then speed up slightly and resume spinning for next pin
+        setTimeout(() => {
+          rotationSpeed = (rotationSpeed > 0 ? -1 : 1) * (Math.abs(rotationSpeed) + 0.3); // reverse and speed up slightly
+          isPlaying = true;
+          setNewTarget();
+          spinLoop();
+        }, 400);
+      } else {
+        wheel.classList.add('hidden');
+        targetCircle.classList.add('hidden');
+        uiDisplay.classList.add('hidden');
+        retryScreen.classList.remove('hidden');
+      }
+    });
+
+    retryScreen.addEventListener('click', initGame);
+    winScreen.addEventListener('click', initGame);
+
+    initGame();
+  </script>
+</body>
+</html>

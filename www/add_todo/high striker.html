@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>High Striker</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            margin-top: 40px;
+        }
+        .container {
+            display: inline-block;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #tower {
+            width: 60px;
+            height: 300px;
+            background: #e0e0e0;
+            margin: 0 auto 15px auto;
+            position: relative;
+            border: 1px solid #999;
+        }
+        #puck {
+            width: 60px;
+            height: 20px;
+            background: #333;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: bottom 0.4s ease-out;
+        }
+        #meter-container {
+            width: 200px;
+            height: 20px;
+            background: #e0e0e0;
+            margin: 0 auto 15px auto;
+            position: relative;
+            border: 1px solid #999;
+        }
+        #meter-indicator {
+            width: 6px;
+            height: 24px;
+            background: #d9534f;
+            position: absolute;
+            top: -2px;
+            left: 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>High Striker</h2>
+    <div id="tower">
+        <div id="puck"></div>
+    </div>
+    <div id="meter-container">
+        <div id="meter-indicator"></div>
+    </div>
+    <button id="strikeBtn" onclick="strike()">Strike!</button>
+    <div id="result">Time it right to nail 100%!</div>
+</div>
+
+<script>
+let power = 0;
+let direction = 1;
+let isRunning = true;
+let animationInterval;
+
+const indicator = document.getElementById('meter-indicator');
+const puck = document.getElementById('puck');
+const result = document.getElementById('result');
+const btn = document.getElementById('strikeBtn');
+const meterContainer = document.getElementById('meter-container');
+
+function startMeter() {
+    power = 0;
+    direction = 1;
+    isRunning = true;
+    btn.disabled = false;
+    result.textContent = "Time it right to nail 100%!";
+    puck.style.bottom = '0px';
+
+    animationInterval = setInterval(() => {
+        power += direction * 2.5;
+        if (power >= 100) {
+            power = 100;
+            direction = -1;
+        } else if (power <= 0) {
+            power = 0;
+            direction = 1;
+        }
+        
+        const maxLeft = meterContainer.clientWidth - indicator.clientWidth;
+        indicator.style.left = (power / 100) * maxLeft + 'px';
+    }, 15);
+}
+
+function strike() {
+    if (!isRunning) return;
+    isRunning = false;
+    clearInterval(animationInterval);
+    btn.disabled = true;
+
+    // Tower height is 300px, puck is 20px, max travel is 280px
+    const maxTravel = 280;
+    const targetHeight = (power / 100) * maxTravel;
+    puck.style.bottom = targetHeight + 'px';
+
+    setTimeout(() => {
+        let message = `Power: ${Math.round(power)}% - `;
+        if (power >= 95) message += "DING! Ring the bell!";
+        else if (power >= 75) message += "Strong hit!";
+        else if (power >= 40) message += "Not bad.";
+        else message += "Weak hit!";
+
+        result.textContent = message;
+
+        // Restart after a short delay
+        setTimeout(() => {
+            startMeter();
+        }, 1500);
+    }, 400);
+}
+
+// Start the game loop on load
+startMeter();
+</script>
+
+</body>
+</html>
