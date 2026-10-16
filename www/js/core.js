@@ -508,6 +508,11 @@ function Engine_Hud(comand) {
             document.getElementById("shrtct").style.display = "";
             world_gen();
     }
+
+    if(comand == 20) {
+        document.getElementById("sc_story_line").style.display = "";
+        showNode('Event_Interview_Intro');
+    }
 }
 
 function Core_Engine_Game_Over() {

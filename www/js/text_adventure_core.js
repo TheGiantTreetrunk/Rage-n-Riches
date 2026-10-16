@@ -53,7 +53,117 @@ var storyNodes = {
             showNode('start');
         },
         choices: []
-    }
+    },
+    GameOver: {
+        text: "Resetting...",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Core_Engine_Game_Over();
+        },
+        choices: []
+    },
+    Event_Interview_Intro: {
+        text: "You walk up to the table and sit down in the chair. However, the second you sit down you become restrained! A figure appears into view on the other side of the table.",
+        choices: [
+            { text: "Uh..... Hello?", nextNode: 'Event_Interview_Intro_A' },
+            { text: "Oh great, an intervention...", nextNode: 'Event_Interview_Intro_B'},
+            { text: "ARE THESE RESTRAINTS NESSECARY?!?!", nextNode: 'Event_Interview_Intro_C'}
+        ]
+    },
+
+    Event_Interview_Intro_A: {
+        text: "Well, well well look what we have here. Fresh meat for my questionaire...",
+        choices: [
+            { text: "Questionaire?", nextNode: 'Event_Interview_Intro_D' },
+            { text: "Um... ok? So im not going to die?", nextNode: 'Event_Interview_Intro_E'}
+        ]
+    },
+
+    Event_Interview_Intro_B: {
+        text: "Well, I wouldn't say an intervention that's a little harsh. More like fresh meat for my questionaire...",
+        choices: [
+            { text: "Questionaire?", nextNode: 'Event_Interview_Intro_D' },
+            { text: "Um... ok? So im not going to die?", nextNode: 'Event_Interview_Intro_E'}
+        ]
+    },
+
+    Event_Interview_Intro_C: {
+        text: "Well, with that attitude absolutely. But also it keeps you here for my questionaire...",
+        choices: [
+            { text: "Questionaire?", nextNode: 'Event_Interview_Intro_D' },
+            { text: "Um... ok? So im not going to die?", nextNode: 'Event_Interview_Intro_E'}
+        ]
+    },
+
+    Event_Interview_Intro_D: {
+        text: "Of course! I haven't seen anyone around here in well over 750 years! You seem like the perfect person to answer them!",
+        choices: [
+            { text: "Sure, why not...", nextNode: 'Event_Interview_Intro_F' },
+            { text: "And if I don't?", nextNode: 'Event_Interview_Intro_G'}
+        ]
+    },
+
+    Event_Interview_Intro_E: {
+        text: "Of course not! consider it extra encouragment to answer my questions...",
+        choices: [
+            { text: "Sure, why not...", nextNode: 'Event_Interview_Intro_F' },
+            { text: "And if I don't?", nextNode: 'Event_Interview_Intro_G'}
+        ]
+    },
+
+    Event_Interview_Intro_F: {
+        text: "Excellent! Whenever you're ready!",
+        choices: [
+            { text: "I'm Ready!", nextNode: 'Event_Interview_Question_1' }
+        ]
+    },
+
+    Event_Interview_Intro_G: {
+        text: "Well in that case I'll have to kill you...",
+        choices: [
+            { text: "You literally just said that you wouldn't!?!?!", nextNode: 'Event_Interview_Intro_H' }
+        ]
+    },
+
+    Event_Interview_Intro_H: {
+        text: "Yeah well im a demon what do you expect... So what will it be?",
+        choices: [
+            { text: "I guess I have little choice...", nextNode: 'Event_Interview_Intro_F' },
+            { text: "Yeah no im good", nextNode: 'Event_Interview_Intro_I' }
+        ]
+    },
+
+    Event_Interview_Intro_I: {
+        text: "With a snap of the demons fingers the restraints tighten on you and kill you...",
+        choices: [
+            { text: "Continue", nextNode: 'GameOver' }
+        ]
+    },
+
+    Event_Interview_Question_1: {
+        text: "Question 1, What is your greatest weakness, and how does it benefit this dungeon?",
+        choices: [
+            { text: "I like to Smash stuff...", nextNode: '' },
+            { text: "I like to Search stuff...", nextNode: ''}
+        ]
+    },
+
+    Event_Interview_Question_2: {
+        text: "Question 2, Why are you trespassing?",
+        choices: [
+            { text: "I fell down a hole and just wanna find the way out...", nextNode: '' },
+            { text: "I fell down a hole and realized how much stuff is down here...", nextNode: ''}
+        ]
+    },
+
+    Event_Interview_Question_3: {
+        text: "Question 3, Where do you see yourself in 500 years?",
+        choices: [
+            { text: "Dead...", nextNode: '' },
+            { text: "Fertilizer for crops...", nextNode: ''},
+            { text: "Remembered as a Hero!", nextNode: ''}
+        ]
+    },
 };
 
 
