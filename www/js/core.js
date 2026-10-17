@@ -364,7 +364,11 @@ function Engine_Hud(comand) {
     if(comand == 11) {
         document.getElementById("tracker").style.display = "";
         document.getElementById("bs").style.display = "";
-        Core_Engine_Combat(0);
+        if(end_game_is == 0) {
+            Core_Engine_Combat(0);
+        } else {
+            Core_Engine_Combat_Boss(0);
+        }
         audioEngine.stop();
         audioEngine.loop("Battle");
     }

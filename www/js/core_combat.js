@@ -8,12 +8,18 @@ var enemy_spd = [1500,1500,1000,3000,1500,1500,2500,3000,1500];
 var enemy_icn = ["&","?","!",".",",","+",";","=","\x5C"];
 var enemy_clr = ["white","green","lime","gray","white","olive","purple","orange","green"];
 
+// Boss specific arrays / lists
+var boss_nme = ["Dread Lord", "Behemoth", "Abyssal Horror", "Titan"];
+var boss_icn = ["W", "M", "X", "V"];
+var boss_clr = ["red", "purple", "orange", "gray"];
+
 var enemy = {
     id: 0,
     name: "",
     health: 0,
     armor: 0,
     dmg: 0,
+    isBoss: false
 };
 
 // Tracks player action cooldown to prevent spamming actions during cast times
@@ -23,6 +29,10 @@ function Core_Engine_Combat(comand) {
     if(comand == 0) {
         for (let i = 0; i < enemy_clr.length; i++) {
             document.getElementById("enemy_battle_icon").classList.remove(enemy_clr[i]);
+        }
+        // Also clean up boss colors just in case
+        for (let i = 0; i < boss_clr.length; i++) {
+            document.getElementById("enemy_battle_icon").classList.remove(boss_clr[i]);
         }
 
         document.getElementById("en_bs_end_of").style.display = "none";
@@ -36,6 +46,8 @@ function Core_Engine_Combat(comand) {
         enemy.health = enemy_hth[enmy];
         enemy.armor = enemy_arm[enmy];
         enemy.dmg = enemy_dmg[enmy];
+        enemy.isBoss = false;
+        
         document.getElementById("enemy_battle_icon").classList.add(enemy_clr[enmy]);
         document.getElementById("enemy_battle_icon").innerHTML = enemy_icn[enmy];
         document.getElementById("enemy_battle_health").innerHTML= enemy.health;
@@ -60,7 +72,7 @@ function Core_Engine_Combat(comand) {
             document.getElementById("player_battle_armor").innerHTML = player.thp;
             document.getElementById("en_bs_end_of").style.display = "";
             document.getElementById("combat_books").style.display = "none";
-            document.getElementById("en_bs_sc").innerHTML = "You have been defeated by the " + enemy.name + "...";
+            document.getElementById("en_bs_sc").innerHTML = "You have been defeated by " + (enemy.isBoss ? "the boss " : "") + enemy.name + "...";
             encounter_outcome = 5;
             Engine_Hud(13);
         }
@@ -74,10 +86,57 @@ function Core_Engine_Combat(comand) {
             document.getElementById("enemy_battle_armor").innerHTML = enemy.armor;
             document.getElementById("en_bs_end_of").style.display = "";
             document.getElementById("combat_books").style.display = "none";
-            document.getElementById("en_bs_sc").innerHTML = "You have defeated the " + enemy.name + "!";
-            encounter_outcome = 3;
-            rb_core_has_completed_first_flr_cmbt = 1;
+            
+            if (enemy.isBoss) {
+                document.getElementById("en_bs_sc").innerHTML = "INCREDIBLE! You have slain the boss, " + enemy.name + "!";
+                encounter_outcome = 3; // Or handle boss-specific victory rewards/flags here
+                rb_core_has_completed_first_flr_cmbt = 1;
+            } else {
+                document.getElementById("en_bs_sc").innerHTML = "You have defeated the " + enemy.name + "!";
+                encounter_outcome = 3;
+                rb_core_has_completed_first_flr_cmbt = 1;
+            }
         }
+    }
+}
+
+// BOSS ENCOUNTER CORE GENERATION
+function Core_Engine_Combat_Boss(comand) {
+    if(comand == 0) {
+        for (let i = 0; i < enemy_clr.length; i++) {
+            document.getElementById("enemy_battle_icon").classList.remove(enemy_clr[i]);
+        }
+        for (let i = 0; i < boss_clr.length; i++) {
+            document.getElementById("enemy_battle_icon").classList.remove(boss_clr[i]);
+        }
+
+        document.getElementById("en_bs_end_of").style.display = "none";
+        document.getElementById("combat_books").style.display = "";
+        isincombat = 1;
+        player_is_acting = false;
+
+        var bsn = Math.floor(Math.random() * boss_nme.length);
+        enemy.id = bsn;
+        enemy.name = boss_nme[bsn];
+        enemy.health = 250;  // Base 250 health
+        enemy.armor = 50;    // Base 50 armor
+        enemy.dmg = 18;      // High damage scaling per hit
+        enemy.isBoss = true;
+
+        document.getElementById("enemy_battle_icon").classList.add(boss_clr[bsn]);
+        document.getElementById("enemy_battle_icon").innerHTML = boss_icn[bsn];
+        document.getElementById("enemy_battle_health").innerHTML = enemy.health;
+        document.getElementById("enemy_battle_armor").innerHTML = enemy.armor;
+
+        document.getElementById("en_bs_sc").innerHTML = "WARNING! A fearsome Boss, " + enemy.name + ", has appeared!";
+        
+        // Boss attacks fast and hard (e.g., 1000ms attack interval)
+        Core_Enemy_Speed_Adjust(1000);
+    }
+
+    if(comand == 1) {
+        // Delegates standard win/loss evaluation states to the same UI handler logic
+        Core_Engine_Combat(1);
     }
 }
 
@@ -101,7 +160,12 @@ function Core_Enemy_Damage() {
             player.hp -= dablage;
         }
 
-        Core_Engine_Combat(1);
+        // Refresh UI state depending on combat type flag
+        if (enemy.isBoss) {
+            Core_Engine_Combat_Boss(1);
+        } else {
+            Core_Engine_Combat(1);
+        }
     }
 }
 
@@ -145,7 +209,8 @@ function Core_Player_Light_Attack() {
             var dmg = Math.floor(Math.random() * class_damage[player.class]) + 1;
             Apply_Damage_To_Target(enemy, dmg);
             document.getElementById("en_bs_sc").innerHTML = "You deal " + dmg + " damage with a Light Attack!";
-            Core_Engine_Combat(1);
+            
+            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
         }
         player_is_acting = false;
     }, castTime);
@@ -165,7 +230,8 @@ function Core_Player_Heavy_Attack() {
             var dmg = Math.floor(Math.random() * baseDmg) + Math.floor(baseDmg * 0.5) + 1; // 1.5x damage potential
             Apply_Damage_To_Target(enemy, dmg);
             document.getElementById("en_bs_sc").innerHTML = "You strike hard for " + dmg + " damage!";
-            Core_Engine_Combat(1);
+            
+            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
         }
         player_is_acting = false;
     }, castTime);
@@ -184,7 +250,8 @@ function Core_Player_Armor_Buff() {
             var gainArmor = Math.floor(Math.random() * 3) + 2; // Gains 2-4 temp armor
             player.thp += gainArmor;
             document.getElementById("en_bs_sc").innerHTML = "You gained " + gainArmor + " temporary armor!";
-            Core_Engine_Combat(1);
+            
+            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
         }
         player_is_acting = false;
     }, castTime);
@@ -209,7 +276,8 @@ function Core_Player_Health_Heal() {
             }
 
             document.getElementById("en_bs_sc").innerHTML = "You restored " + healAmount + " health!";
-            Core_Engine_Combat(1);
+            
+            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
         }
         player_is_acting = false;
     }, castTime);
