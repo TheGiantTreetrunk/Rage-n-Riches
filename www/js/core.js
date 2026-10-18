@@ -190,6 +190,7 @@ function Engine_Hud(comand) {
             Core_Env_Updater('brick', false);
 
             //player has died and is reloading...
+            resetTimer();
             rb_core_score = 0;
             player.hp = class_health[player.class];
             player.dmg = class_damage[player.class];
@@ -517,13 +518,38 @@ function Engine_Hud(comand) {
         document.getElementById("sc_story_line").style.display = "";
         showNode('Event_Interview_Intro');
     }
+
+    if(comand == 21) {
+        Engine_Hud(3); 
+        startTimer();
+    }
+
+    if(comand == 22) {
+        document.getElementById("eg").style.display = "";
+        Core_Engine_Game_Victory();
+    }
 }
 
 function Core_Engine_Game_Over() {
         audioEngine.stop();
         audioEngine.play("youDied");
         document.getElementById("eg").style.display = "block";
+        document.getElementById("eg_title").innerHTML = "Game Over";
+        document.getElementById("eg_icn").innerHTML = "U";
         document.getElementById("eg_sc").innerHTML = "You have died in the dungeon...";
+        document.getElementById("eg_plyr_scr").innerHTML = rb_core_score + "<br> Final Score";
+
+        var quoterdm = Math.floor(Math.random() * quotes.length);
+        document.getElementById("eg_plyr_quote").innerHTML = quotes[quoterdm];
+}
+
+function Core_Engine_Game_Victory() {
+        audioEngine.stop();
+        audioEngine.play("endOfRunVictory");
+        document.getElementById("eg").style.display = "block";
+        document.getElementById("eg_title").innerHTML = "Victory";
+        document.getElementById("eg_icn").innerHTML = "$";
+        document.getElementById("eg_sc").innerHTML = "You have defeated the Super Boss and escaped the dungeon!";
         document.getElementById("eg_plyr_scr").innerHTML = rb_core_score + "<br> Final Score";
 
         var quoterdm = Math.floor(Math.random() * quotes.length);

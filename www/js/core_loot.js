@@ -85,6 +85,11 @@ function Core_Loot_Randomizer() {
         //player death!
         Engine_Hud(13);
     }
+
+    if(encounter_outcome == 6) {
+        //player defeated super boss!
+        Engine_Hud(22);
+    }
 }
 
 function Core_Encounter_Loot_Callout(chest) {

@@ -89,7 +89,7 @@ function Core_Engine_Combat(comand) {
             
             if (enemy.isBoss) {
                 document.getElementById("en_bs_sc").innerHTML = "INCREDIBLE! You have slain the boss, " + enemy.name + "!";
-                encounter_outcome = 3; // Or handle boss-specific victory rewards/flags here
+                encounter_outcome = 6; // Or handle boss-specific victory rewards/flags here
                 rb_core_has_completed_first_flr_cmbt = 1;
             } else {
                 document.getElementById("en_bs_sc").innerHTML = "You have defeated the " + enemy.name + "!";
