@@ -164,6 +164,14 @@ var storyNodes = {
             { text: "Remembered as a Hero!", nextNode: ''}
         ]
     },
+
+    Encounter_RPS_Intro: {
+        text: "",
+        choices: [
+            { text: "", nextNode: '' },
+            { text: "", nextNode: ''}
+        ]
+    },
 };
 
 
