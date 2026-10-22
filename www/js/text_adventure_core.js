@@ -166,11 +166,97 @@ var storyNodes = {
     },
 
     Encounter_RPS_Intro: {
-        text: "",
+        text: "You encounter a Demon and asks if you would be interested in a game?",
         choices: [
-            { text: "", nextNode: '' },
-            { text: "", nextNode: ''}
+            { text: "Sure why not.", nextNode: 'Encounter_RPS_1' },
+            { text: "No, thanks i'll pass.", nextNode: 'Encounter_RPS_Outro'}
         ]
+    },
+
+    Encounter_RPS_Outro: {
+        text: "After declining fire embodies the demon and in a flash, they dissapear!",
+        choices: [
+            { text: "Continue", nextNode: 'Encounter_RPS_0' }
+        ]
+    },
+
+    Encounter_RPS_1: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            //Core_Engine_Game_Over();
+            Engine_Hud(5);
+        },
+        choices: []
+    },
+
+    Encounter_RPS_0: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18);
+        },
+        choices: []
+    },
+
+    Encounter_FAC_Intro: {
+        text: "You encounter a Ghost and asks if you would be interested in a game?",
+        choices: [
+            { text: "Sure why not.", nextNode: 'Encounter_FAC_1' },
+            { text: "No, thanks i'll pass.", nextNode: 'Encounter_FAC_Outro'}
+        ]
+    },
+
+    Encounter_FAC_Outro: {
+        text: "After declining, the Ghost fades out of view. They were never seen again...",
+        choices: [
+            { text: "Continue", nextNode: 'Encounter_FAC_0' }
+        ]
+    },
+
+    Encounter_FAC_1: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            //Core_Engine_Game_Over();
+            Engine_Hud(4);
+        },
+        choices: []
+    },
+
+    Encounter_FAC_0: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18);
+        },
+        choices: []
+    },
+
+    Encounter_LC_Intro: {
+        text: "Searching the room you come across a locked chest. How to open it is the question...",
+        choices: [
+            { text: "Pick the lock", nextNode: 'Encounter_LC_0' },
+            { text: "Smash the lock", nextNode: 'Encounter_LC_1'},
+        ]
+    },
+
+    Encounter_LC_0: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18);
+        },
+        choices: []
+    },
+
+    Encounter_LC_1: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18);
+        },
+        choices: []
     },
 };
 

@@ -194,9 +194,6 @@ function Apply_Damage_To_Target(target, damageAmount) {
     }
 }
 
-// PLAYER ACTIONS
-
-// 1. Light Attack
 function Core_Player_Light_Attack() {
     if (isincombat == 0 || player_is_acting) return;
     
@@ -216,7 +213,6 @@ function Core_Player_Light_Attack() {
     }, castTime);
 }
 
-// 2. Heavy Attack
 function Core_Player_Heavy_Attack() {
     if (isincombat == 0 || player_is_acting) return;
 
@@ -237,7 +233,6 @@ function Core_Player_Heavy_Attack() {
     }, castTime);
 }
 
-// 3. Shield / Armor Buff
 function Core_Player_Armor_Buff() {
     if (isincombat == 0 || player_is_acting) return;
 
@@ -257,7 +252,6 @@ function Core_Player_Armor_Buff() {
     }, castTime);
 }
 
-// 4. Heal Health
 function Core_Player_Health_Heal() {
     if (isincombat == 0 || player_is_acting) return;
 
@@ -278,6 +272,101 @@ function Core_Player_Health_Heal() {
             document.getElementById("en_bs_sc").innerHTML = "You restored " + healAmount + " health!";
             
             if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
+        }
+        player_is_acting = false;
+    }, castTime);
+}
+
+function Core_Player_Slap() {
+    if (isincombat == 0 || player_is_acting) return;
+
+    player_is_acting = true;
+    var castTime = universal_slap_speed;
+    document.getElementById("en_bs_sc").innerHTML = "You wind up a disrespectful slap...";
+
+    setTimeout(function() {
+        if (isincombat == 1) {
+            var dmg = 1; // Fixed 1 true damage
+            enemy.health -= dmg; // Bypasses armor straight to health
+            document.getElementById("en_bs_sc").innerHTML = "You slap the " + enemy.name + " for 1 humiliating damage!";
+            
+            if (enemy.isBoss) { 
+                Core_Engine_Combat_Boss(1); 
+            } else { 
+                Core_Engine_Combat(1); 
+            }
+        }
+        player_is_acting = false;
+    }, castTime);
+}
+
+function Core_Player_Unique_Ability() {
+    if (isincombat == 0 || player_is_acting) return;
+
+    var classId = player.class;
+    var abilityName = class_unique_ability_name[classId];
+    
+    if (abilityName === "None") {
+        document.getElementById("en_bs_sc").innerHTML = "This class has no unique ability!";
+        return;
+    }
+
+    player_is_acting = true;
+    var castTime = class_unique_ability_speed[classId];
+    document.getElementById("en_bs_sc").innerHTML = "Executing " + abilityName + "...";
+
+    setTimeout(function() {
+        if (isincombat == 1) {
+            let msg = "";
+
+            switch(classId) {
+                case 1: // Fighter: Shield Slam (Heavy strike scaling off damage)
+                    var dmg = Math.floor(class_damage[player.class] * 1.3);
+                    Apply_Damage_To_Target(enemy, dmg);
+                    msg = "You slam your shield into them for " + dmg + " damage!";
+                    break;
+                case 2: // Knight: Phalanx Wall (Massive temporary armor boost)
+                    player.thp += 12;
+                    msg = "You lock your shield wall, gaining 12 temporary armor!";
+                    break;
+                case 3: // Alchemist: Acid Splash (Striips enemy armor & deals damage)
+                    if (enemy.armor > 0) enemy.armor = Math.max(0, enemy.armor - 4);
+                    Apply_Damage_To_Target(enemy, 7);
+                    msg = "You chuck a corrosive vial, melting armor and dealing 7 damage!";
+                    break;
+                case 4: // Theologian: Divine Ward (Balanced heal + armor buff)
+                    player.hp += 6;
+                    player.thp += 6;
+                    msg = "Divine grace restores 6 health and grants 6 armor!";
+                    break;
+                case 5: // Ranger: Evasive Roll (Quick high-damage shot)
+                    var dmg = Math.floor(class_damage[player.class] * 1.6);
+                    Apply_Damage_To_Target(enemy, dmg);
+                    msg = "You backflip away and fire a piercing shot for " + dmg + " damage!";
+                    break;
+                case 6: // Artillerist: Shrapnel Mine (Massive heavy blast)
+                    var dmg = 18;
+                    Apply_Damage_To_Target(enemy, dmg);
+                    msg = "You trigger a hidden shrapnel mine for " + dmg + " explosive damage!";
+                    break;
+                case 7: // TEST123: Debug Wipe (Wild, chaotic glitch damage)
+                    var dmg = Math.floor(Math.random() * 40) + 20;
+                    Apply_Damage_To_Target(enemy, dmg);
+                    msg = "[GLITCH] Reality breaks, dealing " + dmg + " chaotic damage!";
+                    break;
+                default:
+                    var dmg = 5;
+                    Apply_Damage_To_Target(enemy, dmg);
+                    msg = "You use " + abilityName + " for " + dmg + " damage!";
+            }
+
+            document.getElementById("en_bs_sc").innerHTML = msg;
+            
+            if (enemy.isBoss) { 
+                Core_Engine_Combat_Boss(1); 
+            } else { 
+                Core_Engine_Combat(1); 
+            }
         }
         player_is_acting = false;
     }, castTime);
