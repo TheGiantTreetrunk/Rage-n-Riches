@@ -1,5 +1,36 @@
 var isincombat = 0;
 
+var class_unique_ability_name = [
+    "None", 
+    "Shield Slam", 
+    "Phalanx Wall", 
+    "Acid Splash", 
+    "Divine Ward", 
+    "Evasive Roll", 
+    "Shrapnel Mine", 
+    "Debug Wipe"
+];
+
+// Cast speeds for each class's unique ability (in milliseconds)
+var class_unique_ability_speed = [500, 1400, 2000, 1200, 1500, 1000, 2500, 400];
+
+// Speed for the universal slap
+var universal_slap_speed = 400;
+
+var class_signature_speed = [1500, 2600, 3000, 2200, 2500, 2800, 3500, 500];
+
+// Array for Ability 2 / Signature Attack Names
+var class_signature_name = [
+    "Desperate Swing", 
+    "Cleave", 
+    "Decapitate", 
+    "Philosopher's Flame", 
+    "Smite", 
+    "Snipe", 
+    "Mortar Volley", 
+    "Memory Leak"
+];
+
 var enemy_nme = ["Ghost","Glarb","Serpant","Golem","Skeleton","Toad","Blob","Ember","Goblin"];
 var enemy_hth = [3,4,3,8,4,2,2,2,4];
 var enemy_dmg = [3,4,4,6,3,2,4,4,3];
@@ -280,15 +311,23 @@ function Core_Player_Health_Heal() {
 function Core_Player_Slap() {
     if (isincombat == 0 || player_is_acting) return;
 
+    // Check if the enemy is at exactly 1 HP
+    if (enemy.health !== 1) {
+        document.getElementById("en_bs_sc").innerHTML = 
+            "The " + enemy.name + " is too strong to be slapped right now! (Must be at exactly 1 HP)";
+        return;
+    }
+
     player_is_acting = true;
-    var castTime = universal_slap_speed;
-    document.getElementById("en_bs_sc").innerHTML = "You wind up a disrespectful slap...";
+    var castTime = 300; // Ultra fast finisher
+    document.getElementById("en_bs_sc").innerHTML = "You wind up a legendary finish...";
 
     setTimeout(function() {
-        if (isincombat == 1) {
-            var dmg = 1; // Fixed 1 true damage
-            enemy.health -= dmg; // Bypasses armor straight to health
-            document.getElementById("en_bs_sc").innerHTML = "You slap the " + enemy.name + " for 1 humiliating damage!";
+        if (isincombat == 1 && enemy.health === 1) {
+            enemy.health = 0; // Guaranteed finish
+            
+            document.getElementById("en_bs_sc").innerHTML = 
+                "DISRESPECTFUL FINISH! You slap the " + enemy.name + " to death for 1 damage!";
             
             if (enemy.isBoss) { 
                 Core_Engine_Combat_Boss(1); 
@@ -362,6 +401,66 @@ function Core_Player_Unique_Ability() {
 
             document.getElementById("en_bs_sc").innerHTML = msg;
             
+            if (enemy.isBoss) { 
+                Core_Engine_Combat_Boss(1); 
+            } else { 
+                Core_Engine_Combat(1); 
+            }
+        }
+        player_is_acting = false;
+    }, castTime);
+}
+
+function Core_Player_Signature_Attack() {
+    if (isincombat == 0 || player_is_acting) return;
+
+    var classId = player.class;
+    var attackName = class_signature_name[classId];
+
+    player_is_acting = true;
+    var castTime = class_signature_speed[classId];
+    document.getElementById("en_bs_sc").innerHTML = "Charging " + attackName + "...";
+
+    setTimeout(function() {
+        if (isincombat == 1) {
+            var baseDmg = class_damage[classId];
+            var dmg = 0;
+
+            switch(classId) {
+                case 1: // Fighter - Cleave
+                    dmg = Math.floor(baseDmg * 2.0);
+                    break;
+                case 2: // Knight - Decapitate
+                    dmg = Math.floor(baseDmg * 1.8) + 4;
+                    break;
+                case 3: // Alchemist - Philosopher's Flame (Bypasses armor)
+                    dmg = 12;
+                    enemy.health -= dmg; // Direct health damage
+                    break;
+                case 4: // Theologian - Smite
+                    dmg = Math.floor(baseDmg * 2.2);
+                    break;
+                case 5: // Ranger - Snipe
+                    dmg = Math.floor(baseDmg * 2.5);
+                    break;
+                case 6: // Artillerist - Mortar Volley
+                    dmg = Math.floor(baseDmg * 3.0);
+                    break;
+                case 7: // TEST123
+                    dmg = 99;
+                    break;
+                default:
+                    dmg = Math.floor(baseDmg * 1.5);
+            }
+
+            // Apply regular damage if not already handled directly (like Alchemist)
+            if (classId !== 3) {
+                Apply_Damage_To_Target(enemy, dmg);
+            }
+
+            document.getElementById("en_bs_sc").innerHTML = 
+                "You unleash " + attackName + " dealing " + dmg + " damage!";
+
             if (enemy.isBoss) { 
                 Core_Engine_Combat_Boss(1); 
             } else { 

@@ -1395,3 +1395,104 @@ td.tavern, th.tavern {
 ::-webkit-scrollbar-thumb:hover {
   background: #b30000; 
 }
+
+.window_scenes_base2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 380px;
+    height: 520px; /* Rigid, uniform total height */
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 100;
+    
+    background-color: #2a2f32;
+    border: 4px solid #141719;
+    box-shadow: 0 0 0 4px #4a5358, 6px 6px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Parchment Card Frame - Fills container completely */
+fieldset#story_board {
+    border: 4px solid #7c5a3d;
+    background-color: #f3e5c8;
+    color: #2b1e17;
+    margin: 0;
+    padding: 12px;
+    box-sizing: border-box;
+    
+    /* Flex layout to lock elements in place */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Spans the full 520px height */
+    box-shadow: inset 0 0 0 2px #d4b896;
+}
+
+/* Header / Inventory Line */
+#inventory-display {
+    flex: 0 0 auto; /* Never shrink or grow */
+    font-weight: bold;
+    color: #8b261d;
+    border-bottom: 2px dashed #b89772;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+/* Story Narrative Section - Takes available vertical space & scrolls */
+.description-section {
+    flex: 1 1 auto; /* Expands to fill unused vertical space */
+    overflow-y: auto; /* Scrolls neatly if text is long */
+    padding-right: 6px;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Custom Scrollbar for Parchment Theme */
+.description-section::-webkit-scrollbar {
+    width: 6px;
+}
+.description-section::-webkit-scrollbar-track {
+    background: #e2cb9c;
+}
+.description-section::-webkit-scrollbar-thumb {
+    background: #7c5a3d;
+}
+
+/* Choice Section Divider */
+.action-section {
+    flex: 0 0 auto; /* Stays locked to the bottom */
+    margin-top: 10px;
+    border-top: 3px dashed #8b261d;
+    padding-top: 10px;
+    box-sizing: border-box;
+    max-height: 220px; /* Keeps choice area contained if there are many buttons */
+    overflow-y: auto;
+}
+
+/* Choice Buttons */
+button.story_board_asset {
+    background-color: #8c6a4e;
+    color: #ffffff;
+    border: 3px solid #4a3423;
+    width: 100%;
+    margin: 6px 0; 
+    padding: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px #000;
+    box-shadow: 2px 2px 0px #2a1c12;
+}
+
+button.story_board_asset:hover {
+    background-color: #a37d5d;
+    border-color: #614530;
+}
+
+button.story_board_asset:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px #000;
+}
