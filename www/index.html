@@ -222,18 +222,16 @@
             <hr>
         </div>
  
-        <div id="dr" class="window_scenes_base">
-            <hr>
-            <h1 id="room_id" class="text_shadow" style="text-align: center">Door '1'</h1>
-            <h3 id="game_score" class="text_shadow" style="text-align: center">983 <br> Score</h3>
-            <center>
-                <button class="box" id="dr_actual_door" style="text-align: center; font-size: 128px;" onclick="Core_Door_Randomizer(1)">:</button>
-            </center>
+        <div id="dr" class="window_circular_void">
+            <h1 id="room_id" class="text_shadow" style="margin: 0; font-size: 1.4rem;">Door '1'</h1>
+            <h3 id="game_score" class="text_shadow" style="margin: 5px 0; font-size: 0.9rem; text-align: center;">983 <br> Score</h3>
             
-            <p id="dr_sc" style="text-align: center" class="text_shadow">You see a door, we should break it down...</p>
-            <p id="dr_hp" class="text_shadow" style="text-align: center"></p>
-            <button  onclick="Engine_Hud(20);">test</button>
-            <hr>
+            <button class="box" id="dr_actual_door" style="text-align: center; font-size: 128px;" onclick="Core_Door_Randomizer(1)">:</button>
+            
+            <p id="dr_sc" style="margin: 5px 0; font-size: 0.85rem; text-align: center;" class="text_shadow">You see a door, we should break it down...</p>
+            <p id="dr_hp" class="text_shadow" style="margin: 2px 0; font-size: 0.85rem; text-align: center;"></p>
+            
+            <button onclick="Engine_Hud(20);" style="margin-top: 5px; padding: 2px 8px; cursor: pointer;">test</button>
         </div>
 
         <div id="bs" class="window_scenes_base">
