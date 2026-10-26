@@ -80,7 +80,7 @@
             <center>
             <img src="favicon.ico">
             </center>
-            <p style="text-align: center" class="text_shadow">v 0.451 alpha test</p>
+            <p style="text-align: center" class="text_shadow">v 0.452 alpha test</p>
             <hr>
         </div>
 
@@ -189,8 +189,7 @@
             <div class="rb_dung_hud_node icns" id="room_6_id">:</div>
         </div>
 
-        <div id="wrld" class="window_scenes_base">
-            <hr>
+        <div id="wrld" class="window_scenes_base3">
             <table id="map" class="icns" style="text-align: center; vertical-align: middle;"></table>
             <br>
             <br>
@@ -219,7 +218,6 @@
             </tr>
             </table>
         </div>
-            <hr>
         </div>
  
         <div id="dr" class="window_circular_void">
@@ -235,44 +233,44 @@
         </div>
 
         <div id="bs" class="window_scenes_base">
-            <hr>
-            <h2 style="text-align: center;" class="text_shadow">BATTLE</h2>
-            <p id="en_bs_sc" class="text_shadow" style="text-align: center;">You come across a 'enemy' they look mad...</p>
-            <br>
-            <table style="width: 100%; table-layout: fixed; text-align: center;">
+            <!-- BATTLE title removed for a cleaner, more immersive RPG look -->
+            <p id="en_bs_sc" class="text_shadow" style="text-align: center; margin: 0 0 12px 0; font-size: 0.85rem;">You come across a Goblin they look mad...</p>
+            
+            <table style="width: 100%; table-layout: fixed; text-align: center; margin-bottom: 5px;">
                 <tr>
-                    <td id="player_battle_icon" class="icns plyr_shadow1" style="font-size: 32px; padding: 10px 0;">@</td>
-                    <td id="enemy_battle_icon" class="icns plyr_shadow1" style="font-size: 32px; padding: 10px 0;">&</td>
+                    <td id="player_battle_icon" class="icns plyr_shadow1" style="font-size: 28px; padding: 5px 0;">@</td>
+                    <td id="enemy_battle_icon" class="icns plyr_shadow1" style="font-size: 28px; padding: 5px 0;">&</td>
                 </tr>
                 <tr>
-                    <td><span class="red icns text_shadow">~</span> <a id="player_battle_health" class="text_shadow">20</a></td>
-                    <td><span class="red icns text_shadow">~</span> <a id="enemy_battle_health" class="text_shadow">10</a></td>
+                    <td><span class="red icns text_shadow">~</span> <a id="player_battle_health" class="text_shadow">100</a></td>
+                    <td><span class="red icns text_shadow">~</span> <a id="enemy_battle_health" class="text_shadow">4</a></td>
                 </tr>
                 <tr>
-                    <td><span class="blue icns text_shadow">%</span> <a id="player_battle_armor" class="text_shadow">10</a></td>
-                    <td><span class="blue icns text_shadow">%</span> <a id="enemy_battle_armor" class="text_shadow">10</a></td>
+                    <td><span class="blue icns text_shadow">%</span> <a id="player_battle_armor" class="text_shadow">49</a></td>
+                    <td><span class="blue icns text_shadow">%</span> <a id="enemy_battle_armor" class="text_shadow">2</a></td>
                 </tr>
             </table>
-
-            <br>
-            <div id="combat_books" class="combat_book">
-                <button class="book_action text_shadow" onclick="Core_Player_Light_Attack()">Light Hit</button>
-                <button class="book_action text_shadow" onclick="Core_Player_Heavy_Attack()">Heavy Hit</button>
-
-                <button class="book_action text_shadow" onclick="Core_Player_Armor_Buff()">Armour Up</button>
-                <button class="book_action text_shadow" onclick="Core_Player_Health_Heal()">Heal Up</button>
-            </div>
-
-            
-            <div id="en_bs_end_of">
-                <center>
-                    <button class="en_uix_button" onclick="Engine_Hud(12)">continue</button>
-                </center>
-            </div>
-
-            <br>
-            <hr>
         </div>
+
+<!-- BOTTOM WINDOW: Attack Commands Slab -->
+<div id="bs_commands" class="battle_command_slab">
+    <div id="combat_books" class="combat_book" style="margin: 0; padding: 0;">
+        <button class="book_action text_shadow" onclick="Core_Player_Light_Attack()">Light Hit</button>
+        <button class="book_action text_shadow" onclick="Core_Player_Heavy_Attack()">Heavy Hit</button>
+
+        <button class="book_action text_shadow" onclick="Core_Player_Signature_Attack()">Signature Attack</button>
+        <button class="book_action text_shadow" onclick="Core_Player_Unique_Ability()">Unique Attack</button>
+
+        <button class="book_action text_shadow" onclick="Core_Player_Armor_Buff()">Armour Up</button>
+        <button class="book_action text_shadow" onclick="Core_Player_Health_Heal()">Heal Up</button>
+    </div>
+
+    <div id="en_bs_end_of" style="width: 100%; margin-top: 5px;">
+        <center>
+            <button class="en_uix_button" onclick="Engine_Hud(12)" style="padding: 10px 20px; font-size: 14px;">continue</button>
+        </center>
+    </div>
+</div>
 
         <div id="en1" class="window_scenes_base">
             <hr>

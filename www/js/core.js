@@ -116,6 +116,7 @@ function Engine_Hud(comand) {
     document.getElementById("wrld").style.display = "none";
     document.getElementById("dr").style.display = "none";
     document.getElementById("bs").style.display = "none";
+    document.getElementById("bs_commands").style.display = "none";
     document.getElementById("en1").style.display = "none";
     document.getElementById("en2").style.display = "none";
     document.getElementById("en3").style.display = "none";
@@ -527,6 +528,24 @@ function Engine_Hud(comand) {
     if(comand == 22) {
         document.getElementById("eg").style.display = "";
         Core_Engine_Game_Victory();
+    }
+
+    if(comand == 23) {
+        //rock paper scissors intro
+        document.getElementById("sc_story_line").style.display = "";
+        showNode('Encounter_RPS_Intro');
+    }
+
+    if(comand == 24) {
+        //flip a coin intro
+        document.getElementById("sc_story_line").style.display = "";
+        showNode('Encounter_FAC_Intro');
+    }
+
+    if(comand == 25) {
+        //toilet intro
+        document.getElementById("sc_story_line").style.display = "";
+        showNode('Encounter_Toilet_Intro');
     }
 }
 

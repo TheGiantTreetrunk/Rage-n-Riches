@@ -160,3 +160,167 @@ button.gamepad-btn:active {
 #map td.facing-right {
   border-right-color: #ffcc00;
 }
+
+#map {
+    position: relative;
+    background-color: #1a1e1e;
+    
+    /* Chunky stone border */
+    border: 4px solid #383f42;
+    
+    /* Stacked 8-bit pixel shadows give it solid 3D depth and lift it off the background */
+    box-shadow: 
+        0 4px 0 #111414,
+        0 8px 0 #0b0e0e,
+        0 12px 0 #070909,
+        0 16px 25px rgba(0, 0, 0, 0.85);
+        
+    border-radius: 2px;
+    
+    /* Keep all icons and text razor-sharp */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    
+    margin: 15px auto;
+}
+
+/* Solid 8-bit rock/dirt cliff hanging off the bottom */
+#map::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: -22px;
+    height: 22px;
+    
+    /* Dark rock strata colors */
+    background: #111414;
+    border-left: 4px solid #222729;
+    border-right: 4px solid #080a0a;
+    border-bottom: 4px solid #040505;
+    
+    /* Clean, blocky retro jagged bottom edge */
+    clip-path: polygon(
+        0% 0%, 100% 0%, 
+        100% 35%, 96% 100%, 
+        86% 75%, 75% 100%, 
+        62% 80%, 50% 100%, 
+        38% 70%, 25% 100%, 
+        14% 85%, 4% 100%, 
+        0% 35%
+    );
+    
+    pointer-events: none;
+    z-index: -1;
+}
+
+#bs {
+    position: absolute;
+    top: 34%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 90vw;
+    max-width: 440px;
+    height: auto;
+    max-height: 50vh;
+    overflow-y: auto;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 100;
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
+    /* Elite dithered stone texture */
+    background-color: #13171a;
+    background-image: 
+        linear-gradient(45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%), 
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.025) 75%), 
+        linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.025) 75%);
+    background-size: 4px 4px;
+
+    /* Chiseled bevels & 3D floating island shadow stack */
+    border: 4px solid #222930;
+    box-shadow: 
+        inset 0 0 0 2px #4b5866,
+        inset 0 0 0 4px #0d1013,
+        0 0 0 4px #060809,
+        0 16px 0 #111414,
+        0 20px 0 #070909,
+        0 24px 35px rgba(0, 0, 0, 0.9);
+        
+    border-radius: 0px;
+}
+
+/* Solid 8-bit rock cliff hanging off the bottom of the Arena slab */
+#bs::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: -22px;
+    height: 22px;
+    background: #111414;
+    border-left: 4px solid #222729;
+    border-right: 4px solid #080a0a;
+    border-bottom: 4px solid #040505;
+    clip-path: polygon(
+        0% 0%, 100% 0%, 
+        100% 35%, 96% 100%, 
+        86% 75%, 75% 100%, 
+        62% 80%, 50% 100%, 
+        38% 70%, 25% 100%, 
+        14% 85%, 4% 100%, 
+        0% 35%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- BOTTOM BATTLE COMMAND SLAB (Pulled Closer to Bottom Navbar) --- */
+.battle_command_slab {
+    position: absolute;
+    top: 74%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 90vw;
+    max-width: 440px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 16px;
+    box-sizing: border-box;
+    z-index: 100;
+
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+
+    /* Matching elite dithered stone texture */
+    background-color: #13171a;
+    background-image: 
+        linear-gradient(45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%), 
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.025) 75%), 
+        linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.025) 75%);
+    background-size: 4px 4px;
+
+    /* Matching chiseled bevels & outer frame */
+    border: 4px solid #222930;
+    box-shadow: 
+        inset 0 0 0 2px #4b5866,
+        inset 0 0 0 4px #0d1013,
+        0 0 0 4px #060809,
+        0 12px 25px rgba(0, 0, 0, 0.9);
+}

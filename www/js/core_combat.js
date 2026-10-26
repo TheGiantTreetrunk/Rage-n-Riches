@@ -68,6 +68,7 @@ function Core_Engine_Combat(comand) {
 
         document.getElementById("en_bs_end_of").style.display = "none";
         document.getElementById("combat_books").style.display = "";
+        document.getElementById("bs_commands").style.display = "";
         isincombat = 1;
         player_is_acting = false;
 

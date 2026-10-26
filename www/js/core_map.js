@@ -438,19 +438,19 @@ function actionInteract() {
     world_gen();
   } else if (currentTile === rb_cr_map_TOILET_CHAR) {
     if (typeof Engine_Hud === "function") {
-        Engine_Hud(7);
+        Engine_Hud(25);
       }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   } else if (currentTile === rb_cr_map_glarb) {
     if (typeof Engine_Hud === "function") {
-        Engine_Hud(5);
+        Engine_Hud(23);
       }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();
   }else if (currentTile === rb_cr_map_ghost) {
     if (typeof Engine_Hud === "function") {
-        Engine_Hud(4);
+        Engine_Hud(24);
       }
     map[targetIdx] = rb_cr_map_CRUSHED_PATH;
     world_gen();

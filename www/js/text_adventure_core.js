@@ -233,6 +233,40 @@ var storyNodes = {
         choices: []
     },
 
+    Encounter_Fountain_Intro: {
+        text: "You encounter a Ghost and asks if you would be interested in a game?",
+        choices: [
+            { text: "Sure why not.", nextNode: 'Encounter_Fountain_1' },
+            { text: "No, thanks i'll pass.", nextNode: 'Encounter_Fountain_Outro'}
+        ]
+    },
+
+    Encounter_Fountain_Outro: {
+        text: "After declining, the Ghost fades out of view. They were never seen again...",
+        choices: [
+            { text: "Continue", nextNode: 'Encounter_Fountain_0' }
+        ]
+    },
+
+    Encounter_Fountain_1: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            //Core_Engine_Game_Over();
+            Engine_Hud(4);
+        },
+        choices: []
+    },
+
+    Encounter_Fountain_0: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18);
+        },
+        choices: []
+    },
+
     Encounter_LC_Intro: {
         text: "Searching the room you come across a locked chest. How to open it is the question...",
         choices: [
@@ -258,6 +292,84 @@ var storyNodes = {
         },
         choices: []
     },
+
+    Encounter_Toilet_Intro: {
+        text: "",
+        onEnter: () => {
+            // Randomly set state: 50% chance clean vs. smelly
+            const isSmelly = Math.random() < 0.5;
+            
+            // Save state to temporary variable or game state for child nodes
+            window.tempToiletState = isSmelly ? "smelly" : "clean";
+
+            // Dynamic intro text based on cleanliness
+            let introText = "";
+            if (isSmelly) {
+                introText = "In the center of the room stands a solitary porcelain toilet. A horrific, pungent odor fills the air, clearly emanating from it.";
+            } else {
+                introText = "In the center of the room stands a solitary porcelain toilet. Oddly enough, it looks spotless and smells completely fresh.";
+            }
+
+            // Render text dynamically
+            document.getElementById("sc_story_line").innerText = introText;
+        },
+        choices: [
+            { text: "Open the toilet lid", nextNode: 'Encounter_Toilet_OpenLid' },
+            { text: "Flush the toilet", nextNode: 'Encounter_Toilet_Flush' },
+            { text: "Leave it be", nextNode: 'Encounter_Toilet_Exit' }
+        ]
+    },
+
+    Encounter_Toilet_OpenLid: {
+        text: "",
+        onEnter: () => {
+            // Retrieve state or evaluate
+            const isSmelly = window.tempToiletState === "smelly";
+
+            let lidText = "";
+            if (isSmelly) {
+                lidText = "You slowly lift the lid. The stench doubles in intensity, revealing murky, dark water and unmentionable debris.";
+            } else {
+                lidText = "You lift the lid carefully. The bowl is filled with crystal-clear water, reflecting the room's lighting.";
+            }
+
+            document.getElementById("sc_story_line").innerText = lidText;
+        },
+        choices: [
+            { text: "Flush the toilet", nextNode: 'Encounter_Toilet_Flush' },
+            { text: "Leave it be", nextNode: 'Encounter_Toilet_Exit' }
+        ]
+    },
+
+    Encounter_Toilet_Flush: {
+        text: "",
+        onEnter: () => {
+            // 50% chance to clog when flushing
+            const isClogged = Math.random() < 0.5;
+
+            if (isClogged) {
+                document.getElementById("sc_story_line").innerText = "You press the handle. The water rises dangerously fast to the brim! It's completely clogged and overflowing!";
+                
+                Engine_Hud(7);
+                // trigger encounter challenge
+                // e.g., TriggerChallenge('toilet_overflow') or deduct HP/stats here
+            } else {
+                document.getElementById("sc_story_line").innerText = "You press the handle. A satisfying swirl carries the water down without a hitch.";
+            }
+        },
+        choices: [
+            { text: "Step away", nextNode: 'Encounter_Toilet_Exit' }
+        ]
+    },
+
+    Encounter_Toilet_Exit: {
+        text: "",
+        onEnter: () => {
+            document.getElementById("sc_story_line").style.display = "none";
+            Engine_Hud(18); // Exit encounter back to game loop/HUD
+        },
+        choices: []
+    }
 };
 
 
