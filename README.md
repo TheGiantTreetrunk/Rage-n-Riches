@@ -1,62 +1,55 @@
 # Rage 'n' Riches
 
-**Rage 'n' Riches** is a minimalist, high-stakes 8-bit roguelike arcade crawler designed for quick, 15-minute tactical sessions. Featuring a monochrome "Void" aesthetic, the game focuses on intense resource management, "Chemical Overload" stress mechanics, and brutal turn-based combat.
+**Rage 'n' Riches** is a fast-paced, high-stakes 8-bit roguelike arcade crawler built for intense **15-minute tactical runs** culminating in a punishing **mid-boss showdown**. Step into an ancient, ever-shifting labyrinth filled with dark lore, treacherous traps, and relentless enemies.
 
 ---
 
-## 🕹️ Core Gameplay Mechanics
+## 🗡️ 15-Minute Run Loop
 
-### 🎒 The 10-Item "Cargo Bay"
-Survival depends on your 10-slot inventory limit. Players must strategically balance combat buffs, healing supplies, and utility items. Every pick-up is a choice.
-* **Limited Capacity:** A strict 10-item cap forces constant inventory triage.
-* **Consumable Categories:** Including Damage Boosters, Strength Potions, Health Kits, and Stress-Relief Scrolls.
+Every run is a race against time and decay. Players have 15 minutes to clear floors, overcome environmental hazards, gather gear, and prepare for the **Mid-Boss Encounter**.
 
-### 🧠 "Chemical Overload" Stress System
-Every action has a psychological cost. The Stress System prevents "stat-padding" and forces careful timing.
-* **Action-Induced Stress:** Attacking while buffed or consuming performance-enhancing potions increases your Stress Level.
-* **Mental Stages:** Transitions through **CALM**, **ANXIOUS**, **STRESSED**, and **PANIC**.
-* **Panic State:** Reaching maximum stress triggers a Panic debuff, reducing physical effectiveness and combat accuracy.
-
-### ⚔️ Tactical Combat & Intelligence
-Enemies aren't just damage sponges—they possess simple decision-making AI.
-* **Reactive AI:** Enemies may "Berserk" at low health or "Sunder" your defenses if you are heavily armored.
-* **Quick Actions:** A streamlined 2x3 grid allows for rapid tactical decisions between Attacking, Analyzing, and Consuming.
+1. **The Descent (0–10 Mins):** Battle through randomized floors, trigger ancient lore, and survive environmental traps.
+2. **The Preparation (10–14 Mins):** Optimize gear, balance health reserves, and prepare for the boss arena.
+3. **The Mid-Boss Gate (15 Mins):** Face off against a formidable boss that tests your class mastery and tactical speed.
 
 ---
 
 ## 🎭 Character Classes
 
-The game features 8 distinct classes, each designed with unique stat distributions and categorized abilities:
+Choose from 6 specialized combat classes, each offering unique strengths to handle the dungeon's horrors:
 
-1.  **Fighter:** High physical durability and steady damage output.
-2.  **Alchemist:** Experts in chemistry; they take reduced stress from potion consumption.
-3.  **Theologian:** Focuses on mental fortitude and stress management.
-4.  **Ranger:** High mobility and critical strike potential.
-5.  **Monk:** Balanced stats with unique self-buffing capabilities.
-6.  **Knight:** The ultimate tank, built to soak damage at the cost of mobility.
-7.  **Troubadour:** Influences combat flow and enemy morale.
-8.  **Artillerist:** High-risk, high-reward glass cannon with massive damage potential.
+* **Fighter:** Durable frontline brawler with steady, reliable physical damage.
+* **Knight:** A heavy tank built to absorb massive incoming damage at the cost of speed.
+* **Alchemist:** Potion and element specialist capable of brewing tactical advantages on the fly.
+* **Theologian:** Holy warrior focused on divine protection, wards, and self-sustenance.
+* **Ranger:** Agile ranged specialist with high critical strike capabilities and swift evasion.
+* **Artillerist:** High-risk, high-reward glass cannon capable of dealing massive area-of-effect damage.
 
 ---
 
-## 🖥️ Technical Design & Aesthetic
+## 👻 Dungeon Encounters & Threats
 
-### "The Void" UI
-* **Monochrome Palette:** A strict Black, White, and Grey aesthetic for high-contrast visibility.
-* **Minimalist HUD:** No borders, no clutter. The UI floats in the "void," utilizing a diagnostic terminal style.
-* **Mobile-First:** Designed with the Google Pixel 10 (Tensor G5) in mind, featuring large touch-targets and a centered 80% width layout for one-handed play.
+The depths are teeming with deadly adversaries and dynamic combat challenges:
 
-### Tech Stack
-* **Engine:** Pure HTML5 / CSS3 / JavaScript (No external libraries).
-* **UI:** Absolute-centered modals and CSS Grid-based inventory layouts.
-* **Art:** ASCII art aesthetics combined with custom 8-bit icon mapping.
+* **Demons:** High-damage, aggressive foes that force rapid defensive responses.
+* **Ghosts:** Elusive phase-shifting spirits that bypass physical armor and inflict debuffs.
+* **Former Occupants:** Undead remains and fallen adventurers who use player-like combat techniques against you.
+* **Dungeon Hazards:** Floor spikes, arcane seals, collapse traps, and cursed altars that demand quick tactical decisions.
 
 ---
 
-## 🛠️ Project Evolution (v1.0)
-The project is currently in active development, focusing on "Earnest" design and mechanical transparency. Recent updates include:
-* Consolidation of the `checkPlayerDeath` safety protocol.
-* Implementation of the borderless Monochrome Loot and Stats screens.
-* Integration of the "Breathe" action for tactical stress reduction.
+## 📜 Lore & Stories of the Dungeon
+
+The dungeon is not just a maze—it is a living tomb with a dark history waiting to be uncovered through environmental storytelling and readable relics:
+
+* **The Lost Expedition:** Discover journals left behind by former adventurers, revealing secrets and warnings about upcoming encounters.
+* **The Ancient Sealing:** Uncover the origin of the demons and why the dungeon’s doors seal tight every 15 minutes.
+* **Echoes of the Past:** Interact with haunted relics to trigger unique mini-events, high-stakes gambles, or temporary curses in exchange for powerful loot.
 
 ---
+
+## 🖥️ Technical Stack & Architecture
+
+* **Engine:** Pure HTML5 / CSS3 / JavaScript (Zero external dependencies).
+* **UI/UX:** Responsive, mobile-first design centered on clear tactical information and rapid touch/keyboard input.
+* **Art Style:** Classic 8-bit aesthetic with crisp typography and custom pixel graphics.
