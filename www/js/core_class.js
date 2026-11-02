@@ -48,6 +48,13 @@ var player = {
     arm: 10,
     thp: 10,
     spd_mlt: 1,
+    skill_points: 0, // ADDED
+    ability_levels: { // ADDED
+        light_attack: 1,
+        ability1: 1,
+        signature: 1,
+        heal: 1
+    },
 	inv: {
         gold: 0,
 		pot_lvl: 0,

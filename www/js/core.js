@@ -392,6 +392,9 @@ function Engine_Hud(comand) {
 
     if(comand == 15) {
         document.getElementById("sc_dr_sts").style.display = "";
+        if (typeof Render_Hero_Stats_Screen === 'function') {
+            Render_Hero_Stats_Screen();
+        }
     }
 
     if(comand == 16) {

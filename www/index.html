@@ -22,6 +22,7 @@
         <script defer type="text/javascript" src="js/core_loot.js"></script>
         <script defer type="text/javascript" src="js/core_combat.js"></script>
         <script defer type="text/javascript" src="js/core_map.js"></script>
+        <script defer type="text/javascript" src="js/core_leveling.js"></script>
         
 		
 		<script src="js/index.js"></script>
@@ -261,8 +262,9 @@
         <button class="book_action text_shadow" onclick="Core_Player_Signature_Attack()">Signature Attack</button>
         <button class="book_action text_shadow" onclick="Core_Player_Unique_Ability()">Unique Attack</button>
 
-        <button class="book_action text_shadow" onclick="Core_Player_Armor_Buff()">Armour Up</button>
-        <button class="book_action text_shadow" onclick="Core_Player_Health_Heal()">Heal Up</button>
+        <!-- Potion buttons updated with active count indicators -->
+        <button class="book_action text_shadow" onclick="Core_Player_Armor_Potion()">Armour Potion <span id="combat_arm_pot_count" style="color: yellow;">(0)</span></button>
+        <button class="book_action text_shadow" onclick="Core_Player_Health_Potion()">Health Potion <span id="combat_hth_pot_count" style="color: yellow;">(0)</span></button>
     </div>
 
     <div id="en_bs_end_of" style="width: 100%; margin-top: 5px;">
@@ -569,19 +571,35 @@
         </div>
 
         <div id="sc_dr_sts" class="window_scenes_base">
-            <hr>
-                <h3 class="text_shadow" style="text-align: center;">Hero Stats</h3>
-                <p id="name_of_class1" class="text_shadow" style="text-align: center">the class description</p>
-                <p id="class_icon1" class="icns plyr_shadow text_shadow" style="text-align: center">@</p>
-                <p id="class_level" class="text_shadow" style="text-align: center">Level 1</p>
-                <p id="class_stats1" class="text_shadow" style="text-align: center">the class stats<br><br></p>
-                <br>
-                <center>
-                    <button class="en_uix_button" onclick="Engine_Hud(18)">Close</button>
-                </center>
-                <br>
-            <hr>
+    <hr>
+        <h3 class="text_shadow" style="text-align: center;">Hero Stats & Upgrades</h3>
+        <p id="name_of_class1" class="text_shadow" style="text-align: center">the class description</p>
+        <p id="class_icon1" class="icns plyr_shadow text_shadow" style="text-align: center">@</p>
+        <p id="class_level" class="text_shadow" style="text-align: center">Level 1</p>
+        
+        <!-- Skill Points Display -->
+        <p id="player_skill_points_display" class="text_shadow" style="text-align: center; color: yellow;">Skill Points Available: 0</p>
+        
+        <p id="class_stats1" class="text_shadow" style="text-align: center">the class stats<br><br></p>
+        
+        <!-- Juggernaut Ability Upgrade Panel -->
+        <div id="juggernaut_upgrade_panel" style="text-align: center; margin: 10px 0;">
+            <h4 class="text_shadow">Ability Upgrades (Max Tier 4)</h4>
+            <div style="font-size: 0.85rem; line-height: 1.6;">
+                <p>Light Attack: <span id="lvl_light_attack">1</span> <button class="en_uix_button" style="padding: 2px 6px; font-size: 10px;" onclick="Upgrade_Player_Ability('light_attack')">+</button></p>
+                <p>Heavy Attack: <span id="lvl_heavy_attack">1</span> <button class="en_uix_button" style="padding: 2px 6px; font-size: 10px;" onclick="Upgrade_Player_Ability('heavy_attack')">+</button></p>
+                <p>Utility Ability: <span id="lvl_ability1">1</span> <button class="en_uix_button" style="padding: 2px 6px; font-size: 10px;" onclick="Upgrade_Player_Ability('ability1')">+</button></p>
+                <p>Signature Attack: <span id="lvl_signature">1</span> <button class="en_uix_button" style="padding: 2px 6px; font-size: 10px;" onclick="Upgrade_Player_Ability('signature')">+</button></p>
+            </div>
         </div>
+
+        <br>
+        <center>
+            <button class="en_uix_button" onclick="Engine_Hud(18)">Close</button>
+        </center>
+        <br>
+    <hr>
+</div>
 
         <div id="sc_dr_stry" class="window_scenes_base text_shadow">
             <hr>

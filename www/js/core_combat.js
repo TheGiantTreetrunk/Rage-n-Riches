@@ -53,6 +53,14 @@ var enemy = {
     isBoss: false
 };
 
+var player_cooldowns = {
+    light_attack: 0,
+    ability1: 0,
+    signature: 0,
+    heal: 0,
+    slap: 0
+};
+
 // Tracks player action cooldown to prevent spamming actions during cast times
 var player_is_acting = false; 
 
@@ -226,248 +234,257 @@ function Apply_Damage_To_Target(target, damageAmount) {
     }
 }
 
-function Core_Player_Light_Attack() {
-    if (isincombat == 0 || player_is_acting) return;
+function Can_Use_Ability(abilityKey, cooldownDuration) {
+    var now = Date.now();
+    if (player_cooldowns[abilityKey] > now) {
+        var timeLeft = ((player_cooldowns[abilityKey] - now) / 1000).toFixed(1);
+        document.getElementById("en_bs_sc").innerHTML = `${abilityKey.toUpperCase()} is on cooldown! (${timeLeft}s)`;
+        return false;
+    }
     
-    player_is_acting = true;
-    var castTime = class_light_attk_speed[player.class];
-    document.getElementById("en_bs_sc").innerHTML = "Preparing Light Attack...";
-
-    setTimeout(function() {
-        if (isincombat == 1) {
-            var dmg = Math.floor(Math.random() * class_damage[player.class]) + 1;
-            Apply_Damage_To_Target(enemy, dmg);
-            document.getElementById("en_bs_sc").innerHTML = "You deal " + dmg + " damage with a Light Attack!";
-            
-            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
-        }
-        player_is_acting = false;
-    }, castTime);
+    // Set cooldown expiration time
+    player_cooldowns[abilityKey] = now + cooldownDuration;
+    return true;
 }
+
+function Core_Player_Light_Attack() {
+    if (isincombat == 0) return;
+
+    // Base cooldown: 1000ms, reduced by 70ms per ability level
+    var lvl = player.ability_levels.light_attack;
+    var cooldown = Math.max(300, 1000 - ((lvl - 1) * 200));
+
+    if (!Can_Use_Ability('light_attack', cooldown)) return;
+
+    // INSTANT EXECUTION (No waiting/charging)
+    var baseDmg = class_damage[player.class];
+    var damageMultiplier = 1 + ((lvl - 1) * 0.35); // Lvl 4 packs a massive punch
+    var dmg = Math.floor((Math.random() * baseDmg + 1) * damageMultiplier);
+
+    // Tier 3/4 Bonus: Chance to strike twice or bypass armor partially
+    if (lvl >= 3 && Math.random() < 0.25) {
+        dmg = Math.floor(dmg * 1.5);
+        document.getElementById("en_bs_sc").innerHTML = "CRITICAL STRIKE! ";
+    }
+
+    Apply_Damage_To_Target(enemy, dmg);
+    document.getElementById("en_bs_sc").innerHTML += `You instantly fire a Light Attack for ${dmg} damage!`;
+
+    Check_Combat_End_States();
+}
+
 
 function Core_Player_Heavy_Attack() {
-    if (isincombat == 0 || player_is_acting) return;
+    if (isincombat == 0) return;
 
-    player_is_acting = true;
-    var castTime = class_heavy_attk_speed[player.class];
-    document.getElementById("en_bs_sc").innerHTML = "Charging Heavy Attack...";
+    var lvl = player.ability_levels.heavy_attack || 1;
+    var cooldown = Math.max(1500, 4000 - ((lvl - 1) * 500)); // Medium cooldown
 
-    setTimeout(function() {
-        if (isincombat == 1) {
-            var baseDmg = class_damage[player.class];
-            var dmg = Math.floor(Math.random() * baseDmg) + Math.floor(baseDmg * 0.5) + 1; // 1.5x damage potential
-            Apply_Damage_To_Target(enemy, dmg);
-            document.getElementById("en_bs_sc").innerHTML = "You strike hard for " + dmg + " damage!";
-            
-            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
-        }
-        player_is_acting = false;
-    }, castTime);
+    if (!Can_Use_Ability('heavy_attack', cooldown)) return;
+
+    var baseDmg = class_damage[player.class];
+    var tierMultiplier = 1 + ((lvl - 1) * 0.4);
+    var dmg = Math.floor(baseDmg * 1.5 * tierMultiplier);
+
+    Apply_Damage_To_Target(enemy, dmg);
+    document.getElementById("en_bs_sc").innerHTML = `You deliver a crushing Heavy Strike for ${dmg} damage!`;
+
+    Check_Combat_End_States();
 }
 
-function Core_Player_Armor_Buff() {
-    if (isincombat == 0 || player_is_acting) return;
+function Core_Player_Armor_Potion() {
+    if (isincombat == 0) return;
 
-    player_is_acting = true;
-    var castTime = class_armor_attk_speed[player.class];
-    document.getElementById("en_bs_sc").innerHTML = "Raising Armor...";
+    // Check if player has armor potions
+    if (player.inv.pot_armor <= 0) {
+        document.getElementById("en_bs_sc").innerHTML = "You are out of Armor Potions!";
+        return;
+    }
 
-    setTimeout(function() {
-        if (isincombat == 1) {
-            var gainArmor = Math.floor(Math.random() * 3) + 2; // Gains 2-4 temp armor
-            player.thp += gainArmor;
-            document.getElementById("en_bs_sc").innerHTML = "You gained " + gainArmor + " temporary armor!";
-            
-            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
-        }
-        player_is_acting = false;
-    }, castTime);
+    if (!Can_Use_Ability('armor_potion', 3000)) return; // 3 second cooldown
+
+    // Consume 1 Armor Potion
+    player.inv.pot_armor--;
+
+    // Grant temporary armor scaling with level or base stats
+    var armorGain = 8 + (player.lvl * 2);
+    player.thp += armorGain;
+
+    document.getElementById("en_bs_sc").innerHTML = `You drank an Armor Potion! Gained ${armorGain} temporary armor. (Left: ${player.inv.pot_armor})`;
+    
+    // Update inventory UI if open
+    if (typeof Core_Inventory === 'function') { Core_Inventory(); }
+    Check_Combat_End_States();
 }
 
-function Core_Player_Health_Heal() {
-    if (isincombat == 0 || player_is_acting) return;
+function Core_Player_Health_Potion() {
+    if (isincombat == 0) return;
 
-    player_is_acting = true;
-    var castTime = class_health_heal_speed[player.class];
-    document.getElementById("en_bs_sc").innerHTML = "Healing...";
+    // Check if player has health potions
+    if (player.inv.pot_health <= 0) {
+        document.getElementById("en_bs_sc").innerHTML = "You are out of Health Potions!";
+        return;
+    }
 
-    setTimeout(function() {
-        if (isincombat == 1) {
-            var healAmount = Math.floor(Math.random() * 4) + 2; // Heals 2-5 HP
-            player.hp += healAmount;
-            
-            // Optional max health check if player.max_hp exists:
-            if (player.max_hp && player.hp > player.max_hp) {
-                player.hp = player.max_hp;
-            }
+    if (!Can_Use_Ability('health_potion', 3000)) return; // 3 second cooldown
 
-            document.getElementById("en_bs_sc").innerHTML = "You restored " + healAmount + " health!";
-            
-            if (enemy.isBoss) { Core_Engine_Combat_Boss(1); } else { Core_Engine_Combat(1); }
-        }
-        player_is_acting = false;
-    }, castTime);
+    // Consume 1 Health Potion
+    player.inv.pot_health--;
+
+    // Restore health scaling with level
+    var healAmount = 15 + (player.lvl * 3);
+    player.hp += healAmount;
+
+    document.getElementById("en_bs_sc").innerHTML = `You chugged a Health Potion! Restored ${healAmount} HP. (Left: ${player.inv.pot_health})`;
+    
+    // Update inventory UI if open
+    if (typeof Core_Inventory === 'function') { Core_Inventory(); }
+    Check_Combat_End_States();
 }
 
 function Core_Player_Slap() {
-    if (isincombat == 0 || player_is_acting) return;
+    if (isincombat == 0) return;
 
-    // Check if the enemy is at exactly 1 HP
+    // Check if enemy is at exactly 1 HP
     if (enemy.health !== 1) {
         document.getElementById("en_bs_sc").innerHTML = 
             "The " + enemy.name + " is too strong to be slapped right now! (Must be at exactly 1 HP)";
         return;
     }
 
-    player_is_acting = true;
-    var castTime = 300; // Ultra fast finisher
-    document.getElementById("en_bs_sc").innerHTML = "You wind up a legendary finish...";
+    if (!Can_Use_Ability('slap', 1000)) return; // 1 second cooldown
 
-    setTimeout(function() {
-        if (isincombat == 1 && enemy.health === 1) {
-            enemy.health = 0; // Guaranteed finish
-            
-            document.getElementById("en_bs_sc").innerHTML = 
-                "DISRESPECTFUL FINISH! You slap the " + enemy.name + " to death for 1 damage!";
-            
-            if (enemy.isBoss) { 
-                Core_Engine_Combat_Boss(1); 
-            } else { 
-                Core_Engine_Combat(1); 
-            }
-        }
-        player_is_acting = false;
-    }, castTime);
+    enemy.health = 0; // Guaranteed execute
+    document.getElementById("en_bs_sc").innerHTML = 
+        "DISRESPECTFUL FINISH! You instantly slap the " + enemy.name + " to death for 1 damage!";
+    
+    Check_Combat_End_States();
 }
 
 function Core_Player_Unique_Ability() {
-    if (isincombat == 0 || player_is_acting) return;
+    if (isincombat == 0) return;
 
     var classId = player.class;
     var abilityName = class_unique_ability_name[classId];
-    
-    if (abilityName === "None") {
-        document.getElementById("en_bs_sc").innerHTML = "This class has no unique ability!";
-        return;
+    if (abilityName === "None") return;
+
+    var lvl = player.ability_levels.ability1;
+    var cooldown = Math.max(2000, 6000 - ((lvl - 1) * 1000)); // Scales down cooldown per tier
+
+    if (!Can_Use_Ability('ability1', cooldown)) return;
+
+    let msg = "";
+    // Tier-based scaling power multiplier
+    var tierPower = 1 + ((lvl - 1) * 0.5);
+
+    switch(classId) {
+        case 1: // Fighter: Shield Slam
+            var dmg = Math.floor(class_damage[player.class] * 1.2 * tierPower);
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `You instantly slam your shield for ${dmg} damage!`;
+            if (lvl >= 4) { enemy.armor = Math.max(0, enemy.armor - 5); msg += " (Shattered armor!)"; }
+            break;
+        case 2: // Knight: Phalanx Wall
+            var armorGain = Math.floor(10 * tierPower);
+            player.thp += armorGain;
+            msg = `You lock your Phalanx Wall, instantly gaining ${armorGain} temp armor!`;
+            break;
+        case 3: // Alchemist: Acid Splash
+            var dmg = Math.floor(8 * tierPower);
+            if (enemy.armor > 0) enemy.armor = Math.max(0, enemy.armor - (2 * lvl));
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `You fling a volatile chemical flask for ${dmg} direct damage!`;
+            break;
+        case 4: // Theologian: Divine Ward
+            var healAmt = Math.floor(6 * tierPower);
+            player.hp += healAmt;
+            player.thp += Math.floor(4 * tierPower);
+            msg = `Divine Ward instantly restores ${healAmt} health and shields you!`;
+            break;
+        case 5: // Ranger: Evasive Roll
+            var dmg = Math.floor(class_damage[player.class] * 1.5 * tierPower);
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `You instantly tumble and snap-shot for ${dmg} damage!`;
+            break;
+        case 6: // Artillerist: Shrapnel Mine
+            var dmg = Math.floor(15 * tierPower);
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `Mines detonate instantly, blasting the enemy for ${dmg} damage!`;
+            break;
+        case 7: // TEST123: Debug Wipe
+            var dmg = Math.floor(30 * tierPower);
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `[GLITCH] Reality rewrites for ${dmg} damage!`;
+            break;
+        default:
+            var dmg = Math.floor(10 * tierPower);
+            Apply_Damage_To_Target(enemy, dmg);
+            msg = `Used ${abilityName} for ${dmg} damage!`;
     }
 
-    player_is_acting = true;
-    var castTime = class_unique_ability_speed[classId];
-    document.getElementById("en_bs_sc").innerHTML = "Executing " + abilityName + "...";
-
-    setTimeout(function() {
-        if (isincombat == 1) {
-            let msg = "";
-
-            switch(classId) {
-                case 1: // Fighter: Shield Slam (Heavy strike scaling off damage)
-                    var dmg = Math.floor(class_damage[player.class] * 1.3);
-                    Apply_Damage_To_Target(enemy, dmg);
-                    msg = "You slam your shield into them for " + dmg + " damage!";
-                    break;
-                case 2: // Knight: Phalanx Wall (Massive temporary armor boost)
-                    player.thp += 12;
-                    msg = "You lock your shield wall, gaining 12 temporary armor!";
-                    break;
-                case 3: // Alchemist: Acid Splash (Striips enemy armor & deals damage)
-                    if (enemy.armor > 0) enemy.armor = Math.max(0, enemy.armor - 4);
-                    Apply_Damage_To_Target(enemy, 7);
-                    msg = "You chuck a corrosive vial, melting armor and dealing 7 damage!";
-                    break;
-                case 4: // Theologian: Divine Ward (Balanced heal + armor buff)
-                    player.hp += 6;
-                    player.thp += 6;
-                    msg = "Divine grace restores 6 health and grants 6 armor!";
-                    break;
-                case 5: // Ranger: Evasive Roll (Quick high-damage shot)
-                    var dmg = Math.floor(class_damage[player.class] * 1.6);
-                    Apply_Damage_To_Target(enemy, dmg);
-                    msg = "You backflip away and fire a piercing shot for " + dmg + " damage!";
-                    break;
-                case 6: // Artillerist: Shrapnel Mine (Massive heavy blast)
-                    var dmg = 18;
-                    Apply_Damage_To_Target(enemy, dmg);
-                    msg = "You trigger a hidden shrapnel mine for " + dmg + " explosive damage!";
-                    break;
-                case 7: // TEST123: Debug Wipe (Wild, chaotic glitch damage)
-                    var dmg = Math.floor(Math.random() * 40) + 20;
-                    Apply_Damage_To_Target(enemy, dmg);
-                    msg = "[GLITCH] Reality breaks, dealing " + dmg + " chaotic damage!";
-                    break;
-                default:
-                    var dmg = 5;
-                    Apply_Damage_To_Target(enemy, dmg);
-                    msg = "You use " + abilityName + " for " + dmg + " damage!";
-            }
-
-            document.getElementById("en_bs_sc").innerHTML = msg;
-            
-            if (enemy.isBoss) { 
-                Core_Engine_Combat_Boss(1); 
-            } else { 
-                Core_Engine_Combat(1); 
-            }
-        }
-        player_is_acting = false;
-    }, castTime);
+    document.getElementById("en_bs_sc").innerHTML = msg;
+    Check_Combat_End_States();
 }
 
 function Core_Player_Signature_Attack() {
-    if (isincombat == 0 || player_is_acting) return;
+    if (isincombat == 0) return;
 
     var classId = player.class;
     var attackName = class_signature_name[classId];
 
-    player_is_acting = true;
-    var castTime = class_signature_speed[classId];
-    document.getElementById("en_bs_sc").innerHTML = "Charging " + attackName + "...";
+    var lvl = player.ability_levels.signature;
+    var cooldown = Math.max(4000, 10000 - ((lvl - 1) * 1500)); // Scales down per level
 
-    setTimeout(function() {
-        if (isincombat == 1) {
-            var baseDmg = class_damage[classId];
-            var dmg = 0;
+    if (!Can_Use_Ability('signature', cooldown)) return;
 
-            switch(classId) {
-                case 1: // Fighter - Cleave
-                    dmg = Math.floor(baseDmg * 2.0);
-                    break;
-                case 2: // Knight - Decapitate
-                    dmg = Math.floor(baseDmg * 1.8) + 4;
-                    break;
-                case 3: // Alchemist - Philosopher's Flame (Bypasses armor)
-                    dmg = 12;
-                    enemy.health -= dmg; // Direct health damage
-                    break;
-                case 4: // Theologian - Smite
-                    dmg = Math.floor(baseDmg * 2.2);
-                    break;
-                case 5: // Ranger - Snipe
-                    dmg = Math.floor(baseDmg * 2.5);
-                    break;
-                case 6: // Artillerist - Mortar Volley
-                    dmg = Math.floor(baseDmg * 3.0);
-                    break;
-                case 7: // TEST123
-                    dmg = 99;
-                    break;
-                default:
-                    dmg = Math.floor(baseDmg * 1.5);
-            }
+    var baseDmg = class_damage[classId];
+    var tierMultiplier = 1 + ((lvl - 1) * 0.6); // Juggernaut scaling
+    var dmg = 0;
 
-            // Apply regular damage if not already handled directly (like Alchemist)
-            if (classId !== 3) {
-                Apply_Damage_To_Target(enemy, dmg);
-            }
+    switch(classId) {
+        case 1: dmg = Math.floor(baseDmg * 2.0 * tierMultiplier); break;
+        case 2: dmg = Math.floor((baseDmg * 1.8 + 4) * tierMultiplier); break;
+        case 3: 
+            dmg = Math.floor(12 * tierMultiplier); 
+            enemy.health -= dmg; // Direct health pierce
+            break;
+        case 4: dmg = Math.floor(baseDmg * 2.2 * tierMultiplier); break;
+        case 5: dmg = Math.floor(baseDmg * 2.5 * tierMultiplier); break;
+        case 6: dmg = Math.floor(baseDmg * 3.0 * tierMultiplier); break;
+        case 7: dmg = Math.floor(99 * tierMultiplier); break;
+        default: dmg = Math.floor(baseDmg * 1.5 * tierMultiplier);
+    }
 
-            document.getElementById("en_bs_sc").innerHTML = 
-                "You unleash " + attackName + " dealing " + dmg + " damage!";
+    if (classId !== 3) {
+        Apply_Damage_To_Target(enemy, dmg);
+    }
 
-            if (enemy.isBoss) { 
-                Core_Engine_Combat_Boss(1); 
-            } else { 
-                Core_Engine_Combat(1); 
-            }
-        }
-        player_is_acting = false;
-    }, castTime);
+    document.getElementById("en_bs_sc").innerHTML = `You instantly unleash ${attackName} for ${dmg} damage!`;
+    Check_Combat_End_States();
+}
+
+function Check_Combat_End_States() {
+    if (enemy.isBoss) {
+        Core_Engine_Combat_Boss(1);
+    } else {
+        Core_Engine_Combat(1);
+    }
+}
+
+function Update_Potion_Counters() {
+    // Stash screen totals
+    if(document.getElementById("hth_pot_total")) {
+        document.getElementById("hth_pot_total").innerHTML = player.inv.pot_health;
+    }
+    if(document.getElementById("arm_pot_total")) {
+        document.getElementById("arm_pot_total").innerHTML = player.inv.pot_armor;
+    }
+
+    // Combat action button counters
+    if(document.getElementById("combat_hth_pot_count")) {
+        document.getElementById("combat_hth_pot_count").innerHTML = `(${player.inv.pot_health})`;
+    }
+    if(document.getElementById("combat_arm_pot_count")) {
+        document.getElementById("combat_arm_pot_count").innerHTML = `(${player.inv.pot_armor})`;
+    }
 }
